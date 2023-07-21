@@ -35,7 +35,7 @@ namespace ChessChallenge.Application
 
       if (NextButtonInRow("Train", ref buttonPos, spacing, buttonSize))
       {
-        Train.StartTraining(controller.boardUI);
+        new Trainer().StartTraining(controller.boardUI);
       }
       if (NextButtonInRow("Save Games", ref buttonPos, spacing, buttonSize))
       {

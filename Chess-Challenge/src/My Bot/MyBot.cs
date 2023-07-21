@@ -3,7 +3,7 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  public float[] Weights = Train.GetWeights();
+  public float[] Weights = new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 };
 
   int Evaluate(Board board, Move move)
   {

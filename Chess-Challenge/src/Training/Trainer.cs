@@ -16,6 +16,7 @@ public class TrainingGame
     public int Moves;
     public float[] WhiteWeights;
     public float[] BlackWeights;
+    public Board Board;
   }
 
   public Action<Board, Move> OnMoveMade;
@@ -36,12 +37,10 @@ public class TrainingGame
 
   private int _totalMoves;
 
-  public TrainingGame(ChessPlayer whitePlayer, ChessPlayer blackPlayer, string startFen)
+  public TrainingGame(ChessPlayer whitePlayer, ChessPlayer blackPlayer)
   {
     _whitePlayer = whitePlayer;
     _blackPlayer = blackPlayer;
-
-    Board.LoadPosition(startFen);
   }
 
   public void LoadIntoUI(BoardUI boardUI)
@@ -98,6 +97,8 @@ public class TrainingGame
 
   public Result Start()
   {
+    Board.LoadStartPosition();
+
     while (!_gameOver)
     {
       MakeMove();
@@ -106,11 +107,12 @@ public class TrainingGame
     return new Result
     {
       GameResult = _result,
-      WhiteReward = _whiteReward / (float)_totalMoves + Train.WhiteResultRewards[_result],
-      BlackReward = _blackReward / (float)_totalMoves + Train.BlackResultRewards[_result],
+      WhiteReward = _whiteReward / (float)_totalMoves + Trainer.WhiteResultRewards[_result],
+      BlackReward = _blackReward / (float)_totalMoves + Trainer.BlackResultRewards[_result],
       Moves = Board.plyCount,
-      WhiteWeights = ((MyBot)_whitePlayer.Bot).Weights,
-      BlackWeights = ((MyBot)_blackPlayer.Bot).Weights,
+      WhiteWeights = _whitePlayer.Bot != null ? ((MyBot)_whitePlayer.Bot).Weights : new float[0],
+      BlackWeights = _blackPlayer.Bot != null ? ((MyBot)_blackPlayer.Bot).Weights : new float[0],
+      Board = Board
     };
   }
 
@@ -155,13 +157,13 @@ public class TrainingGame
 
       if (PlayerToMove() == _whitePlayer)
       {
-        _whiteReward += Train.Reward(Board, move);
-        _blackReward += Train.OponentReward(Board, move);
+        _whiteReward += Trainer.Reward(Board, move);
+        _blackReward += Trainer.OponentReward(Board, move);
       }
       else
       {
-        _blackReward += Train.Reward(Board, move);
-        _whiteReward += Train.OponentReward(Board, move);
+        _blackReward += Trainer.Reward(Board, move);
+        _whiteReward += Trainer.OponentReward(Board, move);
       }
 
       Board.MakeMove(move, true);
@@ -176,8 +178,10 @@ public class TrainingGame
   }
 }
 
-public class Train
+public class Trainer
 {
+  public static float Mutation = 1;
+
   public static float Reward(Board board, Move move)
   {
     ChessChallenge.API.Board botBoard = new ChessChallenge.API.Board(new Board(board));
@@ -235,137 +239,138 @@ public class Train
     { ChessChallenge.API.PieceType.King, 0 }
   };
 
-  private static int s_GamesInProgress;
-  private static Board s_BestGameBoard;
-  private static float s_BestGameEvaluation;
-  private static GameResult s_BestGameResult;
+  public List<float[]> _weightPool = new List<float[]>();
 
-  public static List<float[]> WeightPool = new List<float[]>();
-  public static List<float[]> WinnerWeightPool = new List<float[]>();
-
-  private List<Thread> _gameThreads = new List<Thread>();
-
-  public static void StartTraining(BoardUI boardUI)
+  public void StartTraining(BoardUI boardUI)
   {
     new Thread(() =>
     {
       for (int i = 0; i < 2 * 100; i++)
       {
-        WeightPool.Add(new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 });
+        _weightPool.Add(new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 });
       }
 
-      StartTrainingRound(boardUI);
+      while (true) StartTrainingRound(boardUI);
     }).Start();
   }
 
-  private static void StartTrainingRound(BoardUI boardUI)
+  private void StartTrainingRound(BoardUI boardUI)
   {
-    WinnerWeightPool = new List<float[]>();
-
-    WeightsIndex = 0;
-
-    string startFen = FileHelper.ReadResourceFile("Fens.txt").Split('\n')[0];
-
-    s_GamesInProgress = 100;
-    s_BestGameEvaluation = -999999999999;
+    List<Thread> _gameThreads = new List<Thread>();
+    List<TrainingGame.Result> _gameResults = new List<TrainingGame.Result>();
 
     for (int gameIndex = 0; gameIndex < 100; gameIndex++)
     {
-      int originalWeightsIndex = WeightsIndex;
-
-      WeightsIndex = originalWeightsIndex;
-
       TrainingGame game = new TrainingGame(
-        new ChessPlayer(new MyBot(), ChallengeController.PlayerType.MyBot, 1000 * 60),
-        new ChessPlayer(new MyBot(), ChallengeController.PlayerType.MyBot, 1000 * 60),
-        startFen
+        new ChessPlayer(new MyBot() { Weights = _weightPool[gameIndex * 2] }, ChallengeController.PlayerType.MyBot, 1000 * 60),
+        new ChessPlayer(new MyBot() { Weights = _weightPool[gameIndex * 2 + 1] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
       );
 
-      Thread thread = new Thread(() =>
+      Thread gameThread = new Thread(() =>
       {
         TrainingGame.Result result = game.Start();
 
-        // Console.WriteLine("Finished game with result " + result.GameResult + " white: " + result.WhiteReward + " black: " + result.BlackReward + " in " + result.Moves + " moves");
-
-        if (s_BestGameEvaluation < MathF.Max(result.WhiteReward, result.BlackReward))
-        {
-          s_BestGameEvaluation = MathF.Max(result.WhiteReward, result.BlackReward);
-          s_BestGameBoard = game.Board;
-          s_BestGameResult = result.GameResult;
-        }
-
-        if (result.WhiteReward > result.BlackReward)
-        {
-          WinnerWeightPool.Add(result.WhiteWeights);
-        }
-        else
-        {
-          WinnerWeightPool.Add(result.BlackWeights);
-        }
-
-        s_GamesInProgress--;
-
-        Console.WriteLine(s_GamesInProgress + " games left in round!");
-
-        if (s_GamesInProgress == 0) EndTrainingRound(boardUI);
+        _gameResults.Add(result);
       });
 
-      thread.Start();
+      _gameThreads.Add(gameThread);
+
+      gameThread.Start();
     }
+
+    bool allGamesFinished = false;
+
+    while (!allGamesFinished)
+    {
+      allGamesFinished = true;
+
+      foreach (Thread thread in _gameThreads)
+      {
+        if (thread.IsAlive) allGamesFinished = false;
+      }
+
+      Thread.Sleep(1);
+    }
+
+    float averageReward = 0;
+
+    List<float[]> _winnerWeightPool = new List<float[]>();
+
+    TrainingGame.Result bestResult = _gameResults[0];
+
+    foreach (TrainingGame.Result result in _gameResults)
+    {
+      if (result.WhiteReward > result.BlackReward)
+      {
+        _winnerWeightPool.Add(result.WhiteWeights);
+
+        averageReward += result.WhiteReward;
+      }
+      else
+      {
+        _winnerWeightPool.Add(result.BlackWeights);
+
+        averageReward += result.BlackReward;
+      }
+
+      if (result.WhiteReward <= bestResult.WhiteReward) continue;
+      if (result.BlackReward <= bestResult.BlackReward) continue;
+
+      bestResult = result;
+    }
+
+    DisplayGame(boardUI, bestResult.Board);
+
+    averageReward /= _gameResults.Count;
+
+    _weightPool = new List<float[]>();
+
+    foreach (float[] weights in _winnerWeightPool)
+    {
+      _weightPool.Add(weights);
+
+      int spliceStart = new Random().Next(0, 15);
+      int spliceEnd = new Random().Next(spliceStart, 16);
+
+      float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
+
+      float[] newWeights = weights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(weights[spliceEnd..]).ToArray();
+
+      for (int i = 0; i < newWeights.Length; i++)
+      {
+        newWeights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
+      }
+
+      _weightPool.Add(weights);
+      _weightPool.Add(newWeights);
+    }
+
+    Console.WriteLine("Finished training round. Average reward: " + averageReward);
   }
 
-  private static void EndTrainingRound(BoardUI boardUI)
+  private bool _displayingGame = false;
+
+  private void DisplayGame(BoardUI boardUI, Board board)
   {
-    Console.WriteLine("Finished training round with best game evaluation: " + s_BestGameEvaluation + " " + s_BestGameResult);
+    if (_displayingGame) return;
 
     new Thread(() =>
     {
+      _displayingGame = true;
+
       Board displayBoard = new Board();
-      displayBoard.LoadPosition(s_BestGameBoard.GameStartFen);
+      displayBoard.LoadStartPosition();
 
-      foreach (Move move in s_BestGameBoard.AllGameMoves)
+      foreach (Move move in board.AllGameMoves)
       {
-        // displayBoard.MakeMove(move, false);
+        displayBoard.MakeMove(move, false);
 
-        // boardUI.UpdatePosition(displayBoard, move, true);
+        boardUI.UpdatePosition(displayBoard, move, true);
 
-        // Thread.Sleep(50);
+        Thread.Sleep(200);
       }
 
-      WeightPool = new List<float[]>();
-
-      foreach (float[] weights in WinnerWeightPool)
-      {
-        WeightPool.Add(weights);
-
-        int spliceStart = new Random().Next(0, 15);
-        int spliceEnd = new Random().Next(spliceStart, 16);
-
-        float[] otherWeights = WinnerWeightPool[new Random().Next(0, WinnerWeightPool.Count)];
-
-        float[] newWeights = weights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(weights[spliceEnd..]).ToArray();
-
-        WeightPool.Add(weights);
-        WeightPool.Add(newWeights);
-      }
-
-      StartTrainingRound(boardUI);
+      _displayingGame = false;
     }).Start();
-  }
-
-  private static int WeightsIndex = 0;
-
-  public static float[] GetWeights()
-  {
-    if (WeightPool.Count == 0) return new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 };
-
-    lock (WeightPool)
-    {
-      float[] weights = WeightPool[WeightsIndex];
-
-      WeightsIndex++;
-
-      return weights;
-    }
   }
 }
