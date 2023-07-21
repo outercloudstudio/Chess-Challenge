@@ -3,6 +3,8 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
+  public float[] Weights = Train.GetWeights();
+
   int Evaluate(Board board, Move move)
   {
     board.MakeMove(move);
@@ -49,26 +51,20 @@ public class MyBot : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
-    float[] weights = Train.GetWeights();
-
-    Console.WriteLine(Inference(1, weights));
-
     Move[] moves = board.GetLegalMoves();
 
     Move bestMove = moves[new System.Random().Next(moves.Length)];
-    float bestMoveEvaluation = Inference(Evaluate(board, bestMove), weights);
+    float bestMoveEvaluation = Inference(Evaluate(board, bestMove), Weights);
 
     foreach (Move move in moves)
     {
-      float evaluation = Inference(Evaluate(board, move), weights);
+      float evaluation = Inference(Evaluate(board, move), Weights);
 
       if (evaluation <= bestMoveEvaluation) continue;
 
       bestMove = move;
       bestMoveEvaluation = evaluation;
     }
-
-    Console.WriteLine("Found best move evaluation of " + bestMoveEvaluation);
 
     return bestMove;
   }
