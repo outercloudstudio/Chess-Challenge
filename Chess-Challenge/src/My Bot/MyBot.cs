@@ -21,41 +21,55 @@ public class MyBot : IChessBot
     return 1;
   }
 
-  int ChooseMove(int[] evaluations)
+  float Inference(int evaluation, float[] weights)
   {
-    int evaluationSum = 0;
+    float[] hiddenValues = new float[8];
 
-    foreach (int evaluation in evaluations)
+    for (int index = 0; index < 8; index++)
     {
-      evaluationSum += evaluation;
+      hiddenValues[index] = evaluation * weights[index];
     }
 
-    int target = (int)new System.Random().NextInt64(0, evaluationSum);
+    float outputValue = 0;
 
-    int indexSum = 0;
-
-    for (int index = 0; index < evaluations.Length; index++)
+    for (int index = 0; index < 8; index++)
     {
-      indexSum += evaluations[index];
-
-      if (indexSum > target) return index;
+      outputValue += hiddenValues[index] * weights[8 + index];
     }
 
-    return evaluations.Length - 1;
+    return outputValue;
   }
+
+  /*
+  Network Architecture:
+  Input: 1,
+  Hidden: 8,
+  Output: 1
+  */
 
   public Move Think(Board board, Timer timer)
   {
-    Move[] moves = board.GetLegalMoves();
-    int[] evaluations = new int[moves.Length];
+    float[] weights = Train.GetWeights();
 
-    for (int moveIndex = 0; moveIndex < moves.Length; moveIndex++)
+    Console.WriteLine(Inference(1, weights));
+
+    Move[] moves = board.GetLegalMoves();
+
+    Move bestMove = moves[new System.Random().Next(moves.Length)];
+    float bestMoveEvaluation = Inference(Evaluate(board, bestMove), weights);
+
+    foreach (Move move in moves)
     {
-      evaluations[moveIndex] = Evaluate(board, moves[moveIndex]);
+      float evaluation = Inference(Evaluate(board, move), weights);
+
+      if (evaluation <= bestMoveEvaluation) continue;
+
+      bestMove = move;
+      bestMoveEvaluation = evaluation;
     }
 
-    int chosenMoveIndex = ChooseMove(evaluations);
+    Console.WriteLine("Found best move evaluation of " + bestMoveEvaluation);
 
-    return moves[chosenMoveIndex];
+    return bestMove;
   }
 }

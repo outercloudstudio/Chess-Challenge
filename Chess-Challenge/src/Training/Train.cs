@@ -268,4 +268,9 @@ public class Train
 
     // testingGame.Start();
   }
+
+  public static float[] GetWeights()
+  {
+    return new float[] { -1, -1, -4, -1, -6, -2, -5, -2, 1, 5, 2, 1, 5, 0, 2, 5 };
+  }
 }
