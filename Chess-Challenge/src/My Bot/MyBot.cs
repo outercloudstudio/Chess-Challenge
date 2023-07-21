@@ -56,8 +56,6 @@ public class MyBot : IChessBot
 
     int chosenMoveIndex = ChooseMove(evaluations);
 
-    Console.WriteLine(chosenMoveIndex);
-
     return moves[chosenMoveIndex];
   }
 }
