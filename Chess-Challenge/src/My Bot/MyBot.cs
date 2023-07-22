@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
@@ -20,6 +21,13 @@ public class MyBot : IChessBot
     float[] inputValues = new float[64];
 
     board.MakeMove(move);
+
+    if (board.IsInCheckmate())
+    {
+      board.UndoMove(move);
+
+      return 9999999;
+    }
 
     for (int squareIndex = 0; squareIndex < inputValues.Length; squareIndex++)
     {
