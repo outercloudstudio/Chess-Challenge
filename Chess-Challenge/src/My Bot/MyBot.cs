@@ -1,151 +1,111 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ChessChallenge.API;
+﻿using ChessChallenge.API;
+using System;
 
 public class MyBot : IChessBot
 {
-  public float[] Weights;
-
-  Dictionary<PieceType, int> _pieceIds = new Dictionary<PieceType, int>() {
-    { PieceType.Pawn, 1 },
-    { PieceType.Knight, 2 },
-    { PieceType.Bishop, 3 },
-    { PieceType.Rook, 5 },
-    { PieceType.Queen, 9 },
-    { PieceType.King, 100 },
-    { PieceType.None, 0 }
-  };
-
-  float Sigmoid(float x)
-  {
-    return 1 / (1 + (float)Math.Exp(-x));
-  }
-
-  float[] Layer(float[] input, int previousLayerSize, int layerSize, int layerOffser)
-  {
-    float[] layer = new float[layerSize];
-
-    for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
-    {
-      for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
-      {
-        layer[nodeIndex] += input[weightIndex] * Weights[layerOffser + nodeIndex * previousLayerSize + weightIndex];
-      }
-
-      layer[nodeIndex] = Sigmoid(layer[nodeIndex]);
-    }
-
-    return layer;
-  }
-
-  /*
-  Calculate the beginning material offset
-  Check for checkmates
-  Calculate the ending material offset
-  generate tactical model input
-  run tactical model
-  concat info onto tactical model output
-  run move model
-  return move model input
-  */
-
-  float Inference(Board board, Move move)
-  {
-    //Calculate beginning material offset
-    int materialOffset = 0;
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
-    {
-      Piece piece = board.GetPiece(new Square(squareIndex));
-
-      if (piece.IsWhite == board.IsWhiteToMove)
-      {
-        materialOffset += _pieceIds[piece.PieceType];
-      }
-      else
-      {
-        materialOffset -= _pieceIds[piece.PieceType];
-      }
-    }
-
-    board.MakeMove(move);
-
-    // Check for checkmate
-    if (board.IsInCheckmate())
-    {
-      board.UndoMove(move);
-
-      return 9999999;
-    }
-
-    //Caclulate ending material offset
-    int endMaterialOffset = 0;
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
-    {
-      Piece piece = board.GetPiece(new Square(squareIndex));
-
-      if (piece.IsWhite == board.IsWhiteToMove)
-      {
-        endMaterialOffset += _pieceIds[piece.PieceType];
-      }
-      else
-      {
-        endMaterialOffset -= _pieceIds[piece.PieceType];
-      }
-    }
-
-    float[] tacticalModelInput = new float[16];
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
-    {
-      Piece piece = board.GetPiece(new Square(squareIndex));
-      int squareValue = (piece.IsWhite == board.IsWhiteToMove) ? _pieceIds[piece.PieceType] : -_pieceIds[piece.PieceType];
-
-      int x = squareIndex % 8 / 2;
-      int y = squareIndex / 8 / 2;
-
-      tacticalModelInput[x * 4 + y] += squareValue;
-    }
-
-    board.UndoMove(move);
-
-    float[] tacticalModelHidden1 = Layer(tacticalModelInput, 16, 16, 0);
-    float[] tacticalModelHidden2 = Layer(tacticalModelInput, 16, 16, 16 * 16);
-    float[] tacticalModelOutput = Layer(tacticalModelInput, 16, 3, 16 * 16 + 16 * 16);
-
-    float[] moveModelInput = tacticalModelOutput.Concat(new float[] { move.StartSquare.File, move.StartSquare.Rank, move.TargetSquare.File, move.TargetSquare.Rank, (int)move.MovePieceType, materialOffset, endMaterialOffset }).ToArray();
-    float[] moveModelHidden = Layer(moveModelInput, 10, 8, 16 * 16 + 16 * 16 + 16 * 3);
-    float[] moveModelOutput = Layer(moveModelHidden, 8, 1, 16 * 16 + 16 * 16 + 16 * 3 + 10 * 8);
-
-    return moveModelOutput[0];
-  }
+  static int[] pieceValues = { 0, 1, 3, 3, 5, 9, 1000 };
+  int positionsEvaluated;
+  bool botIsWhite;
 
   struct MoveChoice
   {
     public Move Move;
-    public float Evaluation;
+    public int Score;
   }
 
   public Move Think(Board board, Timer timer)
   {
-    if (Weights == null) Weights = new float[Trainer.WeightCount];
+    botIsWhite = board.IsWhiteToMove;
+    positionsEvaluated = 0;
 
-    List<Move> moves = new List<Move>(board.GetLegalMoves());
-    List<MoveChoice> moveChoices = new List<MoveChoice>();
+    Move[] moves = board.GetLegalMoves();
+    Move bestMove = moves[0];
+    int bestScore = int.MinValue;
 
-    foreach (Move move in moves)
+    int depthToSearch;
+    if (moves.Length < 5) depthToSearch = 3;
+    else depthToSearch = 2;
+
+    for (int i = 0; i < moves.Length; i++)
     {
-      moveChoices.Add(new MoveChoice()
+      int score = Minimax(board, moves[i], depthToSearch);
+
+      if (score > bestScore)
       {
-        Move = move,
-        Evaluation = Inference(board, move)
-      });
+        bestScore = score;
+        bestMove = moves[i];
+      }
     }
 
-    moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
+    return bestMove;
+  }
 
-    return moveChoices[new System.Random().Next(0, Math.Min(moveChoices.Count, 1))].Move;
+  public int Minimax(Board board, Move move, int depth)
+  {
+    positionsEvaluated++;
+
+    board.MakeMove(move);
+
+    // We should always evaluate from the perspective of the bot's color
+    // The problem was if you cause the bot to evaluate for the other color, then it will minimize for that colo, which means it will pick the worst move instead of the best move for the other color
+    int heuristic = EvaluateBoard(board, botIsWhite);
+
+    if (depth == 0)
+    {
+      board.UndoMove(move);
+
+      return heuristic;
+    }
+
+    Move[] legalResponses = board.GetLegalMoves();
+    int bestLegalResponseValue;
+
+    // We also no longer need to pass if we are maximizing, since we can always tell by the color of our bot and the color of the board
+    // if it is our turn to move, we maximize score
+    if (botIsWhite == board.IsWhiteToMove)
+    {
+      bestLegalResponseValue = int.MinValue;
+      for (int i = 0; i < legalResponses.Length; i++)
+      {
+        int value = Minimax(board, legalResponses[i], depth - 1);
+        bestLegalResponseValue = Math.Max(value, bestLegalResponseValue);
+      }
+    }
+    // if it is not our turn to move, we minimize OUR score, which is the same as maximizing the opponent's score
+    else
+    {
+      bestLegalResponseValue = int.MaxValue;
+      for (int i = 0; i < legalResponses.Length; i++)
+      {
+        int value = Minimax(board, legalResponses[i], depth - 1);
+        bestLegalResponseValue = Math.Min(value, bestLegalResponseValue);
+      }
+    }
+
+    board.UndoMove(move);
+
+    return bestLegalResponseValue;
+  }
+
+  public int EvaluateBoard(Board board, bool asWhite)
+  {
+    int whiteScore = 0;
+    int blackScore = 0;
+
+    PieceList[] pieces = board.GetAllPieceLists();
+
+    for (int i = 0; i < pieces.Length; i++)
+    {
+      for (int j = 0; j < pieces[i].Count; j++)
+      {
+        Piece piece = pieces[i][j];
+        int pieceScore = pieceValues[(int)piece.PieceType];
+
+        if (piece.IsWhite) whiteScore += pieceScore;
+        else blackScore += pieceScore;
+      }
+    }
+
+    return (asWhite ? 1 : -1) * (whiteScore - blackScore);
   }
 }
