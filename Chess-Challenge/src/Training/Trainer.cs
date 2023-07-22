@@ -212,7 +212,7 @@ public class Trainer
 {
   public static int WeightCount = 648;
   public static int RoundGameCount = 20;
-  public static int RoundCount = 5000;
+  public static int RoundCount = 100000;
 
   public static float Mutation = 4;
 
@@ -237,7 +237,7 @@ public class Trainer
   }
 
   public static float WinReward = 20;
-  public static float DrawReward = -2;
+  public static float DrawReward = 0;
 
   public static Dictionary<ChessChallenge.API.PieceType, float> PieceWorth = new Dictionary<ChessChallenge.API.PieceType, float>() {
     { ChessChallenge.API.PieceType.Pawn, 1 },
@@ -375,6 +375,11 @@ public class Trainer
 
     foreach (float[] weights in _winnerWeightPool)
     {
+      for (int i = 0; i < weights.Length; i++)
+      {
+        weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
+      }
+
       _weightPool.Add(weights);
 
       for (int variation = 0; variation < 3; variation++)
@@ -388,7 +393,6 @@ public class Trainer
 
         for (int i = 0; i < newWeights.Length; i++)
         {
-          weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
           newWeights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
         }
 
@@ -420,7 +424,7 @@ public class Trainer
 
         boardUI.UpdatePosition(displayBoard, move, true);
 
-        Thread.Sleep(20);
+        Thread.Sleep(200);
       }
 
       _displayingGame = false;

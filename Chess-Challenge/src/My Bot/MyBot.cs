@@ -103,8 +103,8 @@ public class MyBot : IChessBot
       Piece piece = board.GetPiece(new Square(squareIndex));
       int squareValue = (piece.IsWhite == board.IsWhiteToMove) ? _pieceIds[piece.PieceType] : -_pieceIds[piece.PieceType];
 
-      int x = squareIndex % 8;
-      int y = squareIndex / 8;
+      int x = squareIndex % 8 / 2;
+      int y = squareIndex / 8 / 2;
 
       tacticalModelInput[x * 4 + y] += squareValue;
     }
