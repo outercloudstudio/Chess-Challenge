@@ -16,6 +16,28 @@ public class MyBot : IChessBot
     { PieceType.None, 0 }
   };
 
+  // float Sigmoid(float x)
+  // {
+  //   return 1 / (1 + (float)Math.Exp(-x));
+  // }
+
+  float[] Layer(float[] input, int previousLayerSize, int layerSize, int layerOffser)
+  {
+    float[] layer = new float[layerSize];
+
+    for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
+    {
+      for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
+      {
+        layer[nodeIndex] += input[weightIndex] * Weights[layerOffser + nodeIndex * previousLayerSize + weightIndex];
+      }
+
+      // layer[nodeIndex] = Sigmoid(layer[nodeIndex]);
+    }
+
+    return layer;
+  }
+
   float Inference(Board board, Move move)
   {
     float[] inputValues = new float[64];
@@ -39,43 +61,12 @@ public class MyBot : IChessBot
 
     board.UndoMove(move);
 
-    float[] hiddenValues = new float[32];
+    float[] hiddenValues = Layer(inputValues, 64, 32, 0);
 
-    for (int nodeIndex = 0; nodeIndex < hiddenValues.Length; nodeIndex++)
-    {
-      for (int weightIndex = 0; weightIndex < inputValues.Length; weightIndex++)
-      {
-        hiddenValues[nodeIndex] += inputValues[weightIndex] * Weights[nodeIndex * inputValues.Length + weightIndex];
-      }
-    }
+    float[] hiddenValues2 = Layer(hiddenValues, 32, 32, 64 * 32);
 
-    float[] hiddenValues2 = new float[32];
-
-    for (int nodeIndex = 0; nodeIndex < hiddenValues2.Length; nodeIndex++)
-    {
-      for (int weightIndex = 0; weightIndex < hiddenValues.Length; weightIndex++)
-      {
-        hiddenValues2[nodeIndex] += hiddenValues[weightIndex] * Weights[inputValues.Length * hiddenValues.Length + nodeIndex * hiddenValues.Length + weightIndex];
-      }
-    }
-
-    float outputValue = 0;
-
-    for (int weightIndex = 0; weightIndex < hiddenValues2.Length; weightIndex++)
-    {
-      outputValue += hiddenValues2[weightIndex] * Weights[inputValues.Length * hiddenValues.Length + hiddenValues.Length * hiddenValues2.Length + weightIndex];
-    }
-
-    return outputValue;
+    return Layer(hiddenValues2, 32, 1, 64 * 32 + 32 * 32)[0];
   }
-
-  /*
-  Network Architecture:
-  Input: 64,
-  Hidden: 16,
-  Hidden: 4,
-  Output: 1
-  */
 
   struct MoveChoice
   {
@@ -101,6 +92,6 @@ public class MyBot : IChessBot
 
     moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
 
-    return moveChoices[new System.Random().Next(0, Math.Min(moveChoices.Count, 3))].Move;
+    return moveChoices[new System.Random().Next(0, Math.Min(moveChoices.Count, 1))].Move;
   }
 }
