@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
@@ -76,39 +77,30 @@ public class MyBot : IChessBot
   Output: 1
   */
 
+  struct MoveChoice
+  {
+    public Move Move;
+    public float Evaluation;
+  }
+
   public Move Think(Board board, Timer timer)
   {
     if (Weights == null) Weights = new float[Trainer.WeightCount];
 
     List<Move> moves = new List<Move>(board.GetLegalMoves());
-    List<Move> topMoves = new List<Move>();
+    List<MoveChoice> moveChoices = new List<MoveChoice>();
 
-    for (int topMoveNumber = 0; topMoveNumber < 3; topMoveNumber++)
+    foreach (Move move in moves)
     {
-      if (moves.Count == 0) continue;
-
-      int bestMoveIndex = new System.Random().Next(moves.Count);
-      Move bestMove = moves[bestMoveIndex];
-
-      float bestMoveEvaluation = Inference(board, bestMove);
-
-      for (int moveIndex = 0; moveIndex < moves.Count; moveIndex++)
+      moveChoices.Add(new MoveChoice()
       {
-        Move move = moves[moveIndex];
-
-        float evaluation = Inference(board, move);
-
-        if (evaluation <= bestMoveEvaluation) continue;
-
-        bestMoveIndex = moveIndex;
-        bestMove = move;
-        bestMoveEvaluation = evaluation;
-      }
-
-      topMoves.Add(bestMove);
-      moves.RemoveAt(bestMoveIndex);
+        Move = move,
+        Evaluation = Inference(board, move)
+      });
     }
 
-    return topMoves[new System.Random().Next(topMoves.Count)];
+    moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
+
+    return moveChoices[new System.Random().Next(0, Math.Min(moveChoices.Count, 3))].Move;
   }
 }

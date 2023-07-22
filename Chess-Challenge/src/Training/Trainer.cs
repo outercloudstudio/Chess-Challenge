@@ -210,12 +210,12 @@ public class TrainingGame
 
 public class Trainer
 {
-  // public static int WeightCount = 1092;
+  // public static int WeightCount = 624;
   public static int WeightCount = 3104;
   public static int RoundGameCount = 20;
-  public static int RoundCount = 10000;
+  public static int RoundCount = 5000;
 
-  public static float Mutation = 2;
+  public static float Mutation = 4;
 
   public static float Reward(Board board, Move move)
   {
@@ -238,7 +238,7 @@ public class Trainer
   }
 
   public static float WinReward = 20;
-  public static float DrawReward = -3;
+  public static float DrawReward = -2;
 
   public static Dictionary<ChessChallenge.API.PieceType, float> PieceWorth = new Dictionary<ChessChallenge.API.PieceType, float>() {
     { ChessChallenge.API.PieceType.Pawn, 1 },
@@ -358,7 +358,7 @@ public class Trainer
 
     gameResults.Sort((a, b) => b.Reward.CompareTo(a.Reward));
 
-    for (int i = 0; i < _weightPool.Count / 2; i++)
+    for (int i = 0; i < _weightPool.Count / 4; i++)
     {
       _winnerWeightPool.Add(gameResults[i].Weights);
     }
@@ -376,21 +376,25 @@ public class Trainer
 
     foreach (float[] weights in _winnerWeightPool)
     {
-      int spliceStart = new Random().Next(0, WeightCount - 1);
-      int spliceEnd = new Random().Next(spliceStart, WeightCount);
-
-      float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
-
-      float[] newWeights = weights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(weights[spliceEnd..]).ToArray();
-
-      for (int i = 0; i < newWeights.Length; i++)
-      {
-        weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
-        newWeights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
-      }
-
       _weightPool.Add(weights);
-      _weightPool.Add(newWeights);
+
+      for (int variation = 0; variation < 3; variation++)
+      {
+        int spliceStart = new Random().Next(0, WeightCount - 1);
+        int spliceEnd = new Random().Next(spliceStart, WeightCount);
+
+        float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
+
+        float[] newWeights = weights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(weights[spliceEnd..]).ToArray();
+
+        for (int i = 0; i < newWeights.Length; i++)
+        {
+          weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
+          newWeights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
+        }
+
+        _weightPool.Add(newWeights);
+      }
     }
 
     Console.WriteLine("Finished training round " + roundNumber + ". Average reward: " + averageReward);
