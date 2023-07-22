@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static ChessChallenge.Application.Settings;
 using static ChessChallenge.Application.ConsoleHelper;
+using System.Linq;
 
 namespace ChessChallenge.Application
 {
@@ -206,7 +207,7 @@ namespace ChessChallenge.Application
     {
       return type switch
       {
-        PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
+        PlayerType.MyBot => new ChessPlayer(new MyBot() { Weights = File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Checkpoints\\Checkpoint 9900.txt").Split('\n')[..Trainer.WeightCount].Select(float.Parse).ToArray() }, type, GameDurationMilliseconds),
         PlayerType.TestBot => new ChessPlayer(new Bot1(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ChessChallenge.Application;
@@ -209,11 +210,12 @@ public class TrainingGame
 
 public class Trainer
 {
-  public static int WeightCount = 1092;
-  public static int RoundGameCount = 50;
-  public static int RoundCount = 1000;
+  // public static int WeightCount = 1092;
+  public static int WeightCount = 3104;
+  public static int RoundGameCount = 20;
+  public static int RoundCount = 10000;
 
-  public static float Mutation = 1;
+  public static float Mutation = 2;
 
   public static float Reward(Board board, Move move)
   {
@@ -278,18 +280,14 @@ public class Trainer
         _weightPool.Add(weights);
       }
 
-      // StartTrainingRound(boardUI);
-
       for (int round = 0; round < RoundCount; round++)
       {
-        Console.WriteLine("Round " + round + " / " + RoundCount);
-
-        StartTrainingRound(boardUI);
+        StartTrainingRound(boardUI, round);
       }
     }).Start();
   }
 
-  private void StartTrainingRound(BoardUI boardUI)
+  private void StartTrainingRound(BoardUI boardUI, int roundNumber)
   {
     List<Thread> gameThreads = new List<Thread>();
     List<TrainingGame.Result> gameResults = new List<TrainingGame.Result>();
@@ -298,7 +296,7 @@ public class Trainer
     {
       TrainingGame game = new TrainingGame(
         new ChessPlayer(new MyBot() { Weights = _weightPool[gameIndex] }, ChallengeController.PlayerType.MyBot, 1000 * 60),
-        new ChessPlayer(new MyBot() { Weights = _oldWeightPool[gameIndex] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
+        new ChessPlayer(new MyBot() { Weights = _oldWeightPool[new System.Random().Next(_oldWeightPool.Count)] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
       );
 
       Thread gameThread = new Thread(() =>
@@ -340,6 +338,20 @@ public class Trainer
       bestResult = result;
     }
 
+    if (roundNumber % 100 == 0)
+    {
+      string bestResultWeightCheckpoint = "";
+
+      foreach (float weight in bestResult.Weights)
+      {
+        bestResultWeightCheckpoint += weight + "\n";
+      }
+
+      string path = "D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Checkpoints\\Checkpoint " + roundNumber + ".txt";
+
+      File.WriteAllText(path, bestResultWeightCheckpoint);
+    }
+
     DisplayGame(boardUI, bestResult.Board, bestResult.NewBotIsWhite);
 
     List<float[]> _winnerWeightPool = new List<float[]>();
@@ -373,6 +385,7 @@ public class Trainer
 
       for (int i = 0; i < newWeights.Length; i++)
       {
+        weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
         newWeights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
       }
 
@@ -380,7 +393,7 @@ public class Trainer
       _weightPool.Add(newWeights);
     }
 
-    Console.WriteLine("Finished training round. Average reward: " + averageReward);
+    Console.WriteLine("Finished training round " + roundNumber + ". Average reward: " + averageReward);
   }
 
   private bool _displayingGame = false;
@@ -406,8 +419,6 @@ public class Trainer
 
         Thread.Sleep(20);
       }
-
-      Thread.Sleep(3000);
 
       _displayingGame = false;
     }).Start();

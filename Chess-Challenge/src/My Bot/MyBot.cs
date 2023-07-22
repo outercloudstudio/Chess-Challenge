@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
@@ -39,7 +38,7 @@ public class MyBot : IChessBot
 
     board.UndoMove(move);
 
-    float[] hiddenValues = new float[16];
+    float[] hiddenValues = new float[32];
 
     for (int nodeIndex = 0; nodeIndex < hiddenValues.Length; nodeIndex++)
     {
@@ -49,7 +48,7 @@ public class MyBot : IChessBot
       }
     }
 
-    float[] hiddenValues2 = new float[4];
+    float[] hiddenValues2 = new float[32];
 
     for (int nodeIndex = 0; nodeIndex < hiddenValues2.Length; nodeIndex++)
     {

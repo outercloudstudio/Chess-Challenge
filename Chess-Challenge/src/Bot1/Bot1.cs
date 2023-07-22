@@ -1,5 +1,4 @@
 ﻿using ChessChallenge.API;
-using System;
 
 namespace ChessChallenge.Example
 {
@@ -57,8 +56,6 @@ namespace ChessChallenge.Example
       }
 
       int chosenMoveIndex = ChooseMove(evaluations);
-
-      Console.WriteLine(chosenMoveIndex);
 
       return moves[chosenMoveIndex];
     }
