@@ -6,15 +6,16 @@ I will then create a video exploring the implementations of the best and most un
 I also plan to make a small game that features these most interesting/challenging entries, so that everyone can try playing against them.
 
 ## Change Log
-I unfortunately missed a serious bug in the board.GetPiece() function and have had to update the project. Please keep an eye on the change log here in case I've made any other horrifying mistakes. Apologies for the inconvenience. The version you are currently using will be printed to the console when running the program (unless you are using v1.0, in which case nothing will be printed). The latest version is V1.1
-* V1.1 Bug fix for board.GetPiece() function. Added Board.CreateBoardFromFEN() function.
+I unfortunately missed a serious bug in the board.GetPiece() and PieceList functions and have had to update the project. Please keep an eye on the change log here in case I've made any other horrifying mistakes. Apologies for the inconvenience. The version you are currently using will be printed to the console when running the program (unless you are using v1.0, in which case nothing will be printed).
+* V1.1 Bug fix for board.GetPiece() and PieceList functions. Added Board.CreateBoardFromFEN() function.
+  * V1.11 (cosmetic changes only) Added coordinate names to board UI. Fixed human player input bug.
 
 ## Submission Due Date
 October 1st 2023.<br>
 You can submit your entry [here](https://forms.gle/6jjj8jxNQ5Ln53ie6).
 
 ## How to Participate
-* Install an an IDE such as [Visual Studio](https://visualstudio.microsoft.com/downloads/).
+* Install an IDE such as [Visual Studio](https://visualstudio.microsoft.com/downloads/).
 * Install [.NET 6.0](https://dotnet.microsoft.com/en-us/download)
 * Download this repository and open the Chess-Challenge project in your IDE.
 * Try building and running the project.
@@ -33,6 +34,9 @@ You can submit your entry [here](https://forms.gle/6jjj8jxNQ5Ln53ie6).
 
 ## Rules
 * You may participate alone, or in a group of any size.
+* You may submit a maximum of two entries.
+  * Please only submit a second entry if it is significantly different from your first bot (not just a minor tweak).
+  * Note: you will need to log in with a second Google account if you want submit a second entry.
 * Only the following namespaces are allowed:
     * ChessChallenge.API
     * System
@@ -60,4 +64,10 @@ All names (variables, functions, etc.) are counted as a single token, regardless
 ## FAQ and Troubleshooting
 * [Running on Linux](https://github.com/SebLague/Chess-Challenge/discussions/3)
 * [How to run if using a different code editor](https://github.com/SebLague/Chess-Challenge/issues/85)
+* Issues with illegal moves or errors when making/undoing a move
+  * Make sure that you are making and undoing moves in the correct order, and that you don't forget to undo a move when exitting early from a function for example.
+* How to tell what colour MyBot is playing
+  * You can look at board.IsWhiteToMove when the Think function is called
+* GetPiece() function is giving a null piece after making a move
+  * Please make sure you are using the latest version of the project, there was a bug with this function in the original version
   
