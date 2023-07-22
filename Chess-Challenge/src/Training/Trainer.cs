@@ -180,6 +180,8 @@ public class TrainingGame
 
 public class Trainer
 {
+  public static int WeightCount = 1092;
+
   public static float Mutation = 1;
 
   public static float Reward(Board board, Move move)
@@ -239,6 +241,7 @@ public class Trainer
     { ChessChallenge.API.PieceType.King, 0 }
   };
 
+  public List<float[]> _oldWeightPool = new List<float[]>();
   public List<float[]> _weightPool = new List<float[]>();
 
   public void StartTraining(BoardUI boardUI)
@@ -247,7 +250,14 @@ public class Trainer
     {
       for (int i = 0; i < 2 * 100; i++)
       {
-        _weightPool.Add(new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 });
+        float[] weights = new float[WeightCount];
+
+        for (int j = 0; j < WeightCount; j++)
+        {
+          weights[j] = (float)(new Random().NextDouble() * 2 - 1);
+        }
+
+        _weightPool.Add(weights);
       }
 
       while (true) StartTrainingRound(boardUI);
@@ -329,8 +339,8 @@ public class Trainer
     {
       _weightPool.Add(weights);
 
-      int spliceStart = new Random().Next(0, 15);
-      int spliceEnd = new Random().Next(spliceStart, 16);
+      int spliceStart = new Random().Next(0, WeightCount - 1);
+      int spliceEnd = new Random().Next(spliceStart, WeightCount);
 
       float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
 

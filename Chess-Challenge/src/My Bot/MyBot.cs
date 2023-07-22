@@ -1,42 +1,61 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  public float[] Weights = new float[] { -1, -1, 4, -1, 6, -2, 5, -2, 1, 5, 2, 1, 5, 0, 2, 5 };
+  public float[] Weights;
 
-  int Evaluate(Board board, Move move)
+  Dictionary<PieceType, int> _pieceIds = new Dictionary<PieceType, int>() {
+    { PieceType.Pawn, 1 },
+    { PieceType.Knight, 3 },
+    { PieceType.Bishop, 4 },
+    { PieceType.Rook, 5 },
+    { PieceType.Queen, 9 },
+    { PieceType.King, 10 },
+    { PieceType.None, 0 }
+  };
+
+  float Inference(Board board, Move move)
   {
+    float[] inputValues = new float[64];
+
     board.MakeMove(move);
-    bool isMate = board.IsInCheckmate();
-    bool isCheck = board.IsInCheck();
+
+    for (int squareIndex = 0; squareIndex < inputValues.Length; squareIndex++)
+    {
+      Piece piece = board.GetPiece(new Square(squareIndex));
+      bool isMyPiece = piece.IsWhite && !board.IsWhiteToMove;
+
+      inputValues[squareIndex] = _pieceIds[piece.PieceType] * (isMyPiece ? 1 : -1);
+    }
+
     board.UndoMove(move);
 
-    if (isMate) return 1000000;
+    float[] hiddenValues = new float[16];
 
-    if (isCheck) return 1000;
-
-    if (move.IsCapture) return 500;
-
-    if (move.IsCastles) return 200;
-
-    return 1;
-  }
-
-  float Inference(int evaluation, float[] weights)
-  {
-    float[] hiddenValues = new float[8];
-
-    for (int index = 0; index < 8; index++)
+    for (int nodeIndex = 0; nodeIndex < hiddenValues.Length; nodeIndex++)
     {
-      hiddenValues[index] = evaluation * weights[index];
+      for (int weightIndex = 0; weightIndex < inputValues.Length; weightIndex++)
+      {
+        hiddenValues[nodeIndex] += inputValues[weightIndex] * Weights[nodeIndex * inputValues.Length + weightIndex];
+      }
+    }
+
+    float[] hiddenValues2 = new float[4];
+
+    for (int nodeIndex = 0; nodeIndex < hiddenValues2.Length; nodeIndex++)
+    {
+      for (int weightIndex = 0; weightIndex < hiddenValues.Length; weightIndex++)
+      {
+        hiddenValues2[nodeIndex] += hiddenValues[weightIndex] * Weights[inputValues.Length * hiddenValues.Length + nodeIndex * hiddenValues.Length + weightIndex];
+      }
     }
 
     float outputValue = 0;
 
-    for (int index = 0; index < 8; index++)
+    for (int weightIndex = 0; weightIndex < hiddenValues2.Length; weightIndex++)
     {
-      outputValue += hiddenValues[index] * weights[8 + index];
+      outputValue += hiddenValues2[weightIndex] * Weights[inputValues.Length * hiddenValues.Length + hiddenValues.Length * hiddenValues2.Length + weightIndex];
     }
 
     return outputValue;
@@ -44,28 +63,45 @@ public class MyBot : IChessBot
 
   /*
   Network Architecture:
-  Input: 1,
-  Hidden: 8,
+  Input: 64,
+  Hidden: 16,
+  Hidden: 4,
   Output: 1
   */
 
   public Move Think(Board board, Timer timer)
   {
-    Move[] moves = board.GetLegalMoves();
+    if (Weights == null) Weights = new float[Trainer.WeightCount];
 
-    Move bestMove = moves[new System.Random().Next(moves.Length)];
-    float bestMoveEvaluation = Inference(Evaluate(board, bestMove), Weights);
+    List<Move> moves = new List<Move>(board.GetLegalMoves());
+    List<Move> topMoves = new List<Move>();
 
-    foreach (Move move in moves)
+    for (int topMoveNumber = 0; topMoveNumber < 3; topMoveNumber++)
     {
-      float evaluation = Inference(Evaluate(board, move), Weights);
+      if (moves.Count == 0) continue;
 
-      if (evaluation <= bestMoveEvaluation) continue;
+      int bestMoveIndex = new System.Random().Next(moves.Count);
+      Move bestMove = moves[bestMoveIndex];
 
-      bestMove = move;
-      bestMoveEvaluation = evaluation;
+      float bestMoveEvaluation = Inference(board, bestMove);
+
+      for (int moveIndex = 0; moveIndex < moves.Count; moveIndex++)
+      {
+        Move move = moves[moveIndex];
+
+        float evaluation = Inference(board, move);
+
+        if (evaluation <= bestMoveEvaluation) continue;
+
+        bestMoveIndex = moveIndex;
+        bestMove = move;
+        bestMoveEvaluation = evaluation;
+      }
+
+      topMoves.Add(bestMove);
+      moves.RemoveAt(bestMoveIndex);
     }
 
-    return bestMove;
+    return topMoves[new System.Random().Next(topMoves.Count)];
   }
 }
