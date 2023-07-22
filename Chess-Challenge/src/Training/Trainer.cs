@@ -210,8 +210,7 @@ public class TrainingGame
 
 public class Trainer
 {
-  // public static int WeightCount = 624;
-  public static int WeightCount = 3104;
+  public static int WeightCount = 648;
   public static int RoundGameCount = 20;
   public static int RoundCount = 5000;
 
