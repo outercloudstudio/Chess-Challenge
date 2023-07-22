@@ -128,7 +128,7 @@ public class TrainingGame
         GameResult = _result,
         Reward = _reward / (float)_totalMoves + resultReward,
         Moves = Board.plyCount,
-        Weights = _whitePlayer.Bot != null ? ((MyBotAI)_whitePlayer.Bot).Weights : new float[0],
+        Weights = _whitePlayer.Bot != null ? ((MyBot)_whitePlayer.Bot).Weights : new float[0],
         Board = Board,
         NewBotIsWhite = _newBotIsWhite,
       };
@@ -146,7 +146,7 @@ public class TrainingGame
         GameResult = _result,
         Reward = _reward / (float)_totalMoves + resultReward,
         Moves = Board.plyCount,
-        Weights = _blackPlayer.Bot != null ? ((MyBotAI)_blackPlayer.Bot).Weights : new float[0],
+        Weights = _blackPlayer.Bot != null ? ((MyBot)_blackPlayer.Bot).Weights : new float[0],
         Board = Board,
         NewBotIsWhite = _newBotIsWhite,
       };
@@ -294,8 +294,8 @@ public class Trainer
     for (int gameIndex = 0; gameIndex < RoundGameCount; gameIndex++)
     {
       TrainingGame game = new TrainingGame(
-        new ChessPlayer(new MyBotAI() { Weights = _weightPool[gameIndex] }, ChallengeController.PlayerType.MyBot, 1000 * 60),
-        new ChessPlayer(new MyBotAI() { Weights = _oldWeightPool[new System.Random().Next(_oldWeightPool.Count)] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
+        new ChessPlayer(new MyBot() { Weights = _weightPool[gameIndex] }, ChallengeController.PlayerType.MyBot, 1000 * 60),
+        new ChessPlayer(new MyBot() { Weights = _oldWeightPool[new System.Random().Next(_oldWeightPool.Count)] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
       );
 
       Thread gameThread = new Thread(() =>

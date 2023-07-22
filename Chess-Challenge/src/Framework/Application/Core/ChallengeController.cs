@@ -207,8 +207,7 @@ namespace ChessChallenge.Application
     {
       return type switch
       {
-        // { Weights = File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Tactical Model 2 Checkpoints\\Checkpoint 99900.txt").Split('\n')[..Trainer.WeightCount].Select(float.Parse).ToArray() }
-        PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
+        PlayerType.MyBot => new ChessPlayer(new MyBot() { Weights = File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Tactical Model 2 Checkpoints\\Checkpoint 99900.txt").Split('\n')[..Trainer.WeightCount].Select(float.Parse).ToArray() }, type, GameDurationMilliseconds),
         PlayerType.TestBot => new ChessPlayer(new Bot2(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
