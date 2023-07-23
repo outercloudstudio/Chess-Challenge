@@ -1,5 +1,4 @@
 ﻿using ChessChallenge.Chess;
-using ChessChallenge.Example;
 using Raylib_cs;
 using System;
 using System.IO;
@@ -19,7 +18,9 @@ namespace ChessChallenge.Application
     {
       Human,
       MyBot,
-      TestBot
+      TestBot1,
+      TestBot2,
+      TestEvilBot,
     }
 
     // Game state
@@ -207,8 +208,10 @@ namespace ChessChallenge.Application
     {
       return type switch
       {
-        PlayerType.MyBot => new ChessPlayer(new MyBot() { Weights = File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Tactical Model 2 Checkpoints\\Checkpoint 99900.txt").Split('\n')[..Trainer.WeightCount].Select(float.Parse).ToArray() }, type, GameDurationMilliseconds),
-        PlayerType.TestBot => new ChessPlayer(new Bot2(), type, GameDurationMilliseconds),
+        PlayerType.MyBot => new ChessPlayer(new MyBot() { Weights = File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Checkpoints\\Checkpoint 10000.txt").Split('\n')[..Trainer.WeightCount].Select(float.Parse).ToArray() }, type, GameDurationMilliseconds),
+        PlayerType.TestBot1 => new ChessPlayer(new Bot1(), type, GameDurationMilliseconds),
+        PlayerType.TestBot2 => new ChessPlayer(new Bot2(), type, GameDurationMilliseconds),
+        PlayerType.TestEvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
     }

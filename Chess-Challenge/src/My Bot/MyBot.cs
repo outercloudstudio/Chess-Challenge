@@ -1,38 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
   public float[] Weights;
 
-  Dictionary<PieceType, int> _pieceIds = new Dictionary<PieceType, int>() {
-    { PieceType.Pawn, 1 },
-    { PieceType.Knight, 2 },
-    { PieceType.Bishop, 3 },
-    { PieceType.Rook, 5 },
-    { PieceType.Queen, 8 },
-    { PieceType.King, 9 },
-    { PieceType.None, 0 }
-  };
+  bool IsWhite;
 
-  Dictionary<PieceType, int> _pieceWorth = new Dictionary<PieceType, int>() {
-    { PieceType.Pawn, 1 },
-    { PieceType.Knight, 3 },
-    { PieceType.Bishop, 3 },
-    { PieceType.Rook, 5 },
-    { PieceType.Queen, 9 },
-    { PieceType.King, 10000 },
-    { PieceType.None, 0 }
-  };
-
-  float Sigmoid(float x)
+  float Weight(int index)
   {
-    return 1 / (1 + (float)Math.Exp(-x));
+    return Weights[index];
   }
 
-  float[] Layer(float[] input, int previousLayerSize, int layerSize, int layerOffser)
+  float TanH(float x)
+  {
+    return (float)Math.Tanh(x);
+  }
+
+  float[] Layer(float[] input, int previousLayerSize, int layerSize, int layerOffset, Func<float, float> activationFunction)
   {
     float[] layer = new float[layerSize];
 
@@ -40,45 +26,31 @@ public class MyBot : IChessBot
     {
       for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
       {
-        layer[nodeIndex] += input[weightIndex] * Weights[layerOffser + nodeIndex * previousLayerSize + weightIndex];
+        layer[nodeIndex] += input[weightIndex] * Weight(layerOffset + nodeIndex * previousLayerSize + weightIndex);
       }
 
-      layer[nodeIndex] = Sigmoid(layer[nodeIndex]);
+      layer[nodeIndex] = activationFunction(layer[nodeIndex] + Weight(layerOffset + layerSize * previousLayerSize + nodeIndex));
     }
 
     return layer;
   }
 
-  /*
-  Calculate the beginning material offset
-  Check for checkmates
-  Calculate the ending material offset
-  generate tactical model input
-  run tactical model
-  concat info onto tactical model output
-  run move model
-  return move model input
-  */
+  float GetPieceId(Board board, int index)
+  {
+    if (index >= 64) return 0;
+
+    Piece piece = board.GetPiece(new Square(index));
+
+    return (float)((int)piece.PieceType * ((piece.IsWhite == IsWhite) ? 1 : -1)) / 6;
+  }
+
+  int PositionToIndex(int x, int y)
+  {
+    return new Square(x, y).Index;
+  }
 
   float Inference(Board board, Move move)
   {
-    //Calculate beginning material offset
-    int materialOffset = 0;
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
-    {
-      Piece piece = board.GetPiece(new Square(squareIndex));
-
-      if (piece.IsWhite == board.IsWhiteToMove)
-      {
-        materialOffset += _pieceWorth[piece.PieceType];
-      }
-      else
-      {
-        materialOffset -= _pieceWorth[piece.PieceType];
-      }
-    }
-
     board.MakeMove(move);
 
     // Check for checkmate
@@ -89,48 +61,38 @@ public class MyBot : IChessBot
       return 9999999;
     }
 
-    //Caclulate ending material offset
-    int endMaterialOffset = 0;
+    float[] flattened = new float[16];
 
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
+    int flatteneIndex = 0;
+    for (int convolutionX = 1; convolutionX < 8; convolutionX += 2)
     {
-      Piece piece = board.GetPiece(new Square(squareIndex));
-
-      if (piece.IsWhite == board.IsWhiteToMove)
+      for (int convolutionY = 1; convolutionY < 8; convolutionY += 2)
       {
-        endMaterialOffset += _pieceWorth[piece.PieceType];
+        float[] input = new float[] {
+          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY - 1)),
+          GetPieceId(board, PositionToIndex(convolutionX, convolutionY - 1)),
+          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY - 1)),
+          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY)),
+          GetPieceId(board, PositionToIndex(convolutionX, convolutionY)),
+          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY)),
+          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY + 1)),
+          GetPieceId(board, PositionToIndex(convolutionX, convolutionY + 1)),
+          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY + 1)),
+        };
+
+        float[] convolutionHiddenLayer = Layer(input, 9, 16, 0, TanH);
+        flattened[flatteneIndex] = Layer(convolutionHiddenLayer, 16, 1, 9 * 16 + 16, TanH)[0];
+
+        flatteneIndex++;
       }
-      else
-      {
-        endMaterialOffset -= _pieceWorth[piece.PieceType];
-      }
-    }
-
-    float[] tacticalModelInput = new float[16];
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
-    {
-      Square square = new Square(squareIndex);
-      Piece piece = board.GetPiece(square);
-      int squareValue = (piece.IsWhite == board.IsWhiteToMove) ? _pieceIds[piece.PieceType] : -_pieceIds[piece.PieceType];
-
-      int x = squareIndex % 8 / 2;
-      int y = squareIndex / 8 / 2;
-
-      tacticalModelInput[x * 4 + y] += squareValue;
     }
 
     board.UndoMove(move);
 
-    float[] tacticalModelHidden1 = Layer(tacticalModelInput, 16, 16, 0);
-    float[] tacticalModelHidden2 = Layer(tacticalModelInput, 16, 16, 16 * 16);
-    float[] tacticalModelOutput = Layer(tacticalModelInput, 16, 3, 16 * 16 + 16 * 16);
+    float[] hiddenLayer = Layer(flattened, 16, 16, 9 * 16 + 16 + 16 * 1 + 1, TanH);
+    float[] OutputLayer = Layer(flattened, 16, 1, 9 * 16 + 16 + 16 * 1 + 1 + 16 * 16 + 16, (x) => x);
 
-    float[] moveModelInput = tacticalModelOutput.Concat(new float[] { move.StartSquare.File, move.StartSquare.Rank, move.TargetSquare.File, move.TargetSquare.Rank, (int)move.MovePieceType, materialOffset, endMaterialOffset }).ToArray();
-    float[] moveModelHidden = Layer(moveModelInput, 10, 8, 16 * 16 + 16 * 16 + 16 * 3);
-    float[] moveModelOutput = Layer(moveModelHidden, 8, 1, 16 * 16 + 16 * 16 + 16 * 3 + 10 * 8);
-
-    return moveModelOutput[0];
+    return OutputLayer[0];
   }
 
   struct MoveChoice
@@ -141,6 +103,8 @@ public class MyBot : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
+    IsWhite = board.IsWhiteToMove;
+
     if (Weights == null) Weights = new float[Trainer.WeightCount];
 
     List<Move> moves = new List<Move>(board.GetLegalMoves());
@@ -157,6 +121,6 @@ public class MyBot : IChessBot
 
     moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
 
-    return moveChoices[new System.Random().Next(0, Math.Min(moveChoices.Count, 1))].Move;
+    return moveChoices[0].Move;
   }
 }

@@ -210,8 +210,9 @@ public class TrainingGame
 
 public class Trainer
 {
-  public static int WeightCount = 648;
-  public static int RoundGameCount = 20;
+  //                              Conv 1        Conv 2       Inf 1          Inf 2
+  public static int WeightCount = 9 * 16 + 16 + 16 * 1 + 1 + 16 * 16 + 16 + 16 * 1 + 1;
+  public static int RoundGameCount = 40;
   public static int RoundCount = 100000 + 1;
 
   public static float Mutation = 4;
@@ -293,9 +294,15 @@ public class Trainer
 
     for (int gameIndex = 0; gameIndex < RoundGameCount; gameIndex++)
     {
+      List<Func<ChessChallenge.API.IChessBot>> possibleOponents = new List<Func<ChessChallenge.API.IChessBot>>() {
+        () => new MyBot() { Weights = _oldWeightPool[new System.Random().Next(_oldWeightPool.Count)] },
+        // () => new Frederox.AlphaBeta.AlphaBeta(),
+        () => new EvilBot(),
+      };
+
       TrainingGame game = new TrainingGame(
         new ChessPlayer(new MyBot() { Weights = _weightPool[gameIndex] }, ChallengeController.PlayerType.MyBot, 1000 * 60),
-        new ChessPlayer(new MyBot() { Weights = _oldWeightPool[new System.Random().Next(_oldWeightPool.Count)] }, ChallengeController.PlayerType.MyBot, 1000 * 60)
+        new ChessPlayer(possibleOponents[new System.Random().Next(possibleOponents.Count)](), ChallengeController.PlayerType.MyBot, 1000 * 60)
       );
 
       Thread gameThread = new Thread(() =>
@@ -375,21 +382,25 @@ public class Trainer
 
     foreach (float[] weights in _winnerWeightPool)
     {
-      for (int i = 0; i < weights.Length; i++)
-      {
-        weights[i] += (float)(new Random().NextDouble() * Mutation * 2 - Mutation);
-      }
-
       _weightPool.Add(weights);
 
-      for (int variation = 0; variation < 3; variation++)
+      for (int variation = 0; variation < 2; variation++)
       {
-        int spliceStart = new Random().Next(0, WeightCount - 1);
-        int spliceEnd = new Random().Next(spliceStart, WeightCount);
+        float[] newWeights = new float[WeightCount];
 
-        float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
+        for (int i = 0; i < WeightCount; i++)
+        {
+          newWeights[i] = weights[i];
+        }
 
-        float[] newWeights = weights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(weights[spliceEnd..]).ToArray();
+        for (int splices = 0; splices < new System.Random().Next(0, 4); splices++)
+        {
+          int spliceStart = new Random().Next(0, WeightCount - 1);
+          int spliceEnd = new Random().Next(spliceStart, WeightCount);
+
+          float[] otherWeights = _winnerWeightPool[new Random().Next(0, _winnerWeightPool.Count)];
+          newWeights = newWeights[..spliceStart].Concat(otherWeights[spliceStart..spliceEnd]).Concat(newWeights[spliceEnd..]).ToArray();
+        }
 
         for (int i = 0; i < newWeights.Length; i++)
         {
@@ -398,6 +409,14 @@ public class Trainer
 
         _weightPool.Add(newWeights);
       }
+
+      float[] randomWeight = new float[WeightCount];
+      for (int i = 0; i < WeightCount; i++)
+      {
+        randomWeight[i] = (float)(new Random().NextDouble() * 2 - 1);
+      }
+
+      _weightPool.Add(randomWeight);
     }
 
     Console.WriteLine("Finished training round " + roundNumber + ". Average reward: " + averageReward);
