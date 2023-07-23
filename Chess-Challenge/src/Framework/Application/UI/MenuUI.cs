@@ -46,6 +46,10 @@ namespace ChessChallenge.Application
       {
         new Trainer().StartTraining(controller.boardUI);
       }
+      if (NextButtonInRow("Generate Dataset", ref buttonPos, spacing, buttonSize))
+      {
+        Trainer.GenerateDataset();
+      }
       if (NextButtonInRow("Save Games", ref buttonPos, spacing, buttonSize))
       {
         string pgns = controller.AllPGNs;
