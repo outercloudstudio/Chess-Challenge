@@ -121,6 +121,13 @@ public class MyBot : IChessBot
 
     moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
 
+    Console.WriteLine("Evaluations: ");
+
+    foreach (MoveChoice choice in moveChoices)
+    {
+      Console.WriteLine(choice.Move + " " + choice.Evaluation);
+    }
+
     return moveChoices[0].Move;
   }
 }

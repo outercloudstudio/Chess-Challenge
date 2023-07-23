@@ -25,17 +25,17 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
       }
-      if (NextButtonInRow("MyBot vs Test Bot 1", ref buttonPos, spacing, buttonSize))
-      {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot1);
-      }
-      if (NextButtonInRow("MyBot vs Test Bot 2", ref buttonPos, spacing, buttonSize))
-      {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot2);
-      }
+      // if (NextButtonInRow("MyBot vs Test Bot 1", ref buttonPos, spacing, buttonSize))
+      // {
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot1);
+      // }
+      // if (NextButtonInRow("MyBot vs Test Bot 2", ref buttonPos, spacing, buttonSize))
+      // {
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot2);
+      // }
       if (NextButtonInRow("MyBot vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestEvilBot);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
       }
 
 
