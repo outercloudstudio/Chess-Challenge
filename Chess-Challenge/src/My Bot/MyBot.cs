@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
   public float[] Weights;
+
+  public MyBot()
+  {
+    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\Model1.txt").Split('\n');
+
+    Weights = stringWeights[..(stringWeights.Length - 1)].Select(float.Parse).ToArray();
+
+    Console.WriteLine("Weights: " + Weights.Length);
+  }
 
   bool IsWhite;
 
@@ -53,7 +63,27 @@ public class MyBot : IChessBot
   {
     board.MakeMove(move);
 
-    // Check for checkmate
+    float[] input = new float[64];
+    for (int x = 0; x < 8; x++)
+    {
+      for (int y = 0; y < 8; y++)
+      {
+        if (IsWhite)
+        {
+          input[x * 8 + y] = GetPieceId(board, PositionToIndex(x, y));
+        }
+        else
+        {
+          input[(7 - x) * 8 + (7 - y)] = GetPieceId(board, PositionToIndex(x, y));
+        }
+      }
+    }
+
+    float[] hiddenLayer1 = Layer(input, 64, 16, 0, TanH);
+    float[] hiddenLayer2 = Layer(hiddenLayer1, 16, 16, 64 * 16 + 16, TanH);
+    float[] hiddenLayer3 = Layer(hiddenLayer2, 16, 16, 16 * 16 + 16 + 16 * 16 + 16, TanH);
+    float[] output = Layer(hiddenLayer3, 16, 1, 16 * 16 + 16 + 16 * 16 + 16 + 16 * 1 + 1, (x) => x);
+
     if (board.IsInCheckmate())
     {
       board.UndoMove(move);
@@ -61,38 +91,38 @@ public class MyBot : IChessBot
       return 9999999;
     }
 
-    float[] flattened = new float[16];
+    // float[] flattened = new float[16];
 
-    int flatteneIndex = 0;
-    for (int convolutionX = 1; convolutionX < 8; convolutionX += 2)
-    {
-      for (int convolutionY = 1; convolutionY < 8; convolutionY += 2)
-      {
-        float[] input = new float[] {
-          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY - 1)),
-          GetPieceId(board, PositionToIndex(convolutionX, convolutionY - 1)),
-          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY - 1)),
-          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY)),
-          GetPieceId(board, PositionToIndex(convolutionX, convolutionY)),
-          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY)),
-          GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY + 1)),
-          GetPieceId(board, PositionToIndex(convolutionX, convolutionY + 1)),
-          GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY + 1)),
-        };
+    // int flatteneIndex = 0;
+    // for (int convolutionX = 1; convolutionX < 8; convolutionX += 2)
+    // {
+    //   for (int convolutionY = 1; convolutionY < 8; convolutionY += 2)
+    //   {
+    //     float[] input = new float[] {
+    //       GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY - 1)),
+    //       GetPieceId(board, PositionToIndex(convolutionX, convolutionY - 1)),
+    //       GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY - 1)),
+    //       GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY)),
+    //       GetPieceId(board, PositionToIndex(convolutionX, convolutionY)),
+    //       GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY)),
+    //       GetPieceId(board, PositionToIndex(convolutionX - 1, convolutionY + 1)),
+    //       GetPieceId(board, PositionToIndex(convolutionX, convolutionY + 1)),
+    //       GetPieceId(board, PositionToIndex(convolutionX + 1, convolutionY + 1)),
+    //     };
 
-        float[] convolutionHiddenLayer = Layer(input, 9, 16, 0, TanH);
-        flattened[flatteneIndex] = Layer(convolutionHiddenLayer, 16, 1, 9 * 16 + 16, TanH)[0];
+    //     float[] convolutionHiddenLayer = Layer(input, 9, 16, 0, TanH);
+    //     flattened[flatteneIndex] = Layer(convolutionHiddenLayer, 16, 1, 9 * 16 + 16, TanH)[0];
 
-        flatteneIndex++;
-      }
-    }
+    //     flatteneIndex++;
+    //   }
+    // }
 
     board.UndoMove(move);
 
-    float[] hiddenLayer = Layer(flattened, 16, 16, 9 * 16 + 16 + 16 * 1 + 1, TanH);
-    float[] OutputLayer = Layer(flattened, 16, 1, 9 * 16 + 16 + 16 * 1 + 1 + 16 * 16 + 16, (x) => x);
+    // float[] hiddenLayer = Layer(flattened, 16, 16, 9 * 16 + 16 + 16 * 1 + 1, TanH);
+    // float[] OutputLayer = Layer(flattened, 16, 1, 9 * 16 + 16 + 16 * 1 + 1 + 16 * 16 + 16, (x) => x);
 
-    return OutputLayer[0];
+    return output[0];
   }
 
   struct MoveChoice
@@ -121,12 +151,12 @@ public class MyBot : IChessBot
 
     moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
 
-    Console.WriteLine("Evaluations: ");
+    // Console.WriteLine("Evaluations: ");
 
-    foreach (MoveChoice choice in moveChoices)
-    {
-      Console.WriteLine(choice.Move + " " + choice.Evaluation);
-    }
+    // foreach (MoveChoice choice in moveChoices)
+    // {
+    //   Console.WriteLine(choice.Move + " " + choice.Evaluation);
+    // }
 
     return moveChoices[0].Move;
   }
