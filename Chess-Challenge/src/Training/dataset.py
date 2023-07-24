@@ -17,9 +17,9 @@ def positionToTensor(fen):
       piece = board.piece_at(square=chess.square(x, y))
 
       if piece == None:
-        tensor[0][x][y] = 0
+        tensor[0][7 - y][7 - x] = 0
       else:
-        tensor[0][x][y] = piece.piece_type / 6 * (1 if piece.color == chess.WHITE else -1)
+        tensor[0][7 - y][7 - x] = piece.piece_type * (1 if piece.color == chess.WHITE else -1)
 
   return tensor
 

@@ -152,12 +152,21 @@ public class Trainer
 
   public void StartTraining(BoardUI boardUI)
   {
-    TrainingGame game = new TrainingGame(
-      new ChessPlayer(new Frederox.AlphaBeta.AlphaBeta(), ChallengeController.PlayerType.MyBot, 1000 * 60),
-      new ChessPlayer(new Frederox.AlphaBeta.AlphaBeta(), ChallengeController.PlayerType.MyBot, 1000 * 60)
-    );
+    MyBot bot = new MyBot();
 
-    game.Start();
+    Board board = new Board();
+    board.LoadPosition("rnbq3r/pp2pkbp/2pp1np1/8/3PP3/5N2/PPP2PPP/RNBQK2R w KQ - 0 7");
+
+    ChessChallenge.API.Board botBoard = new ChessChallenge.API.Board(board);
+
+    bot.Think(botBoard, new ChessChallenge.API.Timer(1000 * 60));
+
+    // TrainingGame game = new TrainingGame(
+    //   new ChessPlayer(new Frederox.AlphaBeta.AlphaBeta(), ChallengeController.PlayerType.MyBot, 1000 * 60),
+    //   new ChessPlayer(new Frederox.AlphaBeta.AlphaBeta(), ChallengeController.PlayerType.MyBot, 1000 * 60)
+    // );
+
+    // game.Start();
 
     // new Thread(() =>
     // {
