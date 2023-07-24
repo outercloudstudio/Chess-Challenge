@@ -10,7 +10,7 @@ from dataset import PositionDataset, positionToTensor
 training_data = PositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Evaluations Medium.txt')
 test_data = PositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Evaluations Small.txt')
 
-batch_size = 64
+batch_size = 32
 
 train_dataloader = DataLoader(training_data, batch_size=batch_size, shuffle=True)
 test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
@@ -30,7 +30,7 @@ model = EvaluationNeuralNetwork().to(device)
 # model.load_state_dict(torch.load("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 3.pth"))
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 
 def train(dataloader, model, loss_fn, optimizer):
   size = len(dataloader.dataset)
@@ -71,7 +71,7 @@ def test(dataloader, model, loss_fn):
 
     print(f"Test Error: Avg loss: {test_loss:>8f} \n")
 
-epochs = 5
+epochs = 1
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataloader, model, loss_fn, optimizer)

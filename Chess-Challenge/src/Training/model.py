@@ -4,24 +4,29 @@ class EvaluationNeuralNetwork(nn.Module):
   def __init__(self):
     super().__init__()
 
-    self.flatten = nn.Flatten(1)
-
     self.linear_stack = nn.Sequential(
-      nn.Linear(64, 16),
+      nn.Conv2d(1, 4, 3, 1, 1),
+      nn.Tanh(),
+      nn.Conv2d(4, 1, 3, 1, 1),
       nn.Tanh(),
 
-      nn.Linear(16, 16),
+      nn.AvgPool2d(2, 2),
+
+      nn.Flatten(1),
+
+      nn.Linear(16, 32),
       nn.Tanh(),
 
-      nn.Linear(16, 16),
+      nn.Linear(32, 16),
       nn.Tanh(),
 
-      nn.Linear(16, 1)
+      nn.Linear(16, 8),
+      nn.Tanh(),
+
+      nn.Linear(8, 1)
     )
 
   def forward(self, x):
-    x = self.flatten(x)
-
     logits = self.linear_stack(x)
 
     return logits

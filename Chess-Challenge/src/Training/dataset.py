@@ -10,16 +10,16 @@ def getEvaluation(entry):
 
 def positionToTensor(fen):
   board = chess.Board(fen)
-  tensor = torch.zeros((8, 8), dtype=torch.float32)
+  tensor = torch.zeros((1, 8, 8), dtype=torch.float32)
   
   for x in range(8):
     for y in range(8):
       piece = board.piece_at(square=chess.square(x, y))
 
       if piece == None:
-        tensor[x][y] = 0
+        tensor[0][x][y] = 0
       else:
-        tensor[x][y] = piece.piece_type / 6 * (1 if piece.color == chess.WHITE else -1)
+        tensor[0][x][y] = piece.piece_type / 6 * (1 if piece.color == chess.WHITE else -1)
 
   return tensor
 
