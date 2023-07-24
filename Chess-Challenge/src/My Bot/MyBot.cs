@@ -9,14 +9,12 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\Model1.txt").Split('\n');
+    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 3.txt").Split('\n');
 
     Weights = stringWeights[..(stringWeights.Length - 1)].Select(float.Parse).ToArray();
 
     Console.WriteLine("Weights: " + Weights.Length);
   }
-
-  bool IsWhite;
 
   float Weight(int index)
   {
@@ -51,7 +49,7 @@ public class MyBot : IChessBot
 
     Piece piece = board.GetPiece(new Square(index));
 
-    return (float)((int)piece.PieceType * ((piece.IsWhite == IsWhite) ? 1 : -1)) / 6;
+    return (float)((int)piece.PieceType * (piece.IsWhite ? 1 : -1)) / 6;
   }
 
   int PositionToIndex(int x, int y)
@@ -68,21 +66,14 @@ public class MyBot : IChessBot
     {
       for (int y = 0; y < 8; y++)
       {
-        if (IsWhite)
-        {
-          input[x * 8 + y] = GetPieceId(board, PositionToIndex(x, y));
-        }
-        else
-        {
-          input[(7 - x) * 8 + (7 - y)] = GetPieceId(board, PositionToIndex(x, y));
-        }
+        input[x * 8 + y] = GetPieceId(board, PositionToIndex(x, y));
       }
     }
 
     float[] hiddenLayer1 = Layer(input, 64, 16, 0, TanH);
     float[] hiddenLayer2 = Layer(hiddenLayer1, 16, 16, 64 * 16 + 16, TanH);
-    float[] hiddenLayer3 = Layer(hiddenLayer2, 16, 16, 16 * 16 + 16 + 16 * 16 + 16, TanH);
-    float[] output = Layer(hiddenLayer3, 16, 1, 16 * 16 + 16 + 16 * 16 + 16 + 16 * 1 + 1, (x) => x);
+    float[] hiddenLayer3 = Layer(hiddenLayer2, 16, 16, 64 * 16 + 16 + 16 * 16 + 16, TanH);
+    float[] output = Layer(hiddenLayer3, 16, 1, 64 * 16 + 16 + 16 * 16 + 16 + 16 * 1 + 1, (x) => x);
 
     if (board.IsInCheckmate())
     {
@@ -133,8 +124,6 @@ public class MyBot : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
-    IsWhite = board.IsWhiteToMove;
-
     if (Weights == null) Weights = new float[Trainer.WeightCount];
 
     List<Move> moves = new List<Move>(board.GetLegalMoves());
@@ -149,14 +138,19 @@ public class MyBot : IChessBot
       });
     }
 
-    moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
+    if (board.IsWhiteToMove)
+    {
+      moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
+    }
+    else
+    {
+      moveChoices.Sort((a, b) => a.Evaluation.CompareTo(b.Evaluation));
+    }
 
-    // Console.WriteLine("Evaluations: ");
-
-    // foreach (MoveChoice choice in moveChoices)
-    // {
-    //   Console.WriteLine(choice.Move + " " + choice.Evaluation);
-    // }
+    foreach (MoveChoice moveChoice in moveChoices)
+    {
+      Console.WriteLine(moveChoice.Move + " " + moveChoice.Evaluation);
+    }
 
     return moveChoices[0].Move;
   }

@@ -63,6 +63,17 @@ public class Trainer
 
     process.StandardInput.WriteLine("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\eval.exe");
 
+    bool ready = false;
+
+    process.OutputDataReceived += (sender, args) =>
+    {
+      if (args.Data == "uciok") ready = true;
+    };
+
+    process.StandardInput.WriteLine("uci");
+
+    while (!ready) { }
+
     return process;
   }
 
@@ -75,19 +86,28 @@ public class Trainer
 
   public static float Evaluate(Process process, int depth, Board board)
   {
+    bool ready = false;
     bool complete = false;
     float evaluation = 0;
 
     process.OutputDataReceived += (sender, args) =>
     {
-      if (args.Data.StartsWith("info depth")) evaluation = float.Parse(args.Data.Split(" ")[9]) / 100;
+      if (args.Data == "readyok") ready = true;
+
+      if (args.Data.StartsWith("info depth") && args.Data.Split(" ").Length > 9) evaluation = float.Parse(args.Data.Split(" ")[9]) / 100;
 
       if (!args.Data.StartsWith("bestmove ")) return;
 
       complete = true;
     };
 
-    process.StandardInput.WriteLine("position " + FenUtility.CurrentFen(board));
+    process.StandardInput.WriteLine("ucinewgame");
+
+    process.StandardInput.WriteLine("isready");
+
+    while (!ready) { }
+
+    process.StandardInput.WriteLine("position fen " + FenUtility.CurrentFen(board));
     process.StandardInput.WriteLine("go depth " + depth);
 
     while (!complete) { }
@@ -99,7 +119,7 @@ public class Trainer
   {
     Process process = CreateEvaluationProcess();
 
-    string[] fens = File.ReadAllLines("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens.txt");
+    string[] fens = File.ReadAllLines("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\Positions Medium.txt");
 
     string output = "";
 
@@ -110,18 +130,24 @@ public class Trainer
       Board board = new Board();
       board.LoadPosition(fen);
 
-      float evaluation = Evaluate(process, 20, board);
+      float evaluation = Evaluate(process, 5, board);
 
       output += fen + " | " + evaluation + "\n";
 
       Console.WriteLine("Evaluated " + index + " / " + fens.Length);
 
       index++;
+
+      if (index % 1000 == 0)
+      {
+        EndEvaluationProcess(process);
+        process = CreateEvaluationProcess();
+      }
     }
 
     EndEvaluationProcess(process);
 
-    File.WriteAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\dataset.txt", output[..(output.Length - 1)]);
+    File.WriteAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Evaluations Medium.txt", output[..(output.Length - 1)]);
   }
 
   public void StartTraining(BoardUI boardUI)

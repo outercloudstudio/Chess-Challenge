@@ -10,21 +10,21 @@ def getEvaluation(entry):
 
 def positionToTensor(fen):
   board = chess.Board(fen)
-  tensor = torch.zeros((64), dtype=torch.float32)
+  tensor = torch.zeros((8, 8), dtype=torch.float32)
   
   for x in range(8):
     for y in range(8):
       piece = board.piece_at(square=chess.square(x, y))
 
       if piece == None:
-        tensor[x * 8 + y] = 0
+        tensor[x][y] = 0
       else:
-        tensor[x * 8 + y] = piece.piece_type / 6 * (1 if piece.color == chess.WHITE else -1)
+        tensor[x][y] = piece.piece_type / 6 * (1 if piece.color == chess.WHITE else -1)
 
   return tensor
 
 def evalutionToTensor(evaluation):
-  return torch.tensor(evaluation, dtype=torch.float32)
+  return torch.tensor([evaluation], dtype=torch.float32)
 
 class PositionDataset(Dataset):
   def __init__(self, dataset_file, transform=positionToTensor, target_transform=evalutionToTensor):
