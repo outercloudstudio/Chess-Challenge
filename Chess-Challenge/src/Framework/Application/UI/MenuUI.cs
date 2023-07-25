@@ -17,27 +17,27 @@ namespace ChessChallenge.Application
       float breakSpacing = spacing * 0.6f;
 
       // Game Buttons
-      if (NextButtonInRow("Human vs MyBot", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("Human vs ARCNET", ref buttonPos, spacing, buttonSize))
       {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
-      if (NextButtonInRow("MyBot vs MyBot", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET vs ARCNET", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET, ChallengeController.PlayerType.ARCNET);
       }
-      // if (NextButtonInRow("MyBot vs Test Bot 1", ref buttonPos, spacing, buttonSize))
+      // if (NextButtonInRow("ARCNET vs Test Bot 1", ref buttonPos, spacing, buttonSize))
       // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot1);
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET, ChallengeController.PlayerType.TestBot1);
       // }
-      // if (NextButtonInRow("MyBot vs Test Bot 2", ref buttonPos, spacing, buttonSize))
+      // if (NextButtonInRow("ARCNET vs Test Bot 2", ref buttonPos, spacing, buttonSize))
       // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.TestBot2);
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET, ChallengeController.PlayerType.TestBot2);
       // }
-      if (NextButtonInRow("MyBot vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET, ChallengeController.PlayerType.EvilBot);
       }
 
 
