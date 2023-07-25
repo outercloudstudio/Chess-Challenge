@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class MyBot : IChessBot
+public class ARCNET : IChessBot
 {
   public float[] Weights;
 
-  public MyBot()
+  public ARCNET()
   {
     string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 5.txt").Split('\n');
 

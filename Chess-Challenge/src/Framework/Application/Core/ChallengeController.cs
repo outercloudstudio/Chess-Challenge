@@ -194,13 +194,13 @@ namespace ChessChallenge.Application
         boardUI.SetPerspective(PlayerWhite.IsHuman);
         HumanWasWhiteLastGame = PlayerWhite.IsHuman;
       }
-      else if (PlayerWhite.Bot is MyBot && PlayerBlack.Bot is MyBot)
+      else if (PlayerWhite.Bot is ARCNET && PlayerBlack.Bot is ARCNET)
       {
         boardUI.SetPerspective(true);
       }
       else
       {
-        boardUI.SetPerspective(PlayerWhite.Bot is MyBot);
+        boardUI.SetPerspective(PlayerWhite.Bot is ARCNET);
       }
     }
 
@@ -208,7 +208,7 @@ namespace ChessChallenge.Application
     {
       return type switch
       {
-        PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
+        PlayerType.MyBot => new ChessPlayer(new ARCNET(), type, GameDurationMilliseconds),
         PlayerType.EvilBot => new ChessPlayer(new Frederox.AlphaBeta.AlphaBeta(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };

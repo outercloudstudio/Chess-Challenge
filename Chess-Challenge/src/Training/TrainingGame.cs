@@ -115,16 +115,12 @@ public class TrainingGame
     {
       float resultReward = 0;
 
-      if (Arbiter.IsWhiteWinsResult(_result)) resultReward += Trainer.WinReward;
-      if (Arbiter.IsBlackWinsResult(_result)) resultReward -= Trainer.WinReward;
-      if (Arbiter.IsDrawResult(_result)) resultReward += Trainer.DrawReward;
-
       return new Result
       {
         GameResult = _result,
         Reward = _reward / (float)_totalMoves + resultReward,
         Moves = Board.plyCount,
-        Weights = _whitePlayer.Bot != null ? ((MyBot)_whitePlayer.Bot).Weights : new float[0],
+        Weights = _whitePlayer.Bot != null ? ((ARCNET)_whitePlayer.Bot).Weights : new float[0],
         Board = Board,
         NewBotIsWhite = _newBotIsWhite,
       };
@@ -133,16 +129,12 @@ public class TrainingGame
     {
       float resultReward = 0;
 
-      if (Arbiter.IsBlackWinsResult(_result)) resultReward += Trainer.WinReward;
-      if (Arbiter.IsWhiteWinsResult(_result)) resultReward -= Trainer.WinReward;
-      if (Arbiter.IsDrawResult(_result)) resultReward += Trainer.DrawReward;
-
       return new Result
       {
         GameResult = _result,
         Reward = _reward / (float)_totalMoves + resultReward,
         Moves = Board.plyCount,
-        Weights = _blackPlayer.Bot != null ? ((MyBot)_blackPlayer.Bot).Weights : new float[0],
+        Weights = _blackPlayer.Bot != null ? ((ARCNET)_blackPlayer.Bot).Weights : new float[0],
         Board = Board,
         NewBotIsWhite = _newBotIsWhite,
       };
@@ -179,15 +171,6 @@ public class TrainingGame
     Board.MakeMove(move, false);
 
     OnMoveMade?.Invoke(new Board(Board), move);
-
-    if (isMyMove)
-    {
-      _reward += Trainer.Reward(Board, move) - Trainer.OponentReward(Board, move);
-    }
-    else
-    {
-      _reward -= Trainer.Reward(Board, move) - Trainer.OponentReward(Board, move);
-    }
 
     GameResult result = Arbiter.GetGameState(Board);
 

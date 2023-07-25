@@ -1,5 +1,8 @@
 import chess
 
 class ARCNET():
-  def think():
+  def evaluate(board):
+    return 0
+
+  def think(board):
     return 0

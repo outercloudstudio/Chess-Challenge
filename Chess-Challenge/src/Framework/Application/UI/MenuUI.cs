@@ -7,6 +7,8 @@ namespace ChessChallenge.Application
 {
   public static class MenuUI
   {
+    private static Trainer s_Trainer;
+
     public static void DrawButtons(ChallengeController controller)
     {
       Vector2 buttonPos = UIHelper.Scale(new Vector2(260, 100));
@@ -42,13 +44,14 @@ namespace ChessChallenge.Application
       // Page buttons
       buttonPos.Y += breakSpacing;
 
-      if (NextButtonInRow("Train", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("Start Training Server", ref buttonPos, spacing, buttonSize))
       {
-        new Trainer().StartTraining(controller.boardUI);
-      }
-      if (NextButtonInRow("Generate Dataset", ref buttonPos, spacing, buttonSize))
-      {
-        Trainer.GenerateDataset();
+        if (s_Trainer != null)
+          s_Trainer.StopServer();
+
+        s_Trainer = new Trainer();
+
+        s_Trainer.StartServer();
       }
       if (NextButtonInRow("Save Games", ref buttonPos, spacing, buttonSize))
       {
