@@ -1,3 +1,4 @@
+import chess
 import torch
 from torch import nn
 from dataset import positionToTensor
@@ -22,35 +23,48 @@ model.load_state_dict(
     )
 )
 
-fen = "rnbq3r/pp2pkbp/2pp1np1/8/3PP3/5N2/PPP2PPP/RNBQK2R w KQ - 0 7"
-
 model.eval()
 
 with torch.no_grad():
-    print(model(positionToTensor(fen).to(device)).item())
+    board = chess.Board()
+
+    while board.outcome() == None:
+        if board.turn == chess.WHITE:
+            print(board)
+
+            # move = input("Move > ")
+
+            # board.push_uci(move)
+
+            # continue
+
+        moves = list(board.legal_moves)
+
+        evaluations = []
+
+        for move in moves:
+            board.push(move)
+
+            prediction = model(positionToTensor(board.fen()).to(device))
+            predictedEvaluation = prediction.item()
+
+            evaluations.append(predictedEvaluation)
+
+            board.pop()
+
+        bestEvaluation = max(evaluations)
+        if board.turn == chess.BLACK:
+            bestEvaluation = min(evaluations)
+
+        bestMove = moves[evaluations.index(bestEvaluation)]
+        board.push(bestMove)
+
+    print(board)
+    print(board.outcome())
 
 weightCount = 0
 
 weightOutput = ""
-
-# for name, param in model.named_parameters():
-#     print(name)
-
-# print(list(model.parameters())[1])
-# print(list(model.parameters())[1].shape)
-
-convt1 = nn.Conv2d(1, 16, 3, 1, 1)
-convt1.weight = list(model.parameters())[0]
-convt1.bias = list(model.parameters())[1]
-
-res = convt1(positionToTensor(fen).to(device))
-
-print(res)
-print(res.shape)
-
-# print(convt1.shape)
-# convt2 = nn.Conv2d(16, 8, 3, 1, 1)(convt1)
-# print(convt2.shape)
 
 for param in model.parameters():
     weightCount += param.data.flatten().size()[0]

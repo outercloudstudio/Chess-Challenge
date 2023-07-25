@@ -110,7 +110,7 @@ public class MyBot : IChessBot
       {
         for (int x = 0; x < imageWidth; x += 1)
         {
-          float bias = Weight(weightOffset + outputChannels * 3 * 3 + outputChannel);
+          float bias = Weight(weightOffset + inputChannels * outputChannels * 3 * 3 + outputChannel);
           float sum = 0;
 
           for (int inputChannel = 0; inputChannel < inputChannels; inputChannel++)
@@ -132,7 +132,7 @@ public class MyBot : IChessBot
                   Console.WriteLine("Error reading input at " + inputChannel + " " + (y + kernalY) + " " + (x + kernalX) + " from dimensions " + input.GetLength(0) + " " + input.GetLength(1) + " " + input.GetLength(2));
                 }
 
-                float weight = Weight(weightOffset + 3 * 3 * outputChannel + 3 * (kernalY + 1) + (kernalX + 1));
+                float weight = Weight(weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kernalY + 1) + (kernalX + 1));
 
                 kernalValue += pixelValue * weight;
               }
@@ -146,7 +146,7 @@ public class MyBot : IChessBot
       }
     }
 
-    weightOffset += outputChannels * 3 * 3 + outputChannels;
+    weightOffset += inputChannels * outputChannels * 3 * 3 + outputChannels;
 
     return output;
   }
@@ -212,7 +212,7 @@ public class MyBot : IChessBot
 
     Piece piece = board.GetPiece(new Square(index));
 
-    return (float)((int)piece.PieceType * (piece.IsWhite ? 1 : -1)) / 6;
+    return (float)((int)piece.PieceType * (piece.IsWhite ? 1 : -1));
   }
 
   int PositionToIndex(int x, int y)
@@ -237,15 +237,10 @@ public class MyBot : IChessBot
     int weightOffset = 0;
 
     float[,,] convolutionLayer1 = Convolution(input, 1, 16, ref weightOffset, ReLU);
-
-    Console.WriteLine(convolutionLayer1[0, 0, 0]);
-    Console.WriteLine(convolutionLayer1[0, 0, 1]);
-    Console.WriteLine(convolutionLayer1[0, 0, 2]);
-
     float[,,] convolutionLayer2 = Convolution(convolutionLayer1, 16, 8, ref weightOffset, ReLU);
     float[,,] convolutionLayer3 = Convolution(convolutionLayer2, 8, 4, ref weightOffset, ReLU);
 
-    float[,,] downscaleLayer = Downscale(convolutionLayer1);
+    float[,,] downscaleLayer = Downscale(convolutionLayer3);
 
     float[] flattenLayer = Flatten(downscaleLayer);
 
