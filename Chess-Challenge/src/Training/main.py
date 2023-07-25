@@ -116,7 +116,7 @@ def searchMove(board, move, depth):
   return bestMoveEvaluation
 
 while True:
-  if(board.outcome().winner != None):
+  if(board.outcome() != None):
     board = chess.Board(fens[random.randint(0, len(fens) - 1)])
     predictions = []
 
@@ -139,6 +139,26 @@ while True:
   # else:
   for move in moves:
     board.push(move)
+
+    if(board.is_repetition(2)):
+      board.pop()
+
+      moveChoices.append({
+        "move": move,
+        "evaluation": torch.tensor([0, 1], dtype=torch.float32) if board.turn == chess.WHITE else torch.tensor([1, 0], dtype=torch.float32)
+      })
+
+      continue
+
+    if(board.is_variant_draw()):
+      board.pop()
+
+      moveChoices.append({
+        "move": move,
+        "evaluation": torch.tensor([0, 1], dtype=torch.float32) if board.turn == chess.WHITE else torch.tensor([1, 0], dtype=torch.float32)
+      })
+
+      continue
 
     if board.is_checkmate():
       board.pop()
@@ -210,4 +230,5 @@ while True:
 
   predictions = []
 
-  board = chess.Board(fens[random.randint(0, len(fens) - 1)])
+  # board = chess.Board(fens[random.randint(0, len(fens) - 1)])
+  board = chess.Board()

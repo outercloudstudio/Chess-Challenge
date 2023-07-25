@@ -7,15 +7,13 @@ public class ARCNET : IChessBot
 {
   public float[] Weights;
 
-  bool _isWhite;
-
   public ARCNET()
   {
-    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 5.txt").Split('\n');
+    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 7.txt").Split('\n');
 
     Weights = stringWeights[..(stringWeights.Length - 1)].Select(float.Parse).ToArray();
 
-    Console.WriteLine("Weights: " + Weights.Length);
+    Console.WriteLine("ARCNET loaded! Weights: " + Weights.Length);
   }
 
   float Weight(int index)
@@ -23,106 +21,9 @@ public class ARCNET : IChessBot
     return Weights[index];
   }
 
-  float TanH(float x)
+  float Sigmoid(float x)
   {
-    return (float)Math.Tanh(x);
-  }
-
-  float ReLU(float x)
-  {
-    return Math.Max(0, x);
-  }
-
-  float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels, ref int weightOffset, Func<float, float> activationFunction)
-  {
-    int imageHeight = input.GetLength(1);
-    int imageWidth = input.GetLength(2);
-
-    float[,,] output = new float[outputChannels, imageHeight, imageWidth];
-
-    int channels = input.GetLength(0);
-
-    for (int outputChannel = 0; outputChannel < outputChannels; outputChannel++)
-    {
-      for (int y = 0; y < imageHeight; y += 1)
-      {
-        for (int x = 0; x < imageWidth; x += 1)
-        {
-          float bias = Weight(weightOffset + inputChannels * outputChannels * 3 * 3 + outputChannel);
-          float sum = 0;
-
-          for (int inputChannel = 0; inputChannel < inputChannels; inputChannel++)
-          {
-            float kernalValue = 0;
-
-            for (int kernalY = -1; kernalY <= 1; kernalY++)
-            {
-              for (int kernalX = -1; kernalX <= 1; kernalX++)
-              {
-                float pixelValue = 0;
-
-                try
-                {
-                  if (x + kernalX >= 0 && y + kernalY >= 0 && x + kernalX < imageWidth && y + kernalY < imageHeight) pixelValue = input[inputChannel, y + kernalY, x + kernalX];
-                }
-                catch
-                {
-                  Console.WriteLine("Error reading input at " + inputChannel + " " + (y + kernalY) + " " + (x + kernalX) + " from dimensions " + input.GetLength(0) + " " + input.GetLength(1) + " " + input.GetLength(2));
-                }
-
-                float weight = Weight(weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kernalY + 1) + (kernalX + 1));
-
-                kernalValue += pixelValue * weight;
-              }
-            }
-
-            sum += kernalValue;
-          }
-
-          output[outputChannel, y, x] = activationFunction(bias + sum);
-        }
-      }
-    }
-
-    weightOffset += inputChannels * outputChannels * 3 * 3 + outputChannels;
-
-    return output;
-  }
-
-  float[,,] Downscale(float[,,] input)
-  {
-    float[,,] output = new float[input.GetLength(0), input.GetLength(1) / 2, input.GetLength(2) / 2];
-
-    for (int channels = 0; channels < input.GetLength(0); channels++)
-    {
-      for (int y = 0; y < input.GetLength(1); y += 2)
-      {
-        for (int x = 0; x < input.GetLength(2); x += 2)
-        {
-          output[channels, y / 2, x / 2] = (input[channels, y, x] + input[channels, y + 1, x] + input[channels, y, x + 1] + input[channels, y + 1, x + 1]) / 4;
-        }
-      }
-    }
-
-    return output;
-  }
-
-  float[] Flatten(float[,,] input)
-  {
-    float[] output = new float[input.GetLength(0) * input.GetLength(1) * input.GetLength(2)];
-
-    for (int channels = 0; channels < input.GetLength(0); channels++)
-    {
-      for (int y = 0; y < input.GetLength(1); y++)
-      {
-        for (int x = 0; x < input.GetLength(2); x++)
-        {
-          output[channels * input.GetLength(1) * input.GetLength(2) + y * input.GetLength(2) + x] = input[channels, y, x];
-        }
-      }
-    }
-
-    return output;
+    return (float)(1 / (1 + Math.Exp(-x)));
   }
 
   float[] Layer(float[] input, int previousLayerSize, int layerSize, ref int layerOffset, Func<float, float> activationFunction)
@@ -153,47 +54,74 @@ public class ARCNET : IChessBot
     return (float)((int)piece.PieceType * (piece.IsWhite ? 1 : -1));
   }
 
-  int PositionToIndex(int x, int y)
+  List<int> _PieceValues = new List<int>() { 0, 1, 3, 3, 5, 9, 0 };
+
+  int GetMaterial(ChessChallenge.API.Board board, bool white)
   {
-    return new Square(x, y).Index;
+    int material = 0;
+
+    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
+    {
+      ChessChallenge.API.Square square = new ChessChallenge.API.Square(squareIndex);
+      ChessChallenge.API.Piece piece = board.GetPiece(square);
+
+      if (piece.IsWhite == white) material += _PieceValues[(int)piece.PieceType];
+    }
+
+    return material;
   }
 
   float Evaluate(Board board, Move move)
   {
+    float whiteMaterial = GetMaterial(board, true);
+    float blackMaterial = GetMaterial(board, true);
+
     board.MakeMove(move);
+
+    if (board.IsInCheckmate())
+    {
+      board.UndoMove(move);
+
+      return board.IsWhiteToMove ? 9999 : -9999;
+    }
+
+    if (board.IsDraw())
+    {
+      board.UndoMove(move);
+
+      return 0;
+    }
+
+    float[] input = new float[] {
+      whiteMaterial,
+      blackMaterial,
+      GetMaterial(board, true),
+      GetMaterial(board, false),
+      board.GameMoveHistory.Length,
+      board.GetKingSquare(true).File,
+      board.GetKingSquare(true).Rank,
+      board.GetKingSquare(false).File,
+      board.GetKingSquare(false).Rank,
+      move.IsCapture ? 1 : 0,
+      board.IsDraw() ? 1 : 0,
+      board.IsInCheck() ? 1 : 0,
+      _PieceValues[(int)move.MovePieceType],
+      move.StartSquare.File,
+      move.StartSquare.Rank,
+      move.TargetSquare.File,
+      move.TargetSquare.Rank
+    };
 
     board.UndoMove(move);
 
-    return 0;
+    int weightOffset = 0;
 
-    // if (board.IsInCheckmate()) return 9999;
+    float[] hiddenLayer1 = Layer(input, 17, 32, ref weightOffset, Sigmoid);
+    float[] hiddenLayer2 = Layer(hiddenLayer1, 32, 16, ref weightOffset, Sigmoid);
+    float[] hiddenLayer3 = Layer(hiddenLayer2, 16, 32, ref weightOffset, Sigmoid);
+    float[] output = Layer(hiddenLayer3, 32, 2, ref weightOffset, (x) => x);
 
-    // float[,,] input = new float[1, 8, 8];
-
-    // for (int x = 0; x < 8; x++)
-    // {
-    //   for (int y = 0; y < 8; y++)
-    //   {
-    //     input[0, 7 - y, 7 - x] = GetPieceId(board, PositionToIndex(x, y));
-    //   }
-    // }
-
-    // int weightOffset = 0;
-
-    // float[,,] convolutionLayer1 = Convolution(input, 1, 16, ref weightOffset, ReLU);
-    // float[,,] convolutionLayer2 = Convolution(convolutionLayer1, 16, 8, ref weightOffset, ReLU);
-    // float[,,] convolutionLayer3 = Convolution(convolutionLayer2, 8, 4, ref weightOffset, ReLU);
-
-    // float[,,] downscaleLayer = Downscale(convolutionLayer3);
-
-    // float[] flattenLayer = Flatten(downscaleLayer);
-
-    // float[] hiddenLayer1 = Layer(flattenLayer, 64, 128, ref weightOffset, ReLU);
-    // float[] hiddenLayer2 = Layer(hiddenLayer1, 128, 64, ref weightOffset, ReLU);
-    // float[] hiddenLayer3 = Layer(hiddenLayer2, 64, 32, ref weightOffset, ReLU);
-    // float[] output = Layer(hiddenLayer3, 32, 1, ref weightOffset, (x) => x);
-
-    // return output[0];
+    return output[0] - output[1];
   }
 
   struct MoveChoice
@@ -204,8 +132,6 @@ public class ARCNET : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
-    _isWhite = board.IsWhiteToMove;
-
     List<Move> moves = new List<Move>(board.GetLegalMoves());
     List<MoveChoice> moveChoices = new List<MoveChoice>();
 
@@ -226,6 +152,8 @@ public class ARCNET : IChessBot
     {
       moveChoices.Sort((a, b) => a.Evaluation.CompareTo(b.Evaluation));
     }
+
+    Console.WriteLine("Current evaluation: " + moveChoices[0].Evaluation);
 
     return moveChoices[0].Move;
   }
