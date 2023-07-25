@@ -1,7 +1,5 @@
 import chess
 import torch
-from torch import nn
-from dataset import positionToTensor
 
 from model import EvaluationNeuralNetwork
 
@@ -13,69 +11,70 @@ device = (
     else "cpu"
 )
 
-model = EvaluationNeuralNetwork().to(device)
 
-modelName = "ARCNET 4"
+def convert(name):
+    model = EvaluationNeuralNetwork().to(device)
 
-model.load_state_dict(
-    torch.load(
-        "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
+    model.load_state_dict(
+        torch.load(
+            "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + name + ".pth"
+        )
     )
-)
 
-model.eval()
+    weightCount = 0
 
-with torch.no_grad():
-    board = chess.Board()
+    weightOutput = ""
 
-    while board.outcome() == None:
-        if board.turn == chess.WHITE:
-            print(board)
+    for param in model.parameters():
+        weightCount += param.data.flatten().size()[0]
 
-            # move = input("Move > ")
+        for value in param.data.flatten().tolist():
+            weightOutput += str(value) + "\n"
 
-            # board.push_uci(move)
+    print(f"Converted {weightCount} weights. Compressed size: {weightCount / 8}")
 
-            # continue
+    weightFile = open(
+        f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{name}.txt", "w"
+    )
+    weightFile.write(weightOutput)
+    weightFile.close()
 
-        moves = list(board.legal_moves)
 
-        evaluations = []
+# model.eval()
 
-        for move in moves:
-            board.push(move)
+# with torch.no_grad():
+#     board = chess.Board()
 
-            prediction = model(positionToTensor(board.fen()).to(device))
-            predictedEvaluation = prediction.item()
+#     while board.outcome() == None:
+#         if board.turn == chess.WHITE:
+#             print(board)
 
-            evaluations.append(predictedEvaluation)
+#             # move = input("Move > ")
 
-            board.pop()
+#             # board.push_uci(move)
 
-        bestEvaluation = max(evaluations)
-        if board.turn == chess.BLACK:
-            bestEvaluation = min(evaluations)
+#             # continue
 
-        bestMove = moves[evaluations.index(bestEvaluation)]
-        board.push(bestMove)
+#         moves = list(board.legal_moves)
 
-    print(board)
-    print(board.outcome())
+#         evaluations = []
 
-weightCount = 0
+#         for move in moves:
+#             board.push(move)
 
-weightOutput = ""
+#             prediction = model(positionToTensor(board.fen()).to(device))
+#             predictedEvaluation = prediction.item()
 
-for param in model.parameters():
-    weightCount += param.data.flatten().size()[0]
+#             evaluations.append(predictedEvaluation)
 
-    for value in param.data.flatten().tolist():
-        weightOutput += str(value) + "\n"
+#             board.pop()
 
-print(weightCount, weightCount / 8)
+#         bestEvaluation = max(evaluations)
+#         if board.turn == chess.BLACK:
+#             bestEvaluation = min(evaluations)
 
-weightFile = open(
-    f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.txt", "w"
-)
-weightFile.write(weightOutput)
-weightFile.close()
+#         bestMove = moves[evaluations.index(bestEvaluation)]
+#         board.push(bestMove)
+
+#     print(board)
+#     print(board.outcome())
