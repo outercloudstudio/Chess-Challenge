@@ -9,7 +9,7 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 4.txt").Split('\n');
+    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 5.txt").Split('\n');
 
     Weights = stringWeights[..(stringWeights.Length - 1)].Select(float.Parse).ToArray();
 

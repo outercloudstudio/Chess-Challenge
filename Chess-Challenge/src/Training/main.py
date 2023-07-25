@@ -1,5 +1,6 @@
 import os.path
 import chess
+import random
 from stockfish import Stockfish
 import torch
 from torch import nn
@@ -22,7 +23,7 @@ device = (
 model = EvaluationNeuralNetwork().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 
 modelName = "ARCNET 5"
 
@@ -54,66 +55,127 @@ def evaluatePosition(board):
     if evaluation["type"] == "mate":
         return evaluation["value"] * 10
 
+def train():
+  model.train()
 
-def playTraingingGame():
-    model.train()
+  completed = 0
 
-    board = chess.Board()
+  games = []
 
-    while board.outcome() == None:
-        moves = list(board.legal_moves)
+  for i in range(40):
+    games.append(chess.Board())
 
-        evaluations = []
-        actualEvaluations = []
+  while True:
+    for gameIndex in range(len(games)):
+      board = games[gameIndex]
 
-        averageLoss = 0
+      if board.outcome() != None:
+        completed += 1
 
-        for move in moves:
-            board.push(move)
+        games[gameIndex] = chess.Board()
+        
+        torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth")
 
-            prediction = model(positionToTensor(board.fen()).to(device))
-            predictedEvaluation = prediction.item()
-            actualEvaluation = evaluatePosition(board)
+        convert(modelName)
 
-            evaluations.append(predictedEvaluation)
-            actualEvaluations.append(actualEvaluation)
+        continue
 
-            board.pop()
+      moves = list(board.legal_moves)
+      moveChoices = []
 
-            loss = loss_fn(
-                prediction,
-                torch.tensor([actualEvaluation], dtype=torch.float32).to(device),
-            )
+      for move in moves:
+        board.push(move)
 
-            loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
+        modelEvaluation = model(positionToTensor(board.fen()).to(device)).item()
+        
+        moveChoices.append({
+          "move": move,
+          "evaluation": modelEvaluation
+        })
 
-            averageLoss += loss
+        board.pop()
 
-        bestEvaluation = max(evaluations)
-        if board.turn == chess.BLACK:
-            bestEvaluation = min(evaluations)
+      moveChoices.sort(key=lambda x: x["evaluation"], reverse=board.turn == chess.WHITE)
 
-        bestMove = moves[evaluations.index(bestEvaluation)]
-        bestActualEvaluation = actualEvaluations[evaluations.index(bestEvaluation)]
-        board.push(bestMove)
+      choice = moveChoices[random.randint(0, min(2, len(moveChoices) - 1))]["move"]
+      
+      board.push(choice)
 
-        averageLoss /= len(moves)
+      prediction = model(positionToTensor(board.fen()).to(device))
+      actual = evaluatePosition(board)
 
-        print(board)
-        print(f"Average loss: {averageLoss:>7f}")
-        print(
-            f"Predicted evaluation: {bestEvaluation} Actual evaluation: {bestActualEvaluation}"
-        )
+      loss = loss_fn(
+        prediction,
+        torch.tensor([actual], dtype=torch.float32).to(device),
+      )
 
-    torch.save(
-        model.state_dict(),
-        f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth",
-    )
+      loss.backward()
+      optimizer.step()
+      optimizer.zero_grad()
 
-    convert(modelName)
+      print(chr(27) + "[2J")
+      print(board)
+      print(f"Predicted evaluation: {prediction.item()} Actual evaluation: {actual} Loss: {loss}")
+      print(f"Completed {completed} games")
+          
 
+train()
 
-while True:
-    playTraingingGame()
+# def playTraingingGame():
+#     model.train()
+
+#     board = chess.Board()
+
+#     while board.outcome() == None:
+#         moves = list(board.legal_moves)
+
+#         evaluations = []
+#         actualEvaluations = []
+
+#         averageLoss = 0
+
+#         for move in moves:
+#             board.push(move)
+
+#             prediction = model(positionToTensor(board.fen()).to(device))
+#             predictedEvaluation = prediction.item()
+#             actualEvaluation = evaluatePosition(board)
+
+#             evaluations.append(predictedEvaluation)
+#             actualEvaluations.append(actualEvaluation)
+
+#             board.pop()
+
+#             loss = loss_fn(
+#                 prediction,
+#                 torch.tensor([actualEvaluation], dtype=torch.float32).to(device),
+#             )
+
+#             loss.backward()
+#             optimizer.step()
+#             optimizer.zero_grad()
+
+#             averageLoss += loss
+
+#         bestEvaluation = max(evaluations)
+#         if board.turn == chess.BLACK:
+#             bestEvaluation = min(evaluations)
+
+#         bestMove = moves[evaluations.index(bestEvaluation)]
+#         bestActualEvaluation = actualEvaluations[evaluations.index(bestEvaluation)]
+#         board.push(bestMove)
+
+#         averageLoss /= len(moves)
+
+#         print(board)
+#         print(f"Average loss: {averageLoss:>7f}")
+#         print(
+#             f"Predicted evaluation: {bestEvaluation} Actual evaluation: {bestActualEvaluation}"
+#         )
+
+#     torch.save(
+#         model.state_dict(),
+#         f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth",
+#     )
+
+#     convert(modelName)
