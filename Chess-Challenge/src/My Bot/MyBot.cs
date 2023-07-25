@@ -3,158 +3,189 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
+/*
+Think:
+  Loop over available moves
+  Add and Evaluate them if not already in list
+  Sort list by evaluation
+  Pick best move
+  Search Move
+
+Search Move:
+  Loop over available moves
+  Add and Evaluate them if not already in list
+  Sort list by evaluation
+  Update evaluation of previous move
+*/
+
 public class ARCNET : IChessBot
 {
-  public float[] Weights;
-
-  public ARCNET()
+  class State
   {
-    string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 7.txt").Split('\n');
+    public Board CurrentBoard;
+    public Move Move;
+    public float Evaluation;
+    public float Confidence;
+    public List<State> PreviousStates = new List<State>();
+    public List<State> NextStates = new List<State>();
+    public bool WhiteMove;
 
-    Weights = stringWeights[..(stringWeights.Length - 1)].Select(float.Parse).ToArray();
-
-    Console.WriteLine("ARCNET loaded! Weights: " + Weights.Length);
-  }
-
-  float Weight(int index)
-  {
-    return Weights[index];
-  }
-
-  float Sigmoid(float x)
-  {
-    return (float)(1 / (1 + Math.Exp(-x)));
-  }
-
-  float[] Layer(float[] input, int previousLayerSize, int layerSize, ref int layerOffset, Func<float, float> activationFunction)
-  {
-    float[] layer = new float[layerSize];
-
-    for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
+    private void UpdateConfidence()
     {
-      for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
-      {
-        layer[nodeIndex] += input[weightIndex] * Weight(layerOffset + nodeIndex * previousLayerSize + weightIndex);
-      }
-
-      layer[nodeIndex] = activationFunction(layer[nodeIndex] + Weight(layerOffset + layerSize * previousLayerSize + nodeIndex));
+      Confidence = Evaluation * (WhiteMove ? 1 : -1) - PreviousStates.Count * 2;
     }
 
-    layerOffset += layerSize * previousLayerSize + layerSize;
-
-    return layer;
-  }
-
-  float GetPieceId(Board board, int index)
-  {
-    if (index >= 64) return 0;
-
-    Piece piece = board.GetPiece(new Square(index));
-
-    return (float)((int)piece.PieceType * (piece.IsWhite ? 1 : -1));
-  }
-
-  List<int> _PieceValues = new List<int>() { 0, 1, 3, 3, 5, 9, 0 };
-
-  int GetMaterial(ChessChallenge.API.Board board, bool white)
-  {
-    int material = 0;
-
-    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
+    public State(Board board, Move move, float evaluation)
     {
-      ChessChallenge.API.Square square = new ChessChallenge.API.Square(squareIndex);
-      ChessChallenge.API.Piece piece = board.GetPiece(square);
+      Move = move;
+      Evaluation = evaluation;
 
-      if (piece.IsWhite == white) material += _PieceValues[(int)piece.PieceType];
+      WhiteMove = board.IsWhiteToMove;
+
+      UpdateConfidence();
+
+      board.MakeMove(move);
+
+      CurrentBoard = Board.CreateBoardFromFEN(board.GetFenString());
+
+      board.UndoMove(move);
     }
 
-    return material;
+    public State(State state, Move move, float evaluation)
+    {
+      Move = move;
+      Evaluation = evaluation;
+
+      WhiteMove = !state.WhiteMove;
+
+      state.CurrentBoard.MakeMove(move);
+
+      CurrentBoard = Board.CreateBoardFromFEN(state.CurrentBoard.GetFenString());
+
+      state.CurrentBoard.UndoMove(move);
+
+      PreviousStates = state.PreviousStates.ToList();
+      PreviousStates.Add(state);
+
+      UpdateConfidence();
+
+      state.UpdateEvaluation();
+    }
+
+    public void UpdateEvaluation()
+    {
+      if (NextStates.Count == 0) return;
+
+      float updatedEvaluation = NextStates[0].Evaluation;
+
+      foreach (State nextState in NextStates) updatedEvaluation = WhiteMove ? Math.Min(updatedEvaluation, nextState.Evaluation) : Math.Max(updatedEvaluation, nextState.Evaluation);
+
+      if (updatedEvaluation == Evaluation) return;
+
+      Evaluation = updatedEvaluation;
+
+      UpdateConfidence();
+
+      if (PreviousStates.Count != 0) PreviousStates[PreviousStates.Count - 1].UpdateEvaluation();
+    }
+  }
+
+  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
+
+  float Evaluate(Board board)
+  {
+    if (board.IsInCheckmate()) return -10 * (board.IsWhiteToMove ? 1 : -1);
+
+    if (board.IsDraw()) return 0;
+
+    float evaluation = 0;
+
+    for (int index = 0; index < 64; index++)
+    {
+      Piece piece = board.GetPiece(new Square(index));
+
+      evaluation += pieceValues[(int)piece.PieceType] * (piece.IsWhite ? 1 : -1);
+    }
+
+    if (board.IsInCheck()) evaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
+
+    return evaluation;
   }
 
   float Evaluate(Board board, Move move)
   {
-    float whiteMaterial = GetMaterial(board, true);
-    float blackMaterial = GetMaterial(board, true);
-
     board.MakeMove(move);
 
-    if (board.IsInCheckmate())
-    {
-      board.UndoMove(move);
-
-      return board.IsWhiteToMove ? 9999 : -9999;
-    }
-
-    if (board.IsDraw())
-    {
-      board.UndoMove(move);
-
-      return 0;
-    }
-
-    float[] input = new float[] {
-      whiteMaterial,
-      blackMaterial,
-      GetMaterial(board, true),
-      GetMaterial(board, false),
-      board.GameMoveHistory.Length,
-      board.GetKingSquare(true).File,
-      board.GetKingSquare(true).Rank,
-      board.GetKingSquare(false).File,
-      board.GetKingSquare(false).Rank,
-      move.IsCapture ? 1 : 0,
-      board.IsDraw() ? 1 : 0,
-      board.IsInCheck() ? 1 : 0,
-      _PieceValues[(int)move.MovePieceType],
-      move.StartSquare.File,
-      move.StartSquare.Rank,
-      move.TargetSquare.File,
-      move.TargetSquare.Rank
-    };
+    float evaluation = Evaluate(board);
 
     board.UndoMove(move);
 
-    int weightOffset = 0;
-
-    float[] hiddenLayer1 = Layer(input, 17, 32, ref weightOffset, Sigmoid);
-    float[] hiddenLayer2 = Layer(hiddenLayer1, 32, 16, ref weightOffset, Sigmoid);
-    float[] hiddenLayer3 = Layer(hiddenLayer2, 16, 32, ref weightOffset, Sigmoid);
-    float[] output = Layer(hiddenLayer3, 32, 2, ref weightOffset, (x) => x);
-
-    return output[0] - output[1];
+    return evaluation;
   }
 
-  struct MoveChoice
+  List<State> _searchedStates = new List<State>();
+  List<State> _statesToSearch = new List<State>();
+
+  void Search()
   {
-    public Move Move;
-    public float Evaluation;
+    State bestState = _statesToSearch[0];
+
+    Search(bestState);
   }
+
+  void Search(State state)
+  {
+    _statesToSearch.Remove(state);
+    _searchedStates.Add(state);
+
+    foreach (Move move in state.CurrentBoard.GetLegalMoves())
+    {
+      State newState = new State(state, move, Evaluate(state.CurrentBoard, move));
+
+      _statesToSearch.Add(newState);
+      state.NextStates.Add(newState);
+    }
+
+    _statesToSearch = _statesToSearch.OrderByDescending(x => x.Confidence).ToList();
+
+  }
+
+  // void Debug(State targetState, int depth = 0)
+  // {
+  //   Console.WriteLine(new string('\t', depth) + targetState.Move + " " + targetState.Evaluation + " " + targetState.Confidence + " " + targetState.PreviousStates.Count + " " + targetState.CurrentBoard.GetFenString());
+
+  //   foreach (State state in _searchedStates.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1);
+  //   foreach (State state in _statesToSearch.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1);
+  // }
 
   public Move Think(Board board, Timer timer)
   {
-    List<Move> moves = new List<Move>(board.GetLegalMoves());
-    List<MoveChoice> moveChoices = new List<MoveChoice>();
+    string boardFen = board.GetFenString();
 
-    foreach (Move move in moves)
-    {
-      moveChoices.Add(new MoveChoice()
-      {
-        Move = move,
-        Evaluation = Evaluate(board, move)
-      });
-    }
+    _searchedStates = _searchedStates.Where(state => state.PreviousStates.Count == 2 && state.CurrentBoard.GetFenString() == boardFen).ToList();
+    _statesToSearch = _statesToSearch.Where(state => state.PreviousStates.Count == 2 && state.CurrentBoard.GetFenString() == boardFen).ToList();
 
-    if (board.IsWhiteToMove)
-    {
-      moveChoices.Sort((a, b) => b.Evaluation.CompareTo(a.Evaluation));
-    }
-    else
-    {
-      moveChoices.Sort((a, b) => a.Evaluation.CompareTo(b.Evaluation));
-    }
+    foreach (State state in _searchedStates) state.PreviousStates.RemoveAt(0);
+    foreach (State state in _statesToSearch) state.PreviousStates.RemoveAt(0);
 
-    Console.WriteLine("Current evaluation: " + moveChoices[0].Evaluation);
+    List<Move> moves = new List<Move>();
 
-    return moveChoices[0].Move;
+    foreach (Move move in board.GetLegalMoves()) _statesToSearch.Add(new State(board, move, Evaluate(board, move)));
+
+    _statesToSearch = _statesToSearch.OrderByDescending(state => state.Confidence).ToList();
+
+    for (int i = 0; i < 1000; i++) Search();
+
+    _searchedStates = _searchedStates.OrderByDescending(state => state.Evaluation).ToList();
+
+    List<State> searchedPossibleMoves = _searchedStates.Where(state => state.PreviousStates.Count == 0).ToList();
+
+    if (searchedPossibleMoves.Count == 0) searchedPossibleMoves = _statesToSearch.Where(state => state.PreviousStates.Count == 0).ToList();
+
+    State bestState = searchedPossibleMoves[board.IsWhiteToMove ? 0 : (searchedPossibleMoves.Count - 1)];
+
+    // Debug(bestState);
+
+    return bestState.Move;
   }
 }
