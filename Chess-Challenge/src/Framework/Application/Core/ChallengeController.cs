@@ -18,7 +18,8 @@ namespace ChessChallenge.Application
     {
       Human,
       MyBot,
-      EvilBot
+      EvilBot,
+      ARCNET,
     }
 
     // Game state
@@ -26,8 +27,8 @@ namespace ChessChallenge.Application
     int gameID;
     bool isPlaying;
     Board board;
-    public ChessPlayer PlayerWhite { get; private set; }
-    public ChessPlayer PlayerBlack { get; private set; }
+    public ChessPlayer PlayerWhite;
+    public ChessPlayer PlayerBlack;
 
     float lastMoveMadeTime;
     bool isWaitingToPlayMove;

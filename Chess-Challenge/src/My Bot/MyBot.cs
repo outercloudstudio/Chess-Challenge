@@ -7,6 +7,8 @@ public class ARCNET : IChessBot
 {
   public float[] Weights;
 
+  bool _isWhite;
+
   public ARCNET()
   {
     string[] stringWeights = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 5.txt").Split('\n');
@@ -30,70 +32,6 @@ public class ARCNET : IChessBot
   {
     return Math.Max(0, x);
   }
-
-  /*
-  Tensor conv2d_depthwise_dynamic(
-    BufHandle input,
-    BufHandle weight,
-    const InitFunc& init_func,
-    ExprHandle N, <-- Batches
-    ExprHandle C, <-- In Channels
-    ExprHandle H, <-- Image Height
-    ExprHandle W, <-- Image Width
-    ExprHandle K, <-- Out Channels
-    ExprHandle CperG, <-- Channels per group, should = C
-    ExprHandle R, <-- Kernel height, should = 3
-    ExprHandle S, <-- Kernel width, should = 3
-    ExprHandle stride, <-- should = 2
-    ExprHandle pad, <-- should = 1
-    ExprHandle groups <-- should = 1
-  ) {
-  TORCH_INTERNAL_ASSERT(input.ndim() == 4);
-  TORCH_INTERNAL_ASSERT(weight.ndim() == 4);
-
-  auto OH = (H - R + pad * 2) / stride + 1; <-- out image height, should = H
-  auto OW = (W - S + pad * 2) / stride + 1; <-- out image width, should = W
-
-  return Reduce( <-- Repeat for each element in output tensor
-      "conv2d_depthwise",
-      {N, K, OH, OW}, <-- input tensor size
-      c10::nullopt, // TODO
-      Sum(), <-- reduction function, Used when combining multiple channels
-      [&](const std::vector<VarHandle>& v) { return init_func(v); }, // bias applied to each channel individually
-      [&](const std::vector<VarHandle>& v) {
-        auto const& n = v[0];
-        auto const& k = v[1];
-        auto const& oh = v[2];
-        auto const& ow = v[3];
-        auto const& c = v[4];
-        auto const& r = v[5];
-        auto const& s = v[6];
-        auto cond = CompareSelect::make(oh * stride - pad + r, 0, 1, 0, kLT);
-        cond = CompareSelect::make(ow * stride - pad + s, 0, 1, cond, kLT);
-        cond = CompareSelect::make(oh * stride - pad + r, H, 1, cond, kGE);
-        cond = CompareSelect::make(ow * stride - pad + s, W, 1, cond, kGE);
-        auto in = ifThenElse(
-            cond,
-            0.f,
-            input.load(n, k, oh * stride - pad + r, ow * stride - pad + s));
-        return in * weight.load(k, c, r, s);
-      },
-      {C / groups, R, S});
-  }
-  */
-
-  /*
-  Notes:
-  N = batch size
-  C = input channels
-  H = image height
-  W = image width
-
-  K = output channels
-  CperG = channels per group, should = C (input channels)
-  R = convolution height, should = 3
-  S = convolution width, should = 3
-  */
 
   float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels, ref int weightOffset, Func<float, float> activationFunction)
   {
@@ -220,36 +158,42 @@ public class ARCNET : IChessBot
     return new Square(x, y).Index;
   }
 
-  float Evaluate(Board board)
+  float Evaluate(Board board, Move move)
   {
-    if (board.IsInCheckmate()) return 9999;
+    board.MakeMove(move);
 
-    float[,,] input = new float[1, 8, 8];
+    board.UndoMove(move);
 
-    for (int x = 0; x < 8; x++)
-    {
-      for (int y = 0; y < 8; y++)
-      {
-        input[0, 7 - y, 7 - x] = GetPieceId(board, PositionToIndex(x, y));
-      }
-    }
+    return 0;
 
-    int weightOffset = 0;
+    // if (board.IsInCheckmate()) return 9999;
 
-    float[,,] convolutionLayer1 = Convolution(input, 1, 16, ref weightOffset, ReLU);
-    float[,,] convolutionLayer2 = Convolution(convolutionLayer1, 16, 8, ref weightOffset, ReLU);
-    float[,,] convolutionLayer3 = Convolution(convolutionLayer2, 8, 4, ref weightOffset, ReLU);
+    // float[,,] input = new float[1, 8, 8];
 
-    float[,,] downscaleLayer = Downscale(convolutionLayer3);
+    // for (int x = 0; x < 8; x++)
+    // {
+    //   for (int y = 0; y < 8; y++)
+    //   {
+    //     input[0, 7 - y, 7 - x] = GetPieceId(board, PositionToIndex(x, y));
+    //   }
+    // }
 
-    float[] flattenLayer = Flatten(downscaleLayer);
+    // int weightOffset = 0;
 
-    float[] hiddenLayer1 = Layer(flattenLayer, 64, 128, ref weightOffset, ReLU);
-    float[] hiddenLayer2 = Layer(hiddenLayer1, 128, 64, ref weightOffset, ReLU);
-    float[] hiddenLayer3 = Layer(hiddenLayer2, 64, 32, ref weightOffset, ReLU);
-    float[] output = Layer(hiddenLayer3, 32, 1, ref weightOffset, (x) => x);
+    // float[,,] convolutionLayer1 = Convolution(input, 1, 16, ref weightOffset, ReLU);
+    // float[,,] convolutionLayer2 = Convolution(convolutionLayer1, 16, 8, ref weightOffset, ReLU);
+    // float[,,] convolutionLayer3 = Convolution(convolutionLayer2, 8, 4, ref weightOffset, ReLU);
 
-    return output[0];
+    // float[,,] downscaleLayer = Downscale(convolutionLayer3);
+
+    // float[] flattenLayer = Flatten(downscaleLayer);
+
+    // float[] hiddenLayer1 = Layer(flattenLayer, 64, 128, ref weightOffset, ReLU);
+    // float[] hiddenLayer2 = Layer(hiddenLayer1, 128, 64, ref weightOffset, ReLU);
+    // float[] hiddenLayer3 = Layer(hiddenLayer2, 64, 32, ref weightOffset, ReLU);
+    // float[] output = Layer(hiddenLayer3, 32, 1, ref weightOffset, (x) => x);
+
+    // return output[0];
   }
 
   struct MoveChoice
@@ -260,20 +204,18 @@ public class ARCNET : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
-    Console.WriteLine("Current position evaluation: " + Evaluate(board) + " " + board.GetFenString());
+    _isWhite = board.IsWhiteToMove;
 
     List<Move> moves = new List<Move>(board.GetLegalMoves());
     List<MoveChoice> moveChoices = new List<MoveChoice>();
 
     foreach (Move move in moves)
     {
-      board.MakeMove(move);
       moveChoices.Add(new MoveChoice()
       {
         Move = move,
-        Evaluation = Evaluate(board)
+        Evaluation = Evaluate(board, move)
       });
-      board.UndoMove(move);
     }
 
     if (board.IsWhiteToMove)

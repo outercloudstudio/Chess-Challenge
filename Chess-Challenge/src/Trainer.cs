@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using ChessChallenge.Application;
 using ChessChallenge.Chess;
 
 public class Trainer
@@ -13,6 +15,15 @@ public class Trainer
   private TcpClient? _client;
   private NetworkStream? _stream;
   private Thread _listenThread;
+
+  private ChallengeController _controller;
+  private BoardUI _boardUI;
+
+  public Trainer(ChallengeController controller)
+  {
+    _controller = controller;
+    _boardUI = controller.boardUI;
+  }
 
   public void StartServer()
   {
@@ -23,6 +34,18 @@ public class Trainer
 
     _listenThread = new Thread(new ThreadStart(Listen));
     _listenThread.Start();
+  }
+
+  private string ReadString()
+  {
+    byte[] lengthBytes = new byte[4];
+    _stream.Read(lengthBytes, 0, lengthBytes.Length);
+    int length = BitConverter.ToInt32(lengthBytes, 0);
+
+    byte[] bytes = new byte[length];
+    _stream.Read(bytes, 0, bytes.Length);
+
+    return Encoding.UTF8.GetString(bytes, 0, length);
   }
 
   public void Listen()
@@ -38,21 +61,10 @@ public class Trainer
     {
       if (_server == null) return;
 
-      byte[] bytes = new byte[1024];
+      string fen = ReadString();
+      string uci = ReadString();
 
-      int bytesRead;
-      while ((bytesRead = _stream.Read(bytes, 0, bytes.Length)) != 0)
-      {
-        string message = Encoding.UTF8.GetString(bytes[..bytesRead]);
-
-        Console.WriteLine("Received: " + message);
-
-        byte[] sendMessage = Encoding.UTF8.GetBytes("Hello Client!");
-
-        _stream.Write(sendMessage, 0, sendMessage.Length);
-
-        bytes = new byte[1024];
-      }
+      SendMoveState(fen, uci);
     }
   }
 
@@ -70,6 +82,67 @@ public class Trainer
 
     _stream = null;
     _client = null;
+  }
+
+  List<int> _PieceValues = new List<int>() { 0, 1, 3, 3, 5, 9, 0 };
+
+  public int GetMaterial(ChessChallenge.API.Board board, bool white)
+  {
+    int material = 0;
+
+    for (int squareIndex = 0; squareIndex < 64; squareIndex++)
+    {
+      ChessChallenge.API.Square square = new ChessChallenge.API.Square(squareIndex);
+      ChessChallenge.API.Piece piece = board.GetPiece(square);
+
+      if (piece.IsWhite == white) material += _PieceValues[(int)piece.PieceType];
+    }
+
+    return material;
+  }
+
+  public void SendMoveState(string fen, string moveUci)
+  {
+    Board board = new Board();
+    board.LoadPosition(fen);
+
+    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET, -1);
+    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET, -1);
+    _boardUI.ResetSquareColours();
+    _boardUI.SetPerspective(true);
+    _boardUI.UpdatePosition(board);
+
+    ChessChallenge.API.Board apiBoard = new ChessChallenge.API.Board(board);
+    ChessChallenge.API.Move apiMove = new ChessChallenge.API.Move(moveUci, apiBoard);
+
+    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, true)), 0, 4);
+    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, false)), 0, 4);
+
+    apiBoard.MakeMove(apiMove);
+
+    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, true)), 0, 4);
+    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, false)), 0, 4);
+
+    _stream.Write(BitConverter.GetBytes(apiBoard.GameMoveHistory.Length), 0, 4);
+
+    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(true).File), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(true).Rank), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(false).File), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(false).Rank), 0, 4);
+
+    _stream.Write(BitConverter.GetBytes(apiMove.IsCapture), 0, 1);
+    _stream.Write(BitConverter.GetBytes(apiBoard.IsDraw()), 0, 1);
+    _stream.Write(BitConverter.GetBytes(apiBoard.IsInCheck()), 0, 1);
+
+    _stream.Write(BitConverter.GetBytes(_PieceValues[(int)apiMove.MovePieceType]), 0, 4);
+
+    _stream.Write(BitConverter.GetBytes(apiMove.StartSquare.File), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiMove.StartSquare.Rank), 0, 4);
+
+    _stream.Write(BitConverter.GetBytes(apiMove.TargetSquare.File), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiMove.TargetSquare.Rank), 0, 4);
+
+    apiBoard.UndoMove(apiMove);
   }
 
   public static void GenerateDataset()

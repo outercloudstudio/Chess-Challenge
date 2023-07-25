@@ -1,198 +1,213 @@
 import socket
+import chess
+import torch
+import time
+import os
+import random
+
+from torch import nn
+from model import EvaluationNeuralNetwork
+from modelConverter import convert
+
+fensFile = open('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\FensLarge.txt', 'r')
+fens = fensFile.readlines()
+fensFile.close()
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("localhost", 8080))
 
 print('Connected!')
 
-message_to_send = "Hello, server!"
-client.send(message_to_send.encode('utf-8'))
+time.sleep(1)
+
+def sendString(string):
+  client.send(len(string).to_bytes(4, 'little'))
+  client.send(string.encode('utf-8'))
+
+def readInt():
+  return int.from_bytes(client.recv(4), 'little')
+
+def readBool():
+  return bool.from_bytes(client.recv(1), 'little')
+
+def getState(board, move):
+  state = []
+
+  sendString(board.fen())
+  sendString(move.uci())
+
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(1 if readBool() else 0)
+  state.append(1 if readBool() else 0)
+  state.append(1 if readBool() else 0)
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+  state.append(readInt())
+
+  return torch.tensor(state, dtype=torch.float32)
+
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
+
+model = EvaluationNeuralNetwork().to(device)
+
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+
+modelName = "ARCNET 7"
+
+if os.path.exists(
+  "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
+):
+  model.load_state_dict(
+    torch.load(
+        "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
+    )
+  )
+
+model.train()
+
+board = chess.Board()
+predictions = []
+
+def staticEvaluation(board):
+  if board.is_checkmate():
+    return 100 if board.turn == chess.WHITE else -100
+  
+  if board.outcome() != None and board.outcome().winner == None:
+    return 0
+
+  return 0
+
+def searchMove(board, move, depth):
+  if depth == 0 or board.outcome() != None: return staticEvaluation(board)
+  
+  bestMoveEvaluation = None
+
+  for move in board.legal_moves:
+    board.push(move)
+
+    evaluation = searchMove(board, move, depth - 1)
+
+    if bestMoveEvaluation == None:
+      bestMoveEvaluation = evaluation
+    elif board.turn == chess.WHITE:
+      bestMoveEvaluation = max(bestMoveEvaluation, evaluation)
+    else:
+      bestMoveEvaluation = min(bestMoveEvaluation, evaluation)
+
+    board.pop()
+  
+  return bestMoveEvaluation
 
 while True:
-  data = client.recv(1024)
+  if(board.outcome().winner != None):
+    board = chess.Board(fens[random.randint(0, len(fens) - 1)])
+    predictions = []
 
-  message = data.decode('utf-8')
+    continue
 
-  print("Received from server:", message)
+  moves = list(board.legal_moves)
+  moveChoices = []
 
-# import os.path
-# import chess
-# import random
-# from stockfish import Stockfish
-# import torch
-# from torch import nn
-# from torch.utils.data import DataLoader
-# from torchvision import datasets
-# from torchvision.transforms import ToTensor
+  # if(len(board.piece_map()) <= 4):
+  #   for move in moves:
+  #     evaluation = searchMove(board, move, 3)
 
-# from model import EvaluationNeuralNetwork
-# from dataset import positionToTensor
-# from modelConverter import convert
+  #     whiteWinPercentage = (evaluation + 100) / 200
+  #     blackWinPercentage = 1 - whiteWinPercentage
 
-# device = (
-#     "cuda"
-#     if torch.cuda.is_available()
-#     else "mps"
-#     if torch.backends.mps.is_available()
-#     else "cpu"
-# )
+  #     moveChoices.append({
+  #       "move": move,
+  #       "evaluation": torch.tensor([whiteWinPercentage, blackWinPercentage], dtype=torch.float32)
+  #     })
+  # else:
+  for move in moves:
+    board.push(move)
 
-# model = EvaluationNeuralNetwork().to(device)
+    if board.is_checkmate():
+      board.pop()
 
-# loss_fn = nn.MSELoss()
-# optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+      moveChoices.append({
+        "move": move,
+        "evaluation": torch.tensor([1, 0], dtype=torch.float32) if board.turn == chess.WHITE else torch.tensor([0, 1], dtype=torch.float32)
+      })
 
-# modelName = "ARCNET 5"
+      continue
 
-# if os.path.exists(
-#     "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
-# ):
-#     model.load_state_dict(
-#         torch.load(
-#             "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
-#         )
-#     )
+    board.pop()
 
-# stockfish = Stockfish(
-#     path="D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\eval.exe",
-#     depth=10,
-#     parameters={"Threads": 2, "Minimum Thinking Time": 0, "Hash": 2048},
-# )
+    state = getState(board, move).to(device)
 
+    modelEvaluation = model(state)
 
-# def evaluatePosition(board):
-#     fen = board.fen()
+    moveChoices.append({
+      "move": move,
+      "evaluation": modelEvaluation
+    })
 
-#     stockfish.set_fen_position(fen)
+  moveChoices.sort(key=lambda x: x["evaluation"][0], reverse=board.turn == chess.WHITE)
 
-#     evaluation = stockfish.get_evaluation()
+  choice = moveChoices[0]["move"]
 
-#     if evaluation["type"] == "cp":
-#         return evaluation["value"] / 100
-#     if evaluation["type"] == "mate":
-#         return evaluation["value"] * 10
+  state = getState(board, choice).to(device)
 
-# def train():
-#   model.train()
+  prediction = model(state).to(device)
 
-#   completed = 0
+  predictions.append(prediction)
+  
+  board.push(choice)
 
-#   games = []
+  if board.outcome() == None: continue
 
-#   for i in range(40):
-#     games.append(chess.Board())
+  averageLoss = 0
 
-#   while True:
-#     for gameIndex in range(len(games)):
-#       board = games[gameIndex]
+  actual = torch.tensor([0, 0], dtype=torch.float32)
 
-#       if board.outcome() != None:
-#         completed += 1
+  if(board.outcome().winner == chess.WHITE):
+    actual[0] = 1
 
-#         games[gameIndex] = chess.Board()
-        
-#         torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth")
+  if(board.outcome().winner == chess.BLACK):
+    actual[1] = 1
 
-#         convert(modelName)
+  if(board.outcome().winner == None):
+    actual[0] = random.randrange(0, 100) / 100
+    actual[1] = random.randrange(0, 100) / 100
+  
+  actual = actual.to(device)
 
-#         continue
+  for prediction in predictions:
+    loss = loss_fn(prediction, actual)
 
-#       moves = list(board.legal_moves)
-#       moveChoices = []
+    averageLoss += loss
 
-#       for move in moves:
-#         board.push(move)
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
 
-#         modelEvaluation = model(positionToTensor(board.fen()).to(device)).item()
-        
-#         moveChoices.append({
-#           "move": move,
-#           "evaluation": modelEvaluation
-#         })
+  averageLoss /= len(predictions)
 
-#         board.pop()
+  print(f"Loss: {averageLoss}")
 
-#       moveChoices.sort(key=lambda x: x["evaluation"], reverse=board.turn == chess.WHITE)
+  torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth")
 
-#       choice = moveChoices[random.randint(0, min(2, len(moveChoices) - 1))]["move"]
-      
-#       board.push(choice)
+  convert(modelName)
 
-#       prediction = model(positionToTensor(board.fen()).to(device))
-#       actual = evaluatePosition(board)
+  predictions = []
 
-#       loss = loss_fn(
-#         prediction,
-#         torch.tensor([actual], dtype=torch.float32).to(device),
-#       )
-
-#       loss.backward()
-#       optimizer.step()
-#       optimizer.zero_grad()
-
-#       print(chr(27) + "[2J")
-#       print(board)
-#       print(f"Predicted evaluation: {prediction.item()} Actual evaluation: {actual} Loss: {loss}")
-#       print(f"Completed {completed} games")
-          
-
-# train()
-
-# # def playTraingingGame():
-# #     model.train()
-
-# #     board = chess.Board()
-
-# #     while board.outcome() == None:
-# #         moves = list(board.legal_moves)
-
-# #         evaluations = []
-# #         actualEvaluations = []
-
-# #         averageLoss = 0
-
-# #         for move in moves:
-# #             board.push(move)
-
-# #             prediction = model(positionToTensor(board.fen()).to(device))
-# #             predictedEvaluation = prediction.item()
-# #             actualEvaluation = evaluatePosition(board)
-
-# #             evaluations.append(predictedEvaluation)
-# #             actualEvaluations.append(actualEvaluation)
-
-# #             board.pop()
-
-# #             loss = loss_fn(
-# #                 prediction,
-# #                 torch.tensor([actualEvaluation], dtype=torch.float32).to(device),
-# #             )
-
-# #             loss.backward()
-# #             optimizer.step()
-# #             optimizer.zero_grad()
-
-# #             averageLoss += loss
-
-# #         bestEvaluation = max(evaluations)
-# #         if board.turn == chess.BLACK:
-# #             bestEvaluation = min(evaluations)
-
-# #         bestMove = moves[evaluations.index(bestEvaluation)]
-# #         bestActualEvaluation = actualEvaluations[evaluations.index(bestEvaluation)]
-# #         board.push(bestMove)
-
-# #         averageLoss /= len(moves)
-
-# #         print(board)
-# #         print(f"Average loss: {averageLoss:>7f}")
-# #         print(
-# #             f"Predicted evaluation: {bestEvaluation} Actual evaluation: {bestActualEvaluation}"
-# #         )
-
-# #     torch.save(
-# #         model.state_dict(),
-# #         f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth",
-# #     )
-
-# #     convert(modelName)
+  board = chess.Board(fens[random.randint(0, len(fens) - 1)])

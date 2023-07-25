@@ -7,7 +7,7 @@ namespace ChessChallenge.Application
 {
   public static class MenuUI
   {
-    private static Trainer s_Trainer;
+    public static Trainer Trainer;
 
     public static void DrawButtons(ChallengeController controller)
     {
@@ -46,12 +46,12 @@ namespace ChessChallenge.Application
 
       if (NextButtonInRow("Start Training Server", ref buttonPos, spacing, buttonSize))
       {
-        if (s_Trainer != null)
-          s_Trainer.StopServer();
+        if (Trainer != null)
+          Trainer.StopServer();
 
-        s_Trainer = new Trainer();
+        Trainer = new Trainer(controller);
 
-        s_Trainer.StartServer();
+        Trainer.StartServer();
       }
       if (NextButtonInRow("Save Games", ref buttonPos, spacing, buttonSize))
       {
