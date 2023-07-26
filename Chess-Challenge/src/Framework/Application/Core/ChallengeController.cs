@@ -94,6 +94,7 @@ namespace ChessChallenge.Application
       bool isGameWithHuman = whiteType is PlayerType.Human || blackType is PlayerType.Human;
       int fenIndex = isGameWithHuman ? 0 : botMatchGameIndex / 2;
       board.LoadPosition(botMatchStartFens[fenIndex]);
+      board.LoadPosition("rnbqkb1r/pppppppp/5n2/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 3 3");
 
       // Player Setup
       PlayerWhite = CreatePlayer(whiteType);

@@ -3,20 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-/*
-Think:
-  Loop over available moves
-  Add and Evaluate them if not already in list
-  Sort list by evaluation
-  Pick best move
-  Search Move
 
-Search Move:
-  Loop over available moves
-  Add and Evaluate them if not already in list
-  Sort list by evaluation
-  Update evaluation of previous move
-*/
+//quiscene
+//transposition table
+//not ordering moves to search
+//playing unsearched but evaluated moves with less confidence
 
 public class ARCNET : IChessBot
 {
@@ -32,7 +23,7 @@ public class ARCNET : IChessBot
 
     private Board _boardCached;
 
-    private void UpdateConfidence()
+    public void UpdateConfidence()
     {
       Confidence = Evaluation * (WhiteMove ? 1 : -1) - MathF.Pow(PreviousStates.Count, 2);
     }
@@ -69,9 +60,7 @@ public class ARCNET : IChessBot
       PreviousStates = state.PreviousStates.ToList();
       PreviousStates.Add(state);
 
-      UpdateConfidence();
-
-      state.UpdateEvaluation();
+      state.NextStates.Add(this);
     }
 
     public void UpdateEvaluation()
@@ -80,7 +69,7 @@ public class ARCNET : IChessBot
 
       float updatedEvaluation = NextStates[0].Evaluation;
 
-      foreach (State nextState in NextStates) updatedEvaluation = WhiteMove ? Math.Min(updatedEvaluation, nextState.Evaluation) : Math.Max(updatedEvaluation, nextState.Evaluation);
+      foreach (State nextState in NextStates) updatedEvaluation = WhiteMove ? MathF.Min(updatedEvaluation, nextState.Evaluation) : MathF.Max(updatedEvaluation, nextState.Evaluation);
 
       if (updatedEvaluation == Evaluation) return;
 
@@ -135,23 +124,9 @@ public class ARCNET : IChessBot
   List<State> _searchedStates = new List<State>();
   List<State> _statesToSearch = new List<State>();
 
-  void InsertStateToSearch(State state)
-  {
-    for (int i = 0; i < _statesToSearch.Count; i++)
-    {
-      if (state.Confidence < _statesToSearch[i].Confidence) continue;
-
-      _statesToSearch.Insert(i, state);
-
-      return;
-    }
-
-    _statesToSearch.Add(state);
-  }
-
   void Search()
   {
-    State bestState = _statesToSearch[0];
+    State bestState = _statesToSearch.MaxBy(state => state.Confidence);
 
     Search(bestState);
   }
@@ -164,51 +139,48 @@ public class ARCNET : IChessBot
     foreach (Move move in state.CurrentBoard().GetLegalMoves())
     {
       State newState = new State(state, move, Evaluate(state.CurrentBoard(), move));
-
-      InsertStateToSearch(newState);
-      state.NextStates.Add(newState);
+      _statesToSearch.Add(newState);
     }
+
+    state.UpdateEvaluation();
+
+    state.UpdateConfidence();
   }
 
-  void Debug(State targetState, int depth = 0, int maxDepth = 99999)
-  {
-    Console.WriteLine(new string('\t', depth) + targetState.Move + " " + targetState.WhiteMove + " " + targetState.Evaluation + " " + targetState.Confidence + " " + targetState.PreviousStates.Count + " " + targetState.BoardFen);
+  // void Debug(State targetState, int depth = 0, int maxDepth = 99999)
+  // {
+  //   Console.WriteLine(new string('\t', depth) + targetState.Move + " " + targetState.WhiteMove + " " + targetState.Evaluation + " " + targetState.Confidence + " " + targetState.PreviousStates.Count + " " + targetState.BoardFen);
 
-    if (depth >= maxDepth) return;
+  //   if (depth >= maxDepth) return;
 
-    foreach (State state in _searchedStates.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1);
-    foreach (State state in _statesToSearch.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1);
-  }
+  //   foreach (State state in _searchedStates.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1, maxDepth);
+  //   foreach (State state in _statesToSearch.Where(otherState => otherState.PreviousStates.Count == depth + 1 && otherState.PreviousStates.Contains(targetState))) Debug(state, depth + 1, maxDepth);
+  // }
 
   public Move Think(Board board, Timer timer)
   {
     string boardFen = board.GetFenString();
 
-    _searchedStates = _searchedStates.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
-    _statesToSearch = _statesToSearch.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
+    _searchedStates = new List<State>();
+    _statesToSearch = new List<State>();
+
+    // _searchedStates = _searchedStates.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
+    // _statesToSearch = _statesToSearch.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
 
     foreach (State state in _searchedStates) state.PreviousStates.RemoveAt(0);
     foreach (State state in _statesToSearch) state.PreviousStates.RemoveAt(0);
 
     List<Move> moves = new List<Move>();
 
-    foreach (Move move in board.GetLegalMoves()) InsertStateToSearch(new State(board, move, Evaluate(board, move)));
+    foreach (Move move in board.GetLegalMoves()) _statesToSearch.Add(new State(board, move, Evaluate(board, move)));
 
-    for (int i = 0; i < 1000; i++) Search();
+    for (int i = 0; i < 1500; i++) Search();
 
-    _searchedStates = _searchedStates.OrderByDescending(state => state.Evaluation).ToList();
+    List<State> searchedPossibleMoves = _searchedStates.Concat(_statesToSearch).Where(state => state.PreviousStates.Count == 0).ToList();
 
-    List<State> searchedPossibleMoves = _searchedStates.Where(state => state.PreviousStates.Count == 0).ToList();
-
-    if (searchedPossibleMoves.Count == 0) searchedPossibleMoves = _statesToSearch.Where(state => state.PreviousStates.Count == 0).ToList();
-
-    State bestState = searchedPossibleMoves[board.IsWhiteToMove ? 0 : (searchedPossibleMoves.Count - 1)];
+    State bestState = searchedPossibleMoves.MaxBy(state => (state.PreviousStates.Count > 0) ? state.Confidence : (state.Confidence - 2));
 
     Console.WriteLine("Found move " + bestState.Move + " in " + timer.MillisecondsElapsedThisTurn / 1000f + "s");
-
-    foreach (State state in searchedPossibleMoves) Debug(state, 0, 0);
-
-    // Debug(bestState);
 
     return bestState.Move;
   }
