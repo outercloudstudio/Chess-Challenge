@@ -25,7 +25,7 @@ public class ARCNET : IChessBot
 
     public void UpdateConfidence()
     {
-      Confidence = Evaluation * (WhiteMove ? 1 : -1) - MathF.Pow(PreviousStates.Count, 2);
+      Confidence = Evaluation * (WhiteMove ? 1 : -1) - MathF.Pow(PreviousStates.Count, 4) * 2;
     }
 
     public State(Board board, Move move, float evaluation)
@@ -40,6 +40,7 @@ public class ARCNET : IChessBot
       board.MakeMove(move);
 
       BoardFen = board.GetFenString();
+      _boardCached = Board.CreateBoardFromFEN(BoardFen);
 
       board.UndoMove(move);
     }
@@ -50,12 +51,6 @@ public class ARCNET : IChessBot
       Evaluation = evaluation;
 
       WhiteMove = !state.WhiteMove;
-
-      state.CurrentBoard().MakeMove(move);
-
-      BoardFen = state.CurrentBoard().GetFenString();
-
-      state.CurrentBoard().UndoMove(move);
 
       PreviousStates = state.PreviousStates.ToList();
       PreviousStates.Add(state);
@@ -82,9 +77,27 @@ public class ARCNET : IChessBot
 
     public Board CurrentBoard()
     {
-      if (_boardCached == null) _boardCached = Board.CreateBoardFromFEN(BoardFen);
+      if (_boardCached == null)
+      {
+        Board previousBoard = PreviousStates[PreviousStates.Count - 1].CurrentBoard();
+
+        previousBoard.MakeMove(Move);
+
+        _boardCached = Board.CreateBoardFromFEN(previousBoard.GetFenString());
+
+        previousBoard.UndoMove(Move);
+
+        BoardFen = _boardCached.GetFenString();
+      }
 
       return _boardCached;
+    }
+
+    public string GetBoardFen()
+    {
+      CurrentBoard();
+
+      return BoardFen;
     }
   }
 
@@ -94,9 +107,15 @@ public class ARCNET : IChessBot
   {
     if (board.IsInCheckmate()) return -1000 * (board.IsWhiteToMove ? 1 : -1);
 
-    if (board.IsDraw()) return 0;
+    if (board.IsDraw()) return -0.5f;
 
     float evaluation = 0;
+
+    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+    {
+      evaluation += board.GetPieceList((PieceType)typeIndex, true).Count * -pieceValues[typeIndex];
+      evaluation += board.GetPieceList((PieceType)typeIndex, false).Count * -pieceValues[typeIndex];
+    }
 
     for (int index = 0; index < 64; index++)
     {
@@ -118,11 +137,15 @@ public class ARCNET : IChessBot
 
     board.UndoMove(move);
 
+    if (board.PlyCount >= 50 && move.MovePieceType == PieceType.Pawn) evaluation += 1f;
+
     return evaluation;
   }
 
   List<State> _searchedStates = new List<State>();
   List<State> _statesToSearch = new List<State>();
+
+  int _searches = 0;
 
   void Search()
   {
@@ -133,8 +156,12 @@ public class ARCNET : IChessBot
 
   void Search(State state)
   {
+    _searches++;
+
     _statesToSearch.Remove(state);
     _searchedStates.Add(state);
+
+    string boardFen = state.CurrentBoard().GetFenString();
 
     foreach (Move move in state.CurrentBoard().GetLegalMoves())
     {
@@ -161,26 +188,31 @@ public class ARCNET : IChessBot
   {
     string boardFen = board.GetFenString();
 
-    _searchedStates = new List<State>();
-    _statesToSearch = new List<State>();
+    var canReuseState = (State state) => (state.PreviousStates.Count >= 2 && state.PreviousStates[1].GetBoardFen() == boardFen && state.CurrentBoard() != null);
 
-    // _searchedStates = _searchedStates.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
-    // _statesToSearch = _statesToSearch.Where(state => state.PreviousStates.Count == 2 && state.BoardFen == boardFen).ToList();
+    _searchedStates = _searchedStates.Where(canReuseState).ToList();
+    _statesToSearch = _statesToSearch.Where(canReuseState).ToList();
 
-    foreach (State state in _searchedStates) state.PreviousStates.RemoveAt(0);
-    foreach (State state in _statesToSearch) state.PreviousStates.RemoveAt(0);
+    foreach (State state in _searchedStates) state.PreviousStates.RemoveRange(0, 2);
+    foreach (State state in _statesToSearch) state.PreviousStates.RemoveRange(0, 2);
+
+    Console.WriteLine("Reused " + (_statesToSearch.Count + _searchedStates.Count) + " states!");
 
     List<Move> moves = new List<Move>();
 
     foreach (Move move in board.GetLegalMoves()) _statesToSearch.Add(new State(board, move, Evaluate(board, move)));
 
-    for (int i = 0; i < 1500; i++) Search();
+    _searches = 0;
+
+    while (timer.MillisecondsElapsedThisTurn < Math.Min(1000, timer.MillisecondsRemaining / 10)) Search();
 
     List<State> searchedPossibleMoves = _searchedStates.Concat(_statesToSearch).Where(state => state.PreviousStates.Count == 0).ToList();
 
     State bestState = searchedPossibleMoves.MaxBy(state => (state.PreviousStates.Count > 0) ? state.Confidence : (state.Confidence - 2));
 
-    Console.WriteLine("Found move " + bestState.Move + " in " + timer.MillisecondsElapsedThisTurn / 1000f + "s");
+    Console.WriteLine("Found move " + bestState.Move + " in " + timer.MillisecondsElapsedThisTurn / 1000f + "s with " + _searches + " searches and " + (_searchedStates.Count + _statesToSearch.Count) + " states!");
+
+    // Debug(bestState);
 
     return bestState.Move;
   }
