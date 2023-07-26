@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class ARCNET2 : IChessBot
+
+//quiscene
+//transposition table
+//not ordering moves to search
+//playing unsearched but evaluated moves with less confidence
+
+public class ARCNET2B : IChessBot
 {
   static int _statesSearched;
 
@@ -29,14 +35,32 @@ public class ARCNET2 : IChessBot
       if (ParentState != null) ParentState.UpdateEvaluation();
     }
 
+    public void MakeMoves(Board board)
+    {
+      if (ParentState == null) return;
+
+      ParentState.MakeMoves(board);
+
+      board.MakeMove(Move);
+    }
+
+    public void UndoMoves(Board board)
+    {
+      if (ParentState == null) return;
+
+      board.UndoMove(Move);
+
+      ParentState.UndoMoves(board);
+    }
+
     public void Search(Board board)
     {
       _statesSearched++;
 
-      if (ParentState != null) board.MakeMove(Move);
-
       if (ChildStates == null)
       {
+        MakeMoves(board);
+
         ChildStates = board.GetLegalMoves().Select(move =>
         {
           State state = new State(!WhiteMove)
@@ -54,23 +78,16 @@ public class ARCNET2 : IChessBot
           return state;
         }).ToArray();
 
+        UndoMoves(board);
+
         UpdateEvaluation();
 
-        if (ParentState != null) board.UndoMove(Move);
-
         return;
       }
 
-      if (ChildStates.Length == 0)
-      {
-        if (ParentState != null) board.UndoMove(Move);
-
-        return;
-      }
+      if (ChildStates.Length == 0) return;
 
       ChildStates.MaxBy(state => state.Evaluation * (WhiteMove ? -1 : 1)).Search(board);
-
-      if (ParentState != null) board.UndoMove(Move);
     }
   }
 
@@ -95,16 +112,16 @@ public class ARCNET2 : IChessBot
     return evaluation;
   }
 
-  // void Debug(State targetState, int depth = 0, int maxDepth = 99999)
-  // {
-  //   Console.WriteLine(new string('\t', depth) + targetState.Move + " Evaluation: " + targetState.Evaluation + " White Move: " + targetState.WhiteMove);
+  void Debug(State targetState, int depth = 0, int maxDepth = 99999)
+  {
+    Console.WriteLine(new string('\t', depth) + targetState.Move + " Evaluation: " + targetState.Evaluation + " White Move: " + targetState.WhiteMove);
 
-  //   if (depth >= maxDepth) return;
+    if (depth >= maxDepth) return;
 
-  //   if (targetState.ChildStates == null) return;
+    if (targetState.ChildStates == null) return;
 
-  //   foreach (State state in targetState.ChildStates) Debug(state, depth + 1, maxDepth);
-  // }
+    foreach (State state in targetState.ChildStates) Debug(state, depth + 1, maxDepth);
+  }
 
   Dictionary<string, State> _reuseableStates = new Dictionary<string, State>();
 
@@ -133,13 +150,11 @@ public class ARCNET2 : IChessBot
 
     if (_tree.ChildStates != null)
     {
-      board.MakeMove(_tree.Move);
-
       foreach (State state in _tree.ChildStates)
       {
-        board.MakeMove(state.Move);
+        state.MakeMoves(board);
         string fen = board.GetFenString();
-        board.UndoMove(state.Move);
+        state.UndoMoves(board);
 
         state.ParentState = null;
 
@@ -147,13 +162,11 @@ public class ARCNET2 : IChessBot
 
         break;
       }
-
-      board.UndoMove(_tree.Move);
     }
 
     // Debug(_tree);
 
-    Console.WriteLine("Arcnet 2 Searched " + _statesSearched + " states.");
+    Console.WriteLine("Arcnet 2 B Searched " + _statesSearched + " states.");
 
     return _tree.Move;
   }
