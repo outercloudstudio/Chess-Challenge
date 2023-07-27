@@ -3,86 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class ARCNET2 : IChessBot
+public class ARCNET3 : IChessBot
 {
-  static int _statesSearched;
-  static float _maxDepthSearched;
+  int _statesSearched;
+  float _maxDepthSearched;
 
-  class State
-  {
-    public Move Move;
-    public float Evaluation;
-    public State ParentState;
-    public State[] ChildStates = null;
-    public bool WhiteMove;
+  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
 
-    public State(bool whiteMove)
-    {
-      WhiteMove = whiteMove;
-    }
-
-    public void UpdateEvaluation()
-    {
-      if (ChildStates.Length == 0) return;
-
-      Evaluation = WhiteMove ? ChildStates.MinBy(state => state.Evaluation).Evaluation : ChildStates.MaxBy(state => state.Evaluation).Evaluation;
-
-      if (ParentState != null) ParentState.UpdateEvaluation();
-    }
-
-    public void Search(Board board, float depth = 0.5f)
-    {
-      _statesSearched++;
-      _maxDepthSearched = Math.Max(_maxDepthSearched, (int)depth);
-
-      if (ParentState != null) board.MakeMove(Move);
-
-      if (ChildStates == null)
-      {
-        ChildStates = board.GetLegalMoves().Select(move =>
-        {
-          State state = new State(!WhiteMove)
-          {
-            ParentState = this,
-            Move = move
-          };
-
-          board.MakeMove(move);
-
-          state.Evaluation = Evaluate(board);
-
-          board.UndoMove(move);
-
-          return state;
-        }).ToArray();
-
-        UpdateEvaluation();
-
-        if (ParentState != null) board.UndoMove(Move);
-
-        return;
-      }
-
-      if (ChildStates.Length == 0)
-      {
-        if (ParentState != null) board.UndoMove(Move);
-
-        return;
-      }
-
-      ChildStates.MaxBy(state => state.Evaluation * (WhiteMove ? -1 : 1)).Search(board, depth + 0.5f);
-
-      if (ParentState != null) board.UndoMove(Move);
-    }
-  }
-
-  static int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
-
-  static float Evaluate(Board board)
+  float Evaluate(Board board)
   {
     if (board.IsInCheckmate()) return -1000 * (board.IsWhiteToMove ? 1 : -1);
 
-    if (board.IsInsufficientMaterial() || board.IsRepeatedPosition() || board.FiftyMoveCounter >= 100) return -0.5f;
+    if (board.IsInsufficientMaterial() || board.IsRepeatedPosition() || board.FiftyMoveCounter >= 100) return -0.5f * (board.IsWhiteToMove ? 1 : -1);
 
     float evaluation = 0;
 
@@ -97,67 +29,114 @@ public class ARCNET2 : IChessBot
     return evaluation;
   }
 
-  // void Debug(State targetState, int depth = 0, int maxDepth = 99999)
-  // {
-  //   Console.WriteLine(new string('\t', depth) + targetState.Move + " Evaluation: " + targetState.Evaluation + " White Move: " + targetState.WhiteMove);
+  float EvaluateOrder(Board board, Move move)
+  {
+    float evaluation = 0;
 
-  //   if (depth >= maxDepth) return;
+    if (move.IsCapture) evaluation += 1f;
+    if (move.IsPromotion) evaluation += 2f;
 
-  //   if (targetState.ChildStates == null) return;
+    board.MakeMove(move);
 
-  //   foreach (State state in targetState.ChildStates) Debug(state, depth + 1, maxDepth);
-  // }
+    if (board.IsInCheck()) evaluation += 0.5f;
 
-  Dictionary<string, State> _reuseableStates = new Dictionary<string, State>();
+    board.UndoMove(move);
+
+    return evaluation;
+  }
+
+  struct MoveEvaluationPair
+  {
+    public Move Move;
+    public float Value;
+  }
+
+  float Search(Board board, float previousValue = 0, int depth = 0)
+  {
+    _statesSearched++;
+    _maxDepthSearched = Math.Max(_maxDepthSearched, depth);
+
+    var moves = board.GetLegalMoves().Select(move => new MoveEvaluationPair
+    {
+      Move = move,
+      Value = EvaluateOrder(board, move)
+    }).OrderByDescending(evaluation => evaluation.Value);
+
+    if (moves.Count() == 0) return Evaluate(board);
+
+    if (depth > 1)
+    {
+      var evaluations = moves.Select(evaluation =>
+      {
+        board.MakeMove(evaluation.Move);
+
+        float value = Evaluate(board);
+
+        board.UndoMove(evaluation.Move);
+
+        return new MoveEvaluationPair
+        {
+          Move = evaluation.Move,
+          Value = value
+        };
+      });
+
+      if (board.IsWhiteToMove)
+      {
+        return evaluations.Max(evaluation => evaluation.Value);
+      }
+      else
+      {
+        return evaluations.Min(evaluation => evaluation.Value);
+      }
+    }
+
+    bool set = false;
+    float best = 0;
+
+    foreach (MoveEvaluationPair evaluation in moves.Reverse())
+    {
+      board.MakeMove(evaluation.Move);
+
+      float result = Search(board, previousValue, depth + 1);
+
+      board.UndoMove(evaluation.Move);
+
+      Console.WriteLine(new string('\t', depth) + " Evaluated " + evaluation.Move + " for " + result);
+
+      if ((board.IsWhiteToMove && result > previousValue + 1f) || (!board.IsWhiteToMove && result < previousValue - 1f)) return result;
+
+      if (!set || (board.IsWhiteToMove && result >= best) || (!board.IsWhiteToMove && result <= best)) best = result;
+
+      set = true;
+    }
+
+    Console.WriteLine(new string('\t', depth) + " Best is " + best);
+
+    return best;
+  }
 
   public Move Think(Board board, Timer timer)
   {
     _statesSearched = 0;
     _maxDepthSearched = 0;
 
-    string boardFen = board.GetFenString();
-
-    State _tree;
-
-    if (_reuseableStates.ContainsKey(boardFen))
+    float evaluation = 0;
+    Move bestMove = board.GetLegalMoves().MaxBy(move =>
     {
-      _tree = _reuseableStates[boardFen];
-    }
-    else
-    {
-      _tree = new State(!board.IsWhiteToMove);
-    }
+      board.MakeMove(move);
 
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60 || _tree.ChildStates == null) _tree.Search(board);
+      float result = Search(board);
 
-    _tree = _tree.ChildStates.MaxBy(state => state.Evaluation * (board.IsWhiteToMove ? 1 : -1));
+      board.UndoMove(move);
 
-    _reuseableStates = new Dictionary<string, State>();
+      evaluation = Math.Max(evaluation, result);
 
-    if (_tree.ChildStates != null)
-    {
-      board.MakeMove(_tree.Move);
+      return result * (board.IsWhiteToMove ? 1 : -1);
+    });
 
-      foreach (State state in _tree.ChildStates)
-      {
-        board.MakeMove(state.Move);
-        string fen = board.GetFenString();
-        board.UndoMove(state.Move);
+    Console.WriteLine("Arcnet 3 Found " + bestMove + " Evaluation: " + evaluation + " Searched " + _statesSearched + " states. Max depth: " + _maxDepthSearched);
 
-        state.ParentState = null;
-
-        _reuseableStates[fen] = state;
-
-        break;
-      }
-
-      board.UndoMove(_tree.Move);
-    }
-
-    // Debug(_tree);
-
-    Console.WriteLine("Arcnet 2 Optimized Searched " + _statesSearched + " states. Max depth: " + _maxDepthSearched);
-
-    return _tree.Move;
+    return bestMove;
   }
 }

@@ -17,23 +17,23 @@ namespace ChessChallenge.Application
       float breakSpacing = spacing * 0.6f;
 
       // Game Buttons
-      if (NextButtonInRow("Human vs ARCNET 2", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("Human vs ARCNET 3", ref buttonPos, spacing, buttonSize))
       {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2 : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2 : ChallengeController.PlayerType.Human;
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET3 : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET3 : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
-      if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 3 vs ARCNET 3", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET3, ChallengeController.PlayerType.ARCNET3);
       }
-      if (NextButtonInRow("ARCNET 2 vs ARCNET 1", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 3 vs ARCNET 1", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET1);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET3, ChallengeController.PlayerType.ARCNET1);
       }
-      if (NextButtonInRow("ARCNET 2 vs ARCNET 2 Optimized", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 3 vs ARCNET 2 Optimized", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2_Optimized);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET3, ChallengeController.PlayerType.ARCNET2_Optimized);
       }
       // if (NextButtonInRow("ARCNET vs Test Bot 1", ref buttonPos, spacing, buttonSize))
       // {
@@ -43,13 +43,13 @@ namespace ChessChallenge.Application
       // {
       //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET, ChallengeController.PlayerType.TestBot2);
       // }
-      if (NextButtonInRow("ARCNET 2 vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 3 vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EvilBot);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET3, ChallengeController.PlayerType.EvilBot);
       }
-      if (NextButtonInRow("ARCNET 2 vs Elo Bot 2", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 3 vs Elo Bot 2", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EloBot2);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET3, ChallengeController.PlayerType.EloBot2);
       }
 
 

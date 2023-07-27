@@ -123,8 +123,8 @@ public class Trainer
     Board board = new Board();
     board.LoadPosition(fen);
 
-    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
-    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
+    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET3, -1);
+    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET3, -1);
     _boardUI.ResetSquareColours();
     _boardUI.SetPerspective(true);
     _boardUI.UpdatePosition(board);
@@ -156,8 +156,8 @@ public class Trainer
     Board board = new Board();
     board.LoadPosition(fen);
 
-    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
-    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
+    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET3, -1);
+    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET3, -1);
     _boardUI.ResetSquareColours();
     _boardUI.SetPerspective(true);
     _boardUI.UpdatePosition(board);
