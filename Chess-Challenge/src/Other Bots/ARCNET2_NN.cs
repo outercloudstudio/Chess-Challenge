@@ -111,7 +111,7 @@ public class ARCNET2_NN : IChessBot
   {
     if (board.IsInCheckmate()) return -1000 * (board.IsWhiteToMove ? 1 : -1);
 
-    if (board.IsInsufficientMaterial() || board.IsRepeatedPosition() || board.FiftyMoveCounter >= 100) return -0.5f;
+    if (board.IsInsufficientMaterial() || board.IsRepeatedPosition() || board.FiftyMoveCounter >= 100) return -0.5f * (board.IsWhiteToMove ? 1 : -1);
 
     float materialEvaluation = 0;
 

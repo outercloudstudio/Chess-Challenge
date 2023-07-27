@@ -18,7 +18,7 @@ namespace ChessChallenge.Application
     {
       Human,
       ARCNET1,
-      ARCNET3,
+      ARCNET2,
       ARCNET2_Optimized,
       EloBot2,
       EvilBot
@@ -74,7 +74,7 @@ namespace ChessChallenge.Application
       botMatchStartFens = FileHelper.ReadResourceFile("Fens.txt").Split('\n').Where(fen => fen.Length > 0).ToArray();
       botTaskWaitHandle = new AutoResetEvent(false);
 
-      StartNewGame(PlayerType.Human, PlayerType.ARCNET3);
+      StartNewGame(PlayerType.Human, PlayerType.ARCNET2);
     }
 
     public void StartNewGame(PlayerType whiteType, PlayerType blackType)
@@ -201,7 +201,7 @@ namespace ChessChallenge.Application
       }
       else
       {
-        boardUI.SetPerspective(PlayerWhite.Bot is ARCNET3);
+        boardUI.SetPerspective(PlayerWhite.Bot is ARCNET2);
       }
     }
 
@@ -210,7 +210,7 @@ namespace ChessChallenge.Application
       return type switch
       {
         PlayerType.ARCNET1 => new ChessPlayer(new ARCNET1(), type, GameDurationMilliseconds),
-        PlayerType.ARCNET3 => new ChessPlayer(new ARCNET3(), type, GameDurationMilliseconds),
+        PlayerType.ARCNET2 => new ChessPlayer(new ARCNET2(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_Optimized => new ChessPlayer(new ARCNET2_Optimized(), type, GameDurationMilliseconds),
         PlayerType.EloBot2 => new ChessPlayer(new EloBot2(), type, GameDurationMilliseconds),
         PlayerType.EvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
