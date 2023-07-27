@@ -67,7 +67,7 @@ device = (
 
 model = EvaluationNeuralNetwork().to(device)
 
-loss_fn = nn.MSELoss()
+loss_fn = nn.L1Loss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
 modelName = "ARCNET 2"
@@ -126,7 +126,7 @@ def test(dataloader, model, loss_fn):
 
     print(f"Test Error: Avg loss: {test_loss:>8f} \n")
 
-epochs = 1
+epochs = 5
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataloader, model, loss_fn, optimizer)

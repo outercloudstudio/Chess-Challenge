@@ -3,41 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class ARCNET2 : IChessBot
+public class ARCNET2_Optimized : IChessBot
 {
-  static float[] Parameters;
-
-  public ARCNET2()
-  {
-    string[] stringParameters = System.IO.File.ReadAllText("D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\ARCNET 2.txt").Split('\n');
-
-    Parameters = stringParameters[..(stringParameters.Length - 1)].Select(float.Parse).ToArray();
-  }
-
-  static float Parameter(int index)
-  {
-    return Parameters[index];
-  }
-
-  static float[] Layer(float[] input, int previousLayerSize, int layerSize, ref int parameterOffset, Func<float, float> activationFunction)
-  {
-    float[] layer = new float[layerSize];
-
-    for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
-    {
-      for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
-      {
-        layer[nodeIndex] += input[weightIndex] * Parameter(parameterOffset + nodeIndex * previousLayerSize + weightIndex);
-      }
-
-      layer[nodeIndex] = activationFunction(layer[nodeIndex] + Parameter(parameterOffset + layerSize * previousLayerSize + nodeIndex));
-    }
-
-    parameterOffset += layerSize * previousLayerSize + layerSize;
-
-    return layer;
-  }
-
   static int _statesSearched;
 
   class State
@@ -115,31 +82,17 @@ public class ARCNET2 : IChessBot
 
     if (board.IsInsufficientMaterial() || board.IsRepeatedPosition() || board.FiftyMoveCounter >= 100) return -0.5f;
 
-    float materialEvaluation = 0;
+    float evaluation = 0;
 
     for (int typeIndex = 1; typeIndex < 7; typeIndex++)
     {
-      materialEvaluation += board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
-      materialEvaluation -= board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+      evaluation += board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
+      evaluation -= board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
     }
 
-    float checkEvaluation = 0;
+    if (board.IsInCheck()) evaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
 
-    if (board.IsInCheck()) checkEvaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
-
-    float[] input = new float[] { materialEvaluation, checkEvaluation, board.PlyCount };
-
-    int parameterOffset = 0;
-
-    var ReLU = (float x) => Math.Max(0, x);
-
-    float[] hidden1 = Layer(input, 3, 8, ref parameterOffset, ReLU);
-    float[] hidden2 = Layer(hidden1, 8, 8, ref parameterOffset, ReLU);
-    float[] hidden3 = Layer(hidden2, 8, 8, ref parameterOffset, ReLU);
-    float output = Layer(hidden3, 8, 1, ref parameterOffset, ReLU)[0];
-
-    return materialEvaluation + checkEvaluation + output * 0.5f;
-    // return output;
+    return evaluation;
   }
 
   // void Debug(State targetState, int depth = 0, int maxDepth = 99999)

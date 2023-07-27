@@ -31,9 +31,9 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET1);
       }
-      if (NextButtonInRow("ARCNET 2 vs ARCNET 2 B", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("ARCNET 2 vs ARCNET 2 Optimized", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2B);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2_Optimized);
       }
       // if (NextButtonInRow("ARCNET vs Test Bot 1", ref buttonPos, spacing, buttonSize))
       // {
