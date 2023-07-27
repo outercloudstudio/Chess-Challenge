@@ -99,6 +99,13 @@ public class ARCNET2_NN : IChessBot
         return;
       }
 
+      if (ChildStates.Length == 0)
+      {
+        if (ParentState != null) board.UndoMove(Move);
+
+        return;
+      }
+
       ChildStates.MaxBy(state => state.Evaluation * (WhiteMove ? -1 : 1)).Search(board, depth + 0.5f);
 
       if (ParentState != null) board.UndoMove(Move);
