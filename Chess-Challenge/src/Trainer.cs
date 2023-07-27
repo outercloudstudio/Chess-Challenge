@@ -61,10 +61,25 @@ public class Trainer
     {
       if (_server == null) return;
 
-      string fen = ReadString();
-      string uci = ReadString();
+      try
+      {
+        string fen = ReadString();
 
-      SendMoveState(fen, uci);
+        if (fen.Length == 0)
+        {
+          StopServer();
+
+          return;
+        }
+
+        SendMoveState(fen);
+      }
+      catch
+      {
+        StopServer();
+
+        return;
+      }
     }
   }
 
@@ -101,6 +116,41 @@ public class Trainer
     return material;
   }
 
+  public void SendMoveState(string fen)
+  {
+    Console.WriteLine(fen);
+
+    Board board = new Board();
+    board.LoadPosition(fen);
+
+    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
+    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.ARCNET2, -1);
+    _boardUI.ResetSquareColours();
+    _boardUI.SetPerspective(true);
+    _boardUI.UpdatePosition(board);
+
+    ChessChallenge.API.Board apiBoard = new ChessChallenge.API.Board(board);
+
+    int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
+
+    float materialEvaluation = 0;
+
+    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+    {
+      materialEvaluation += apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, true).Count * pieceValues[typeIndex];
+      materialEvaluation -= apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+    }
+
+    float checkEvaluation = 0;
+
+    if (board.IsInCheck()) checkEvaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
+
+    _stream.Write(BitConverter.GetBytes(materialEvaluation), 0, 4);
+    _stream.Write(BitConverter.GetBytes(checkEvaluation), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiBoard.PlyCount), 0, 4);
+
+  }
+
   public void SendMoveState(string fen, string moveUci)
   {
     Board board = new Board();
@@ -115,32 +165,25 @@ public class Trainer
     ChessChallenge.API.Board apiBoard = new ChessChallenge.API.Board(board);
     ChessChallenge.API.Move apiMove = new ChessChallenge.API.Move(moveUci, apiBoard);
 
-    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, true)), 0, 4);
-    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, false)), 0, 4);
-
     apiBoard.MakeMove(apiMove);
 
-    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, true)), 0, 4);
-    _stream.Write(BitConverter.GetBytes(GetMaterial(apiBoard, false)), 0, 4);
+    int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
 
-    _stream.Write(BitConverter.GetBytes(apiBoard.GameMoveHistory.Length), 0, 4);
+    float materialEvaluation = 0;
 
-    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(true).File), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(true).Rank), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(false).File), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiBoard.GetKingSquare(false).Rank), 0, 4);
+    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+    {
+      materialEvaluation += apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, true).Count * pieceValues[typeIndex];
+      materialEvaluation -= apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+    }
 
-    _stream.Write(BitConverter.GetBytes(apiMove.IsCapture), 0, 1);
-    _stream.Write(BitConverter.GetBytes(apiBoard.IsDraw()), 0, 1);
-    _stream.Write(BitConverter.GetBytes(apiBoard.IsInCheck()), 0, 1);
+    float checkEvaluation = 0;
 
-    _stream.Write(BitConverter.GetBytes(_PieceValues[(int)apiMove.MovePieceType]), 0, 4);
+    if (board.IsInCheck()) checkEvaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
 
-    _stream.Write(BitConverter.GetBytes(apiMove.StartSquare.File), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiMove.StartSquare.Rank), 0, 4);
-
-    _stream.Write(BitConverter.GetBytes(apiMove.TargetSquare.File), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiMove.TargetSquare.Rank), 0, 4);
+    _stream.Write(BitConverter.GetBytes(materialEvaluation), 0, 4);
+    _stream.Write(BitConverter.GetBytes(checkEvaluation), 0, 4);
+    _stream.Write(BitConverter.GetBytes(apiBoard.PlyCount), 0, 4);
 
     apiBoard.UndoMove(apiMove);
   }

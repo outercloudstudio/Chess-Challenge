@@ -8,7 +8,14 @@ def getFen(entry):
 
 
 def getEvaluation(entry):
-    return float(entry.split(" | ")[1])
+  continousEvaluation = float(entry.split(" | ")[1])
+
+  if continousEvaluation > 0.2:
+    return 1
+  elif continousEvaluation < 0.2:
+    return -1
+  else:
+    return 0
 
 
 def positionToTensor(fen):
@@ -37,8 +44,7 @@ class PositionDataset(Dataset):
     def __init__(
         self,
         dataset_file,
-        transform=positionToTensor,
-        target_transform=evalutionToTensor,
+        transform
     ):
         file = open(dataset_file, "r")
 
@@ -46,22 +52,15 @@ class PositionDataset(Dataset):
 
         self.fens = list(map(getFen, entries))
         self.evaluation = list(map(getEvaluation, entries))
-        self.transform = transform
-        self.target_transform = target_transform
-
         file.close()
+        
+        self.transform = transform
 
     def __len__(self):
         return len(self.fens)
 
     def __getitem__(self, idx):
-        fen = self.fens[idx]
-        evaluation = self.evaluation[idx]
-
-        if self.transform:
-            fen = self.transform(fen)
-
-        if self.target_transform:
-            evaluation = self.target_transform(evaluation)
+        fen = self.transform(self.fens[idx])
+        evaluation = evalutionToTensor(self.evaluation[idx])
 
         return fen, evaluation

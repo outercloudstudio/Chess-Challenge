@@ -5,18 +5,16 @@ class EvaluationNeuralNetwork(nn.Module):
     super().__init__()
 
     self.linear_stack = nn.Sequential(
-      nn.Linear(17, 32),
-      nn.Sigmoid(),
+      nn.Linear(3, 8),
+      nn.Tanh(),
 
-      nn.Linear(32, 16),
-      nn.Sigmoid(),
+      nn.Linear(8, 8),
+      nn.Tanh(),
 
-      nn.Linear(16, 32),
-      nn.Sigmoid(),
+      nn.Linear(8, 8),
+      nn.Tanh(),
 
-      nn.Linear(32, 2),
-      
-      nn.Softmax(dim=0)
+      nn.Linear(8, 1),
     )
 
   def forward(self, x):
