@@ -17,10 +17,10 @@ namespace ChessChallenge.Application
       float breakSpacing = spacing * 0.6f;
 
       // Game Buttons
-      if (NextButtonInRow("Human vs ARCNET 2", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("Human vs My Bot", ref buttonPos, spacing, buttonSize))
       {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2 : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2 : ChallengeController.PlayerType.Human;
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
       if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
@@ -31,15 +31,15 @@ namespace ChessChallenge.Application
       }
       if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EvilBot);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
       }
       if (NextButtonInRow("v T1", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
       }
       if (NextButtonInRow("v T2", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EloBot2);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
       }
       // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
       // {
