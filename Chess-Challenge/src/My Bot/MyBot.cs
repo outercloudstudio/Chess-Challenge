@@ -7,7 +7,6 @@ public class MyBot : IChessBot
 {
   static Board _board;
   static int _maxDepth = 0;
-  static int _currentDepth = 0;
 
   class State
   {
@@ -15,9 +14,9 @@ public class MyBot : IChessBot
     public int Score;
     public State[] ChildStates = null;
 
-    public void Expand(int alpha = -99999, int beta = 99999)
+    public void Expand(int alpha = -99999, int beta = 99999, int depth = 0)
     {
-      _currentDepth++;
+      _maxDepth = Math.Max(_maxDepth, depth);
 
       _board.MakeMove(Move);
 
@@ -27,15 +26,19 @@ public class MyBot : IChessBot
 
         if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
 
+        _board.UndoMove(Move);
+
         // foreach (State state in ChildStates) Console.WriteLine(new String('\t', _currentDepth) + String.Format("{0} Score: {1} Alpha: {2} Beta: {3}", state.Move, state.Score, alpha, beta));
       }
       else
       {
+        int max = -99999;
+
         foreach (State state in ChildStates)
         {
           // Console.WriteLine(new String('\t', _currentDepth) + String.Format("Looking at {0} Alpha: {1} Beta: {2}", state.Move, alpha, beta));
 
-          state.Expand(-beta, -alpha);
+          state.Expand(-beta, -alpha, depth + 1);
 
           int score = -state.Score;
 
@@ -48,26 +51,24 @@ public class MyBot : IChessBot
             break;
           }
 
-          if (score > alpha)
+          if (score > max)
           {
-            alpha = score;
+            max = score;
 
-            Score = alpha;
+            if (score > alpha) alpha = score;
           }
         }
 
+        Score = max;
+
         ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
+
+        _board.UndoMove(Move);
       }
-
-      _board.UndoMove(Move);
-
-      _currentDepth--;
     }
 
     public State(Move move)
     {
-      _maxDepth = Math.Max(_maxDepth, _currentDepth);
-
       Move = move;
 
       if (move.IsNull) return;
@@ -107,26 +108,15 @@ public class MyBot : IChessBot
   {
     _board = board;
     _maxDepth = 0;
-    _currentDepth = 0;
 
     string boardFen = board.GetFenString();
 
     State tree;
 
-    Console.WriteLine("Thinking with states: " + _reuseableStates.Count);
+    if (_reuseableStates.ContainsKey(boardFen)) tree = _reuseableStates[boardFen];
+    else tree = new State(Move.NullMove);
 
-    if (_reuseableStates.ContainsKey(boardFen))
-    {
-      Console.WriteLine("Reusing State!");
-
-      tree = _reuseableStates[boardFen];
-    }
-    else
-    {
-      tree = new State(Move.NullMove);
-    }
-
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60 || tree.ChildStates == null) tree.Expand();
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 120 || tree.ChildStates == null) tree.Expand();
 
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
