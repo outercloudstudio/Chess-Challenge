@@ -2,6 +2,8 @@
 using System.Numerics;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChessChallenge.Application
 {
@@ -23,6 +25,12 @@ namespace ChessChallenge.Application
         var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
+      if (NextButtonInRow("Human vs My Bot No T", ref buttonPos, spacing, buttonSize))
+      {
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotNoTransposition : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotNoTransposition : ChallengeController.PlayerType.Human;
+        controller.StartNewGame(whiteType, blackType);
+      }
       if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
       {
         var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
@@ -35,7 +43,68 @@ namespace ChessChallenge.Application
       }
       if (NextButtonInRow("My Bot vs My Bot No Transposition", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotNoTransposition);
+        string[] fens = FileHelper.ReadResourceFile("Fens.txt").Split('\n').Where(fen => fen.Length > 0).ToArray()[..500];
+
+        int wins = 0;
+        int draws = 0;
+        int losses = 0;
+
+        Task[] tasks = new Task[fens.Length * 2];
+
+        int index = 0;
+        foreach (string fen in fens)
+        {
+          Task whiteTask = Task.Factory.StartNew(() =>
+          {
+            FastGame.Result whiteResult = FastGame.Play(new MyBot(), new MyBotNoTransposition(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
+
+            if (whiteResult == FastGame.Result.WhiteWin)
+            {
+              wins++;
+            }
+            else if (whiteResult == FastGame.Result.BlackWin)
+            {
+              losses++;
+            }
+            else
+            {
+              draws++;
+            }
+
+            Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, whiteResult));
+          });
+
+          Task blackTask = Task.Factory.StartNew(() =>
+          {
+            FastGame.Result blackResult = FastGame.Play(new MyBotNoTransposition(), new MyBot(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
+
+            if (blackResult == FastGame.Result.WhiteWin)
+            {
+              losses++;
+            }
+            else if (blackResult == FastGame.Result.BlackWin)
+            {
+              wins++;
+            }
+            else
+            {
+              draws++;
+            }
+
+            Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, blackResult));
+          });
+
+          tasks[index * 2] = whiteTask;
+          tasks[index * 2 + 1] = whiteTask;
+
+          index++;
+
+          // if (index % 40 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
+        }
+
+        Task.WaitAll(tasks);
+
+        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
       }
       if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       {

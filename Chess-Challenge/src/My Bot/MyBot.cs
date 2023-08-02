@@ -5,19 +5,23 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  static Board _board;
-  static int _maxDepth = 0;
+  Board _board;
+  int _maxDepth = 0;
 
   record struct TranspositionEntry(ulong Hash, int Depth, State State);
-  static TranspositionEntry[] _transpositionTable = new TranspositionEntry[10000];
+  TranspositionEntry[] _transpositionTable = new TranspositionEntry[1000000];
 
-  static void AddTranspositionEntry(int evaluationDepth, State state)
+  void AddTranspositionEntry(int evaluationDepth, State state)
   {
-    TranspositionEntry transpositionEntry = _transpositionTable[_board.ZobristKey % 10000];
+    if (evaluationDepth < 3) return;
+
+    TranspositionEntry transpositionEntry = _transpositionTable[_board.ZobristKey % 1000000];
 
     // Console.WriteLine(new String('\t', depth) + String.Format("Transposition Set! {4} hash: {3} entry depth: {0} evaluation depth: {1} depth: {2}", _transpositionEntry.Depth, targetDepth - depth, depth, _board.ZobristKey, Move));
 
-    _transpositionTable[_board.ZobristKey % 10000] = new TranspositionEntry(_board.ZobristKey, evaluationDepth, state);
+    if (transpositionEntry.Depth > evaluationDepth) return;
+
+    _transpositionTable[_board.ZobristKey % 1000000] = new TranspositionEntry(_board.ZobristKey, evaluationDepth, state);
   }
 
   class State
@@ -26,17 +30,19 @@ public class MyBot : IChessBot
     public int Score;
     public State[] ChildStates = null;
 
+    MyBot Me;
+
     public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
     {
       if (depth > targetDepth) return;
 
-      _maxDepth = Math.Max(_maxDepth, depth);
+      Me._maxDepth = Math.Max(Me._maxDepth, depth);
 
-      _board.MakeMove(Move);
+      Me._board.MakeMove(Move);
 
       // Console.WriteLine(String.Format("Transposition check. entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3}", _transpositionEntry.Depth, targetDepth - depth, depth, targetDepth));
 
-      if (ChildStates == null) ChildStates = _board.GetLegalMoves().Select(move => new State(move, targetDepth, depth)).OrderByDescending(state => -state.Score).ToArray();
+      if (ChildStates == null) ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, targetDepth, Me, depth)).OrderByDescending(state => -state.Score).ToArray();
 
       int max = -99999;
 
@@ -65,49 +71,57 @@ public class MyBot : IChessBot
 
       ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
 
-      AddTranspositionEntry(targetDepth - depth, this);
+      Me.AddTranspositionEntry(targetDepth - depth, this);
 
-      _board.UndoMove(Move);
+      Me._board.UndoMove(Move);
     }
 
-    public State(Move move, int targetDepth, int depth = 0)
+    public State(Move move, int targetDepth, MyBot me, int depth = 0)
     {
+      Me = me;
+
       Move = move;
 
-      _board.MakeMove(move);
+      Me._board.MakeMove(move);
 
-      TranspositionEntry transpositionEntry = _transpositionTable[_board.ZobristKey % 10000];
+      Score = Me.Evaluate();
 
-      if (targetDepth - depth <= transpositionEntry.Depth && transpositionEntry.Depth > 0 && transpositionEntry.Hash == _board.ZobristKey)
+      if (depth == targetDepth)
       {
-        // Console.WriteLine(new String('\t', depth) + String.Format("!!!! Transposition Hit! {4} entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3} score: {5}", transpositionEntry.Depth, targetDepth - depth, depth, targetDepth, Move, transpositionEntry.State.Score));
+        ulong key = Me._board.ZobristKey;
 
-        ChildStates = transpositionEntry.State.ChildStates;
-        Score = transpositionEntry.State.Score;
+        TranspositionEntry transpositionEntry = Me._transpositionTable[key % 1000000];
 
-        _board.UndoMove(move);
+        if (transpositionEntry.Hash == key)
+        {
+          // Console.WriteLine(new String('\t', depth) + String.Format("!!!! Transposition Hit! {4} entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3} score: {5}", transpositionEntry.Depth, targetDepth - depth, depth, targetDepth, Move, transpositionEntry.State.Score));
 
-        return;
+          Score = transpositionEntry.State.Score;
+        }
       }
 
-      if (move.IsNull)
-      {
-        _board.UndoMove(move);
+      // TranspositionEntry transpositionEntry = Me._transpositionTable[Me._board.ZobristKey % 1000000];
 
-        return;
-      }
+      // if (targetDepth - depth <= transpositionEntry.Depth && transpositionEntry.Depth > 0 && transpositionEntry.Hash == Me._board.ZobristKey)
+      // {
+      //   // Console.WriteLine(new String('\t', depth) + String.Format("!!!! Transposition Hit! {4} entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3} score: {5}", transpositionEntry.Depth, targetDepth - depth, depth, targetDepth, Move, transpositionEntry.State.Score));
 
-      Score = Evaluate();
-
-      _board.UndoMove(move);
+      //   ChildStates = transpositionEntry.State.ChildStates;
+      //   Score = transpositionEntry.State.Score;
+      // }
+      // else
+      // {
+      // Score = Me.Evaluate();
+      // }
+      Me._board.UndoMove(move);
     }
   }
 
-  static int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
+  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
 
-  static int ColorEvaluationFactor(bool white) => white ? 1 : -1;
+  int ColorEvaluationFactor(bool white) => white ? 1 : -1;
 
-  static int Evaluate()
+  int Evaluate()
   {
     if (_board.IsInCheckmate()) return -1000;
 
@@ -133,7 +147,7 @@ public class MyBot : IChessBot
 
     string boardFen = board.GetFenString();
 
-    State tree = new State(Move.NullMove, -1);
+    State tree = new State(Move.NullMove, -1, this);
 
     // if (_reuseableStates.ContainsKey(boardFen)) tree = _reuseableStates[boardFen];
     // else tree = new State(Move.NullMove, -1);
