@@ -20,6 +20,7 @@ namespace ChessChallenge.Application
       ARCNET1,
       ARCNET2,
       ARCNET2_Optimized,
+      ARCNET2_MoveOrdering,
       EloBot2,
       EvilBot
     }
@@ -212,6 +213,7 @@ namespace ChessChallenge.Application
         PlayerType.ARCNET1 => new ChessPlayer(new ARCNET1(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2 => new ChessPlayer(new ARCNET2(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_Optimized => new ChessPlayer(new ARCNET2_Optimized(), type, GameDurationMilliseconds),
+        PlayerType.ARCNET2_MoveOrdering => new ChessPlayer(new ARCNET2_MoveOrdering(), type, GameDurationMilliseconds),
         PlayerType.EloBot2 => new ChessPlayer(new EloBot2(), type, GameDurationMilliseconds),
         PlayerType.EvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
