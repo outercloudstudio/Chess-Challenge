@@ -19,10 +19,13 @@ namespace ChessChallenge.Application
       Human,
       ARCNET1,
       MyBot,
+      MyBotFailHard,
       ARCNET2_Optimized,
       ARCNET2_MoveOrdering,
       EloBot2,
-      EvilBot
+      EvilBot,
+      Tyrant,
+      MyBotNoTransposition
     }
 
     // Game state
@@ -213,10 +216,13 @@ namespace ChessChallenge.Application
       {
         PlayerType.ARCNET1 => new ChessPlayer(new ARCNET1(), type, GameDurationMilliseconds),
         PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
+        PlayerType.MyBotFailHard => new ChessPlayer(new MyBotFailHard(), type, GameDurationMilliseconds),
+        PlayerType.MyBotNoTransposition => new ChessPlayer(new MyBotNoTransposition(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_Optimized => new ChessPlayer(new ARCNET2_Optimized(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_MoveOrdering => new ChessPlayer(new ARCNET2_MoveOrdering(), type, GameDurationMilliseconds),
         PlayerType.EloBot2 => new ChessPlayer(new EloBot2(), type, GameDurationMilliseconds),
         PlayerType.EvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
+        PlayerType.Tyrant => new ChessPlayer(new Tyrant(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
     }
@@ -392,6 +398,7 @@ namespace ChessChallenge.Application
       string nameB = GetPlayerName(PlayerBlack);
       boardUI.DrawPlayerNames(nameW, nameB, PlayerWhite.TimeRemainingMs, PlayerBlack.TimeRemainingMs, isPlaying);
     }
+
     public void DrawOverlay()
     {
       BotBrainCapacityUI.Draw(tokenCount, debugTokenCount, MaxTokenCount);

@@ -33,6 +33,10 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
       }
+      if (NextButtonInRow("My Bot vs My Bot No Transposition", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotNoTransposition);
+      }
       if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
@@ -44,6 +48,10 @@ namespace ChessChallenge.Application
       if (NextButtonInRow("v T2", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
+      }
+      if (NextButtonInRow("v Tyrant", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tyrant);
       }
       // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
       // {

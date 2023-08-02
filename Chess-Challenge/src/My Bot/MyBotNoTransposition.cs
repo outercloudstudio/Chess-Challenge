@@ -3,22 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class MyBot : IChessBot
+public class MyBotNoTransposition : IChessBot
 {
   static Board _board;
   static int _maxDepth = 0;
-
-  record struct TranspositionEntry(ulong Hash, int Depth, State State);
-  static TranspositionEntry[] _transpositionTable = new TranspositionEntry[10000];
-
-  static void AddTranspositionEntry(int evaluationDepth, State state)
-  {
-    TranspositionEntry transpositionEntry = _transpositionTable[_board.ZobristKey % 10000];
-
-    // Console.WriteLine(new String('\t', depth) + String.Format("Transposition Set! {4} hash: {3} entry depth: {0} evaluation depth: {1} depth: {2}", _transpositionEntry.Depth, targetDepth - depth, depth, _board.ZobristKey, Move));
-
-    _transpositionTable[_board.ZobristKey % 10000] = new TranspositionEntry(_board.ZobristKey, evaluationDepth, state);
-  }
 
   class State
   {
@@ -65,8 +53,6 @@ public class MyBot : IChessBot
 
       ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
 
-      AddTranspositionEntry(targetDepth - depth, this);
-
       _board.UndoMove(Move);
     }
 
@@ -75,20 +61,6 @@ public class MyBot : IChessBot
       Move = move;
 
       _board.MakeMove(move);
-
-      TranspositionEntry transpositionEntry = _transpositionTable[_board.ZobristKey % 10000];
-
-      if (targetDepth - depth <= transpositionEntry.Depth && transpositionEntry.Depth > 0 && transpositionEntry.Hash == _board.ZobristKey)
-      {
-        // Console.WriteLine(new String('\t', depth) + String.Format("!!!! Transposition Hit! {4} entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3} score: {5}", transpositionEntry.Depth, targetDepth - depth, depth, targetDepth, Move, transpositionEntry.State.Score));
-
-        ChildStates = transpositionEntry.State.ChildStates;
-        Score = transpositionEntry.State.Score;
-
-        _board.UndoMove(move);
-
-        return;
-      }
 
       if (move.IsNull)
       {
