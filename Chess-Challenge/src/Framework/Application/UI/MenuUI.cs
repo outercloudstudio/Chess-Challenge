@@ -29,6 +29,10 @@ namespace ChessChallenge.Application
         var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
+      if (NextButtonInRow("My Bot vs My Bot", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
+      }
       if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
