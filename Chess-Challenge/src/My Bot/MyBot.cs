@@ -8,25 +8,39 @@ public class MyBot : IChessBot
   static Board _board;
   static int _maxDepth = 0;
 
+  record struct TranspositionEntry(int Score, int Depth);
+  static TranspositionEntry[] _transpositionTable = new TranspositionEntry[10000];
+
   class State
   {
     public Move Move;
     public int Score;
     public State[] ChildStates = null;
 
-    public void Expand(int alpha = -99999, int beta = 99999, int depth = 0)
+    public void Expand(int targetDepth, bool root, int alpha = -99999, int beta = 99999, int depth = 0)
     {
       _maxDepth = Math.Max(_maxDepth, depth);
 
       _board.MakeMove(Move);
+
+      // TranspositionEntry _transpositionEntry = _transpositionTable[_board.ZobristKey % 10000];
+
+      // if (_transpositionEntry.Depth >= targetDepth - depth)
+      // {
+      //   Console.WriteLine(String.Format("Transposition Hit! entry depth: {0} target depth: {1} actual depth: {2}", _transpositionEntry.Depth, targetDepth, depth));
+
+      //   Score = _transpositionEntry.Score;
+
+      //   _board.UndoMove(Move);
+
+      //   return;
+      // }
 
       if (ChildStates == null)
       {
         ChildStates = _board.GetLegalMoves().Select(move => new State(move)).OrderByDescending(state => -state.Score).ToArray();
 
         if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
-
-        _board.UndoMove(Move);
 
         // foreach (State state in ChildStates) Console.WriteLine(new String('\t', _currentDepth) + String.Format("{0} Score: {1} Alpha: {2} Beta: {3}", state.Move, state.Score, alpha, beta));
       }
@@ -38,7 +52,7 @@ public class MyBot : IChessBot
         {
           // Console.WriteLine(new String('\t', _currentDepth) + String.Format("Looking at {0} Alpha: {1} Beta: {2}", state.Move, alpha, beta));
 
-          state.Expand(-beta, -alpha, depth + 1);
+          state.Expand(targetDepth, false, -beta, -alpha, depth + 1);
 
           int score = -state.Score;
 
@@ -62,9 +76,14 @@ public class MyBot : IChessBot
         Score = max;
 
         ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
-
-        _board.UndoMove(Move);
       }
+
+      // if (targetDepth - depth > _transpositionEntry.Depth && depth > 0)
+      // {
+      // _transpositionTable[_board.ZobristKey % 10000] = new TranspositionEntry(Score, depth);
+      // }
+
+      _board.UndoMove(Move);
     }
 
     public State(Move move)
@@ -116,7 +135,12 @@ public class MyBot : IChessBot
     if (_reuseableStates.ContainsKey(boardFen)) tree = _reuseableStates[boardFen];
     else tree = new State(Move.NullMove);
 
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 120 || tree.ChildStates == null) tree.Expand();
+    for (int targetDepth = 1; timer.MillisecondsElapsedThisTurn < 12 || tree.ChildStates == null; targetDepth++)
+    {
+      Console.WriteLine("Expanding...");
+
+      tree.Expand(targetDepth, true);
+    }
 
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
