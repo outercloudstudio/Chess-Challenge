@@ -143,7 +143,7 @@ public class MyBotEvil : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    Console.WriteLine(String.Format("My Bot Evil: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
+    // Console.WriteLine(String.Format("My Bot Evil: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
 
     return tree.Move;
   }

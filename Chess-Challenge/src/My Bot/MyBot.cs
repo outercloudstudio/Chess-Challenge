@@ -42,10 +42,7 @@ public class MyBot : IChessBot
 
       if (ChildStates == null)
       {
-        Span<Move> moves = stackalloc Move[218];
-        Me._board.GetLegalMovesNonAlloc(ref moves);
-
-        ChildStates = moves.ToArray().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
+        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
 
         if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
       }
@@ -146,7 +143,7 @@ public class MyBot : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
+    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
 
     return tree.Move;
   }
