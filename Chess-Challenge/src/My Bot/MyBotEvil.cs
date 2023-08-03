@@ -36,9 +36,9 @@ public class MyBotEvil : IChessBot
 
       if (depth > targetDepth) return;
 
-      Me._maxDepth = Math.Max(Me._maxDepth, depth);
-
       Me._board.MakeMove(Move);
+
+      Me._maxDepth = Math.Max(Me._maxDepth, depth);
 
       if (ChildStates == null)
       {
@@ -106,7 +106,7 @@ public class MyBotEvil : IChessBot
   {
     if (_board.IsInCheckmate()) return -1000;
 
-    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return 1;
+    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -2;
 
     int materialEvaluation = 0;
 
@@ -119,23 +119,31 @@ public class MyBotEvil : IChessBot
     return materialEvaluation * ColorEvaluationFactor(_board.IsWhiteToMove);
   }
 
+  Dictionary<ulong, State> _reuseableStates = new Dictionary<ulong, State>();
+
   public Move Think(Board board, Timer timer)
   {
     _board = board;
     _maxDepth = 0;
 
-    string boardFen = board.GetFenString();
+    ulong hash = board.ZobristKey;
 
-    State tree = new State(Move.NullMove, this);
+    State tree;
+
+    if (_reuseableStates.Count != 0) tree = _reuseableStates[hash];
+    else tree = new State(Move.NullMove, this);
+
+    tree.Move = Move.NullMove;
 
     for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth);
 
-    // foreach (State state in tree.ChildStates) Console.WriteLine(String.Format("{0} Score: {1}", state.Move, state.Score)); //#DEBUG
-
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 
+    _reuseableStates = new Dictionary<ulong, State>();
 
-    // Console.WriteLine(String.Format("My Bot Evil: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
+    if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
+
+    Console.WriteLine(String.Format("My Bot Evil: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
 
     return tree.Move;
   }

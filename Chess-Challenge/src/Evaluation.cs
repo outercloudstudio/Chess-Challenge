@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using ChessChallenge.Chess;
 
@@ -65,5 +66,39 @@ public class Evaluation
     while (!complete) { }
 
     return evaluation;
+  }
+
+  public static string BestMoveAtElo(Process process, int elo, string fen, int whiteTime, int blackTime)
+  {
+    bool ready = false;
+    bool complete = false;
+    string bestMove = "";
+
+    process.OutputDataReceived += (sender, args) =>
+    {
+      if (args.Data == "readyok") ready = true;
+
+      if (!args.Data.StartsWith("bestmove ")) return;
+
+      bestMove = args.Data.Split(" ")[1];
+
+      complete = true;
+    };
+
+    process.StandardInput.WriteLine("ucinewgame");
+
+    process.StandardInput.WriteLine("isready");
+
+    while (!ready) { }
+
+    process.StandardInput.WriteLine("setoption name UCI_LimitStrength value true");
+    process.StandardInput.WriteLine("setoption name UCI_Elo value " + elo);
+
+    process.StandardInput.WriteLine("position fen " + fen);
+    process.StandardInput.WriteLine("go wtime " + whiteTime + " btime " + blackTime);
+
+    while (!complete) { }
+
+    return bestMove;
   }
 }

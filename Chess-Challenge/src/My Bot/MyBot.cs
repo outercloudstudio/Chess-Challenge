@@ -36,13 +36,16 @@ public class MyBot : IChessBot
 
       if (depth > targetDepth) return;
 
-      Me._maxDepth = Math.Max(Me._maxDepth, depth);
-
       Me._board.MakeMove(Move);
+
+      Me._maxDepth = Math.Max(Me._maxDepth, depth);
 
       if (ChildStates == null)
       {
-        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
+        Span<Move> moves = stackalloc Move[218];
+        Me._board.GetLegalMovesNonAlloc(ref moves);
+
+        ChildStates = moves.ToArray().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
 
         if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
       }
@@ -106,7 +109,7 @@ public class MyBot : IChessBot
   {
     if (_board.IsInCheckmate()) return -1000;
 
-    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return 1;
+    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -2;
 
     int materialEvaluation = 0;
 
@@ -130,8 +133,6 @@ public class MyBot : IChessBot
 
     State tree;
 
-    // Console.WriteLine("Looking at " + _reuseableStates.Count + " states"); //#DEBUG
-
     if (_reuseableStates.Count != 0) tree = _reuseableStates[hash];
     else tree = new State(Move.NullMove, this);
 
@@ -145,7 +146,7 @@ public class MyBot : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
+    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
 
     return tree.Move;
   }

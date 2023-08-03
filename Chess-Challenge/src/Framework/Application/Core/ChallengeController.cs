@@ -24,7 +24,8 @@ namespace ChessChallenge.Application
       EloBot2,
       EvilBot,
       Tyrant,
-      MyBotEvil
+      MyBotEvil,
+      StockFish
     }
 
     // Game state
@@ -221,6 +222,7 @@ namespace ChessChallenge.Application
         PlayerType.EloBot2 => new ChessPlayer(new EloBot2(), type, GameDurationMilliseconds),
         PlayerType.EvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
         PlayerType.Tyrant => new ChessPlayer(new Tyrant(), type, GameDurationMilliseconds),
+        PlayerType.StockFish => new ChessPlayer(new StockFish(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
     }

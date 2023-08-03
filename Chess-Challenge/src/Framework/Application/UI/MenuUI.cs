@@ -25,18 +25,18 @@ namespace ChessChallenge.Application
         var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBot : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
-      if (NextButtonInRow("Human vs My Bot No T", ref buttonPos, spacing, buttonSize))
-      {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
-        controller.StartNewGame(whiteType, blackType);
-      }
-      if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
-      {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
-        controller.StartNewGame(whiteType, blackType);
-      }
+      // if (NextButtonInRow("Human vs My Bot No T", ref buttonPos, spacing, buttonSize))
+      // {
+      //   var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
+      //   var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
+      //   controller.StartNewGame(whiteType, blackType);
+      // }
+      // if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
+      // {
+      //   var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
+      //   var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
+      //   controller.StartNewGame(whiteType, blackType);
+      // }
       if (NextButtonInRow("My Bot vs My Bot", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
@@ -49,19 +49,18 @@ namespace ChessChallenge.Application
       {
         FastGame.Match(() => new MyBot(), () => new MyBotEvil(), 30 * 1000);
       }
-
-      if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
-      {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
-      }
-      if (NextButtonInRow("v T1", ref buttonPos, spacing, buttonSize))
-      {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
-      }
-      if (NextButtonInRow("My Bot vs T1 Threaded", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new ARCNET2_MoveOrdering(), 30 * 1000);
-      }
+      // if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
+      // {
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
+      // }
+      // if (NextButtonInRow("v T1", ref buttonPos, spacing, buttonSize))
+      // {
+      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
+      // }
+      // if (NextButtonInRow("My Bot vs T1 Threaded", ref buttonPos, spacing, buttonSize))
+      // {
+      //   FastGame.Match(() => new MyBot(), () => new ARCNET2_MoveOrdering(), 30 * 1000);
+      // }
       if (NextButtonInRow("v T2", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
@@ -77,6 +76,14 @@ namespace ChessChallenge.Application
       if (NextButtonInRow("My Bot vs Tyrant Threaded", ref buttonPos, spacing, buttonSize))
       {
         FastGame.Match(() => new MyBot(), () => new Tyrant(), 30 * 1000);
+      }
+      if (NextButtonInRow("My Bot vs StockFish", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.StockFish);
+      }
+      if (NextButtonInRow("My Bot vs StockFish Threaded", ref buttonPos, spacing, buttonSize))
+      {
+        FastGame.Match(() => new MyBot(), () => new StockFish(), 60 * 1000);
       }
       // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
       // {
