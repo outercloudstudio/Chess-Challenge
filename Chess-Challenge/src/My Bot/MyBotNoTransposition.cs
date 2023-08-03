@@ -26,7 +26,7 @@ public class MyBotNoTransposition : IChessBot
 
       // Console.WriteLine(String.Format("Transposition check. entry depth: {0} evaluation depth: {1} call depth: {2} target depth: {3}", _transpositionEntry.Depth, targetDepth - depth, depth, targetDepth));
 
-      if (ChildStates == null) ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, targetDepth, Me, depth)).OrderByDescending(state => -state.Score).ToArray();
+      if (ChildStates == null) ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
 
       int max = -99999;
 
@@ -58,7 +58,7 @@ public class MyBotNoTransposition : IChessBot
       Me._board.UndoMove(Move);
     }
 
-    public State(Move move, int targetDepth, MyBotNoTransposition me, int depth = 0)
+    public State(Move move, MyBotNoTransposition me)
     {
       Me = me;
 
@@ -100,13 +100,13 @@ public class MyBotNoTransposition : IChessBot
 
     string boardFen = board.GetFenString();
 
-    State tree = new State(Move.NullMove, -1, this);
+    State tree = new State(Move.NullMove, this);
 
     for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth);
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 
-    Console.WriteLine(String.Format("My Bot No Transposition: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
+    // Console.WriteLine(String.Format("My Bot No Transposition: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
 
     return tree.Move;
   }

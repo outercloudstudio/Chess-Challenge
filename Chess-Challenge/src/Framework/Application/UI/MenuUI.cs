@@ -43,6 +43,10 @@ namespace ChessChallenge.Application
       }
       if (NextButtonInRow("My Bot vs My Bot No Transposition", ref buttonPos, spacing, buttonSize))
       {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotNoTransposition);
+      }
+      if (NextButtonInRow("My Bot vs My Bot No Transposition Threaded", ref buttonPos, spacing, buttonSize))
+      {
         string[] fens = FileHelper.ReadResourceFile("Fens.txt").Split('\n').Where(fen => fen.Length > 0).ToArray()[..500];
 
         int wins = 0;
@@ -72,6 +76,7 @@ namespace ChessChallenge.Application
             }
 
             Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, whiteResult));
+            Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
           });
 
           Task blackTask = Task.Factory.StartNew(() =>
@@ -92,6 +97,7 @@ namespace ChessChallenge.Application
             }
 
             Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, blackResult));
+            Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
           });
 
           tasks[index * 2] = whiteTask;
