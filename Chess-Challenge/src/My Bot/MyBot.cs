@@ -119,59 +119,33 @@ public class MyBot : IChessBot
     return materialEvaluation * ColorEvaluationFactor(_board.IsWhiteToMove);
   }
 
-  // Dictionary<string, State> _reuseableStates = new Dictionary<string, State>();
+  Dictionary<ulong, State> _reuseableStates = new Dictionary<ulong, State>();
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
     _maxDepth = 0;
 
-    string boardFen = board.GetFenString();
+    ulong hash = board.ZobristKey;
 
-    State tree = new State(Move.NullMove, this);
+    State tree;
 
-    // if (_reuseableStates.ContainsKey(boardFen)) tree = _reuseableStates[boardFen];
-    // else tree = new State(Move.NullMove, -1);
+    // Console.WriteLine("Looking at " + _reuseableStates.Count + " states"); //#DEBUG
 
-    // for (int targetDepth = 0; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60 || tree.ChildStates == null; targetDepth++)
-    // {
-    //   // Console.WriteLine("\nSearching Depth " + targetDepth);
+    if (_reuseableStates.Count != 0) tree = _reuseableStates[hash];
+    else tree = new State(Move.NullMove, this);
 
-    //   tree.Expand(targetDepth, true);
-    // }
+    tree.Move = Move.NullMove;
 
     for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth);
-    // for (int targetDepth = 0; targetDepth <= 3; targetDepth++) tree.Expand(targetDepth);
-
-    // foreach (State state in tree.ChildStates) Console.WriteLine(String.Format("{0} Score: {1}", state.Move, state.Score)); //#DEBUG
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 
-    // _reuseableStates = new Dictionary<string, State>();
+    _reuseableStates = new Dictionary<ulong, State>();
 
-    // if (tree.ChildStates != null)
-    // {
-    //   board.MakeMove(tree.Move);
+    if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    //   foreach (State state in tree.ChildStates)
-    //   {
-    //     board.MakeMove(state.Move);
-
-    //     string fen = board.GetFenString();
-
-    //     board.UndoMove(state.Move);
-
-    //     _reuseableStates[fen] = state;
-
-    //     state.Move = Move.NullMove;
-
-    //     break;
-    //   }
-
-    //   board.UndoMove(tree.Move);
-    // }
-
-    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
+    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
 
     return tree.Move;
   }

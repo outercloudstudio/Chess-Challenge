@@ -42,7 +42,7 @@ public class Tyrant : IChessBot
     // Progressively increase search depth, starting from 2
     for (int depth = 2; ;)
     {
-      Console.WriteLine("hit depth: " + depth + " in " + searchTimer.MillisecondsElapsedThisTurn + "ms"); // #DEBUG
+      // Console.WriteLine("hit depth: " + depth + " in " + searchTimer.MillisecondsElapsedThisTurn + "ms"); // #DEBUG
 
       PVS(depth++, -9999999, 9999999, 0);
 

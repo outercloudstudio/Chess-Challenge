@@ -47,71 +47,9 @@ namespace ChessChallenge.Application
       }
       if (NextButtonInRow("My Bot vs My Bot Evil Threaded", ref buttonPos, spacing, buttonSize))
       {
-        string[] fens = FileHelper.ReadResourceFile("Fens.txt").Split('\n').Where(fen => fen.Length > 0).ToArray()[..500];
-
-        int wins = 0;
-        int draws = 0;
-        int losses = 0;
-
-        Task[] tasks = new Task[fens.Length * 2];
-
-        int index = 0;
-        foreach (string fen in fens)
-        {
-          Task whiteTask = Task.Factory.StartNew(() =>
-          {
-            FastGame.Result whiteResult = FastGame.Play(new MyBot(), new MyBotEvil(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
-
-            if (whiteResult == FastGame.Result.WhiteWin)
-            {
-              wins++;
-            }
-            else if (whiteResult == FastGame.Result.BlackWin)
-            {
-              losses++;
-            }
-            else
-            {
-              draws++;
-            }
-
-            Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, whiteResult));
-            Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
-          });
-
-          Task blackTask = Task.Factory.StartNew(() =>
-          {
-            FastGame.Result blackResult = FastGame.Play(new MyBotEvil(), new MyBot(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
-
-            if (blackResult == FastGame.Result.WhiteWin)
-            {
-              losses++;
-            }
-            else if (blackResult == FastGame.Result.BlackWin)
-            {
-              wins++;
-            }
-            else
-            {
-              draws++;
-            }
-
-            Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, blackResult));
-            Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
-          });
-
-          tasks[index * 2] = whiteTask;
-          tasks[index * 2 + 1] = whiteTask;
-
-          index++;
-
-          // if (index % 40 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
-        }
-
-        Task.WaitAll(tasks);
-
-        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
+        FastGame.Match(() => new MyBot(), () => new MyBotEvil(), 30 * 1000);
       }
+
       if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
@@ -120,13 +58,25 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
       }
+      if (NextButtonInRow("My Bot vs T1 Threaded", ref buttonPos, spacing, buttonSize))
+      {
+        FastGame.Match(() => new MyBot(), () => new ARCNET2_MoveOrdering(), 30 * 1000);
+      }
       if (NextButtonInRow("v T2", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
       }
+      if (NextButtonInRow("My Bot vs T2", ref buttonPos, spacing, buttonSize))
+      {
+        FastGame.Match(() => new MyBot(), () => new EloBot2(), 30 * 1000);
+      }
       if (NextButtonInRow("v Tyrant", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tyrant);
+      }
+      if (NextButtonInRow("My Bot vs Tyrant Threaded", ref buttonPos, spacing, buttonSize))
+      {
+        FastGame.Match(() => new MyBot(), () => new Tyrant(), 30 * 1000);
       }
       // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
       // {

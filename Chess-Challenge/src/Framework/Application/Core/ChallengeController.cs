@@ -19,7 +19,6 @@ namespace ChessChallenge.Application
       Human,
       ARCNET1,
       MyBot,
-      MyBotFailHard,
       ARCNET2_Optimized,
       ARCNET2_MoveOrdering,
       EloBot2,
@@ -216,7 +215,6 @@ namespace ChessChallenge.Application
       {
         PlayerType.ARCNET1 => new ChessPlayer(new ARCNET1(), type, GameDurationMilliseconds),
         PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
-        PlayerType.MyBotFailHard => new ChessPlayer(new MyBotFailHard(), type, GameDurationMilliseconds),
         PlayerType.MyBotEvil => new ChessPlayer(new MyBotEvil(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_Optimized => new ChessPlayer(new ARCNET2_Optimized(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_MoveOrdering => new ChessPlayer(new ARCNET2_MoveOrdering(), type, GameDurationMilliseconds),
