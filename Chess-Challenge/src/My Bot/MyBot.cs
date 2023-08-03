@@ -135,7 +135,7 @@ public class MyBot : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth);
+    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth, tree.Score - 1, tree.Score + 1);
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 
