@@ -6,7 +6,6 @@ using ChessChallenge.API;
 public class MyBot : IChessBot
 {
   Board _board;
-  Timer _timer;
   int _maxDepth = 0;  // #DEBUG
 
   record class TranspositionEntry(ulong Hash, int Depth, int Score);
@@ -24,8 +23,6 @@ public class MyBot : IChessBot
 
     public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
     {
-      if (ChildStates != null && Me._timer.MillisecondsElapsedThisTurn >= Me._timer.MillisecondsRemaining / 60) return;
-
       TranspositionEntry entry = Me._transpositionTable[Key];
 
       int evaluationDepth = targetDepth - depth;
@@ -127,7 +124,6 @@ public class MyBot : IChessBot
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _timer = timer;
     _maxDepth = 0; // #DEBUG
 
     ulong hash = board.ZobristKey;
