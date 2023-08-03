@@ -27,8 +27,8 @@ namespace ChessChallenge.Application
       }
       if (NextButtonInRow("Human vs My Bot No T", ref buttonPos, spacing, buttonSize))
       {
-        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotNoTransposition : ChallengeController.PlayerType.Human;
-        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotNoTransposition : ChallengeController.PlayerType.Human;
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
       if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
@@ -41,11 +41,11 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
       }
-      if (NextButtonInRow("My Bot vs My Bot No Transposition", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("My Bot vs My Bot Evil", ref buttonPos, spacing, buttonSize))
       {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotNoTransposition);
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotEvil);
       }
-      if (NextButtonInRow("My Bot vs My Bot No Transposition Threaded", ref buttonPos, spacing, buttonSize))
+      if (NextButtonInRow("My Bot vs My Bot Evil Threaded", ref buttonPos, spacing, buttonSize))
       {
         string[] fens = FileHelper.ReadResourceFile("Fens.txt").Split('\n').Where(fen => fen.Length > 0).ToArray()[..500];
 
@@ -60,7 +60,7 @@ namespace ChessChallenge.Application
         {
           Task whiteTask = Task.Factory.StartNew(() =>
           {
-            FastGame.Result whiteResult = FastGame.Play(new MyBot(), new MyBotNoTransposition(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
+            FastGame.Result whiteResult = FastGame.Play(new MyBot(), new MyBotEvil(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
 
             if (whiteResult == FastGame.Result.WhiteWin)
             {
@@ -81,7 +81,7 @@ namespace ChessChallenge.Application
 
           Task blackTask = Task.Factory.StartNew(() =>
           {
-            FastGame.Result blackResult = FastGame.Play(new MyBotNoTransposition(), new MyBot(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
+            FastGame.Result blackResult = FastGame.Play(new MyBotEvil(), new MyBot(), API.Board.CreateBoardFromFEN(fen), 30 * 1000);
 
             if (blackResult == FastGame.Result.WhiteWin)
             {

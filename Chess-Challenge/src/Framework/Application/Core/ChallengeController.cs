@@ -25,7 +25,7 @@ namespace ChessChallenge.Application
       EloBot2,
       EvilBot,
       Tyrant,
-      MyBotNoTransposition
+      MyBotEvil
     }
 
     // Game state
@@ -217,7 +217,7 @@ namespace ChessChallenge.Application
         PlayerType.ARCNET1 => new ChessPlayer(new ARCNET1(), type, GameDurationMilliseconds),
         PlayerType.MyBot => new ChessPlayer(new MyBot(), type, GameDurationMilliseconds),
         PlayerType.MyBotFailHard => new ChessPlayer(new MyBotFailHard(), type, GameDurationMilliseconds),
-        PlayerType.MyBotNoTransposition => new ChessPlayer(new MyBotNoTransposition(), type, GameDurationMilliseconds),
+        PlayerType.MyBotEvil => new ChessPlayer(new MyBotEvil(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_Optimized => new ChessPlayer(new ARCNET2_Optimized(), type, GameDurationMilliseconds),
         PlayerType.ARCNET2_MoveOrdering => new ChessPlayer(new ARCNET2_MoveOrdering(), type, GameDurationMilliseconds),
         PlayerType.EloBot2 => new ChessPlayer(new EloBot2(), type, GameDurationMilliseconds),

@@ -171,7 +171,7 @@ public class MyBot : IChessBot
     //   board.UndoMove(tree.Move);
     // }
 
-    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
+    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn));
 
     return tree.Move;
   }

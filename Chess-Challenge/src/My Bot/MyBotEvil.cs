@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
-public class MyBotFailHard : IChessBot
+public class MyBotEvil : IChessBot
 {
   static Board _board;
   static int _maxDepth = 0;
