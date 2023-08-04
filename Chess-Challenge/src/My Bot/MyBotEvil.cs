@@ -135,7 +135,15 @@ public class MyBotEvil : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++) tree.Expand(targetDepth);
+    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
+    {
+      int lowerWindow = tree.Score - 1;
+      int upperWindow = tree.Score + 1;
+
+      tree.Expand(targetDepth, 0, lowerWindow, upperWindow);
+
+      if (tree.Score <= lowerWindow || tree.Score >= upperWindow) tree.Expand(targetDepth);
+    }
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 

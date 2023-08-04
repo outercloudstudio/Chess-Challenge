@@ -5,8 +5,15 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
+  /*
+  TODO:
+  PSTS
+  Move Ordering
+  Q Search
+  */
+
   Board _board;
-  int _maxDepth = 0;  // #DEBUG
+  int _maxDepth = 0;
 
   record class TranspositionEntry(ulong Hash, int Depth, int Score);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[100000];
@@ -23,6 +30,8 @@ public class MyBot : IChessBot
 
     public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
     {
+      Me._maxDepth = Math.Max(Me._maxDepth, depth);
+
       TranspositionEntry entry = Me._transpositionTable[Key];
 
       int evaluationDepth = targetDepth - depth;
@@ -34,11 +43,7 @@ public class MyBot : IChessBot
         return;
       }
 
-      if (depth > targetDepth) return;
-
       Me._board.MakeMove(Move);
-
-      Me._maxDepth = Math.Max(Me._maxDepth, depth);  // #DEBUG
 
       if (ChildStates == null)
       {
@@ -124,7 +129,6 @@ public class MyBot : IChessBot
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _maxDepth = 0; // #DEBUG
 
     ulong hash = board.ZobristKey;
 
@@ -135,8 +139,10 @@ public class MyBot : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
+    for (int targetDepth = Math.Max(0, _maxDepth - 2); tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
     {
+      _maxDepth = 0;
+
       int lowerWindow = tree.Score - 1;
       int upperWindow = tree.Score + 1;
 
