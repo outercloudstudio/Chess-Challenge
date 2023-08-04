@@ -13,7 +13,6 @@ public class MyBot : IChessBot
   */
 
   Board _board;
-  int _maxDepth = 0;
 
   record class TranspositionEntry(ulong Hash, int Depth, int Score);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[100000];
@@ -25,18 +24,17 @@ public class MyBot : IChessBot
     public State[] ChildStates = null;
     public int Key;
     public ulong Hash;
+    public int Depth;
 
     MyBot Me;
 
     public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
     {
-      Me._maxDepth = Math.Max(Me._maxDepth, depth);
+      if (depth > targetDepth) return;
 
       TranspositionEntry entry = Me._transpositionTable[Key];
 
-      int evaluationDepth = targetDepth - depth;
-
-      if (entry != null && entry.Hash == Hash && entry.Depth >= evaluationDepth)
+      if (entry != null && entry.Hash == Hash && entry.Depth > Depth)
       {
         Score = entry.Score;
 
@@ -50,6 +48,8 @@ public class MyBot : IChessBot
         ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
 
         if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
+
+        Depth = 1;
       }
       else
       {
@@ -58,6 +58,7 @@ public class MyBot : IChessBot
         foreach (State state in ChildStates)
         {
           state.Expand(targetDepth, depth + 1, -beta, -alpha);
+          Depth = Math.Max(state.Depth + 1, Depth);
 
           int score = -state.Score;
 
@@ -81,7 +82,7 @@ public class MyBot : IChessBot
         ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
       }
 
-      if (entry == null || entry.Depth < evaluationDepth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, evaluationDepth, Score);
+      if (entry == null || entry.Depth < Depth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, Depth, Score);
 
       Me._board.UndoMove(Move);
     }
@@ -139,17 +140,22 @@ public class MyBot : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = Math.Max(0, _maxDepth - 2); tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
+    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
     {
-      _maxDepth = 0;
-
       int lowerWindow = tree.Score - 1;
       int upperWindow = tree.Score + 1;
 
       tree.Expand(targetDepth, 0, lowerWindow, upperWindow);
 
-      if (tree.Score <= lowerWindow || tree.Score >= upperWindow) tree.Expand(targetDepth);
+      if (tree.Score <= lowerWindow || tree.Score >= upperWindow)
+      {
+        tree.Expand(targetDepth);
+      }
+
+      Console.WriteLine("Expanded with target depth " + targetDepth + " " + tree.Depth + " in " + timer.MillisecondsElapsedThisTurn + "ms"); //#DEBUG
     }
+
+    int maxDepth = tree.Depth;
 
     tree = tree.ChildStates.MaxBy(state => -state.Score);
 
@@ -157,7 +163,7 @@ public class MyBot : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
+    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
 
     return tree.Move;
   }
