@@ -28,13 +28,13 @@ public class MyBot : IChessBot
 
     MyBot Me;
 
-    public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
+    public void Expand(int targetDepth, int depth = 0, int alpha = -9999999, int beta = 9999999)
     {
       if (depth > targetDepth) return;
 
       TranspositionEntry entry = Me._transpositionTable[Key];
 
-      if (entry != null && entry.Hash == Hash && entry.Depth > Depth && entry.Depth >= targetDepth)
+      if (entry != null && entry.Hash == Hash && entry.Depth >= Depth && entry.Depth >= targetDepth)
       {
         Score = entry.Score;
 
@@ -45,15 +45,17 @@ public class MyBot : IChessBot
 
       if (ChildStates == null)
       {
-        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
+        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).ToArray();
 
-        if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
+        if (ChildStates.Length != 0) Score = ChildStates.Max(State => -State.Score);
 
         Depth = 1;
       }
       else
       {
-        int max = -99999;
+        ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
+
+        int max = -9999999;
 
         foreach (State state in ChildStates)
         {
@@ -78,8 +80,6 @@ public class MyBot : IChessBot
         }
 
         Score = max;
-
-        ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
       }
 
       if (entry == null || entry.Depth < Depth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, Depth, Score);
@@ -104,15 +104,15 @@ public class MyBot : IChessBot
     }
   }
 
-  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
+  int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 0 };
 
   int ColorEvaluationFactor(bool white) => white ? 1 : -1;
 
   int Evaluate()
   {
-    if (_board.IsInCheckmate()) return -1000;
+    if (_board.IsInCheckmate()) return -100000;
 
-    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -2;
+    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -200;
 
     int materialEvaluation = 0;
 
@@ -140,10 +140,10 @@ public class MyBot : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
+    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn * 1.5 < timer.MillisecondsRemaining / 60; targetDepth++)
     {
-      int lowerWindow = tree.Score - 1;
-      int upperWindow = tree.Score + 1;
+      int lowerWindow = tree.Score - 100;
+      int upperWindow = tree.Score + 100;
 
       tree.Expand(targetDepth, 0, lowerWindow, upperWindow);
 

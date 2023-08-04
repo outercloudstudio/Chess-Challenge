@@ -105,7 +105,7 @@ class FastGame
 
       index++;
 
-      if (index % 20 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
+      // if (index % 20 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
     }
 
     Task.WaitAll(tasks);
