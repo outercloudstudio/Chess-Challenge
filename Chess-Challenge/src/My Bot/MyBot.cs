@@ -34,7 +34,7 @@ public class MyBot : IChessBot
 
       TranspositionEntry entry = Me._transpositionTable[Key];
 
-      if (entry != null && entry.Hash == Hash && entry.Depth > Depth)
+      if (entry != null && entry.Hash == Hash && entry.Depth > Depth && entry.Depth >= targetDepth)
       {
         Score = entry.Score;
 
@@ -152,7 +152,7 @@ public class MyBot : IChessBot
         tree.Expand(targetDepth);
       }
 
-      Console.WriteLine("Expanded with target depth " + targetDepth + " " + tree.Depth + " in " + timer.MillisecondsElapsedThisTurn + "ms"); //#DEBUG
+      // Console.WriteLine("Expanded with target depth " + targetDepth + " " + tree.Depth + " in " + timer.MillisecondsElapsedThisTurn + "ms"); //#DEBUG
     }
 
     int maxDepth = tree.Depth;
@@ -163,7 +163,8 @@ public class MyBot : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
+    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
+    // Console.WriteLine("My Bot: Current Evaluation: " + tree.Score); //#DEBUG
 
     return tree.Move;
   }
