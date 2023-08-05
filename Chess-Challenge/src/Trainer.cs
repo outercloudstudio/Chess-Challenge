@@ -64,19 +64,24 @@ public class Trainer
       try
       {
         string fen = ReadString();
+        string move = ReadString();
 
         if (fen.Length == 0)
         {
           StopServer();
 
+          StartServer();
+
           return;
         }
 
-        SendMoveState(fen);
+        SendMoveState(fen, move);
       }
       catch
       {
         StopServer();
+
+        StartServer();
 
         return;
       }
@@ -153,39 +158,43 @@ public class Trainer
 
   public void SendMoveState(string fen, string moveUci)
   {
-    Board board = new Board();
-    board.LoadPosition(fen);
-
-    _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.MyBot, -1);
-    _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.MyBot, -1);
-    _boardUI.ResetSquareColours();
-    _boardUI.SetPerspective(true);
-    _boardUI.UpdatePosition(board);
-
-    ChessChallenge.API.Board apiBoard = new ChessChallenge.API.Board(board);
-    ChessChallenge.API.Move apiMove = new ChessChallenge.API.Move(moveUci, apiBoard);
-
-    apiBoard.MakeMove(apiMove);
-
-    int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
-
-    float materialEvaluation = 0;
-
-    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+    try
     {
-      materialEvaluation += apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, true).Count * pieceValues[typeIndex];
-      materialEvaluation -= apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+      Board board = new Board();
+      board.LoadPosition(fen);
+
+      ChessChallenge.API.Board apiBoard = new ChessChallenge.API.Board(board);
+      ChessChallenge.API.Move apiMove = new ChessChallenge.API.Move(moveUci, apiBoard);
+
+      int[,,] boardRepresentation = new int[6, 8, 8];
+
+      for (int typeIndex = 0; typeIndex < 6; typeIndex++)
+      {
+        foreach (ChessChallenge.API.Piece piece in apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex + 1, apiBoard.IsWhiteToMove)) boardRepresentation[typeIndex, piece.Square.File, piece.Square.Rank] = -1;
+        foreach (ChessChallenge.API.Piece piece in apiBoard.GetPieceList((ChessChallenge.API.PieceType)typeIndex + 1, !apiBoard.IsWhiteToMove)) boardRepresentation[typeIndex, piece.Square.File, piece.Square.Rank] = 1;
+      }
+
+      for (int t = 0; t < 6; t++)
+      {
+        for (int x = 0; x < 8; x++)
+        {
+          for (int y = 0; y < 8; y++)
+          {
+            _stream.Write(BitConverter.GetBytes(boardRepresentation[t, x, y]), 0, 4);
+          }
+        }
+      }
+
+      _controller.PlayerWhite = new ChessPlayer(null, ChallengeController.PlayerType.MyBot, -1);
+      _controller.PlayerBlack = new ChessPlayer(null, ChallengeController.PlayerType.MyBot, -1);
+      _boardUI.ResetSquareColours();
+      _boardUI.SetPerspective(true);
+      _boardUI.UpdatePosition(board);
     }
-
-    float checkEvaluation = 0;
-
-    if (board.IsInCheck()) checkEvaluation += -0.5f * (board.IsWhiteToMove ? 1 : -1);
-
-    _stream.Write(BitConverter.GetBytes(materialEvaluation), 0, 4);
-    _stream.Write(BitConverter.GetBytes(checkEvaluation), 0, 4);
-    _stream.Write(BitConverter.GetBytes(apiBoard.PlyCount), 0, 4);
-
-    apiBoard.UndoMove(apiMove);
+    catch (Exception error)
+    {
+      Console.WriteLine(error);
+    }
   }
 
   public static void GenerateDataset()

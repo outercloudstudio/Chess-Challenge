@@ -1,32 +1,13 @@
 import socket
-import chess
 import torch
-import time
 import os
-import random
 import struct
 
 from torch import nn
 from torch.utils.data import DataLoader
 from model import EvaluationNeuralNetwork
 from modelConverter import convert
-from dataset import PositionDataset, positionToTensor
-# from stockfish import Stockfish
-
-# stockfish = Stockfish(
-#   path="D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\eval.exe",
-#   depth=10,
-#   parameters={"Threads": 2, "Minimum Thinking Time": 0, "Hash": 2048},
-# )
-
-# def evaluatePosition(board):
-#   fen = board.fen()
-#   stockfish.set_fen_position(fen)
-#   evaluation = stockfish.get_evaluation()
-#   if evaluation["type"] == "cp":
-#       return evaluation["value"] / 100
-#   if evaluation["type"] == "mate":
-#       return evaluation["value"] * 10
+from movePositionDataset import MovePositionDataset
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("localhost", 8080))
@@ -41,21 +22,34 @@ def readFloat():
   return struct.unpack('<f', client.recv(4))[0]
 
 def readInt():
-  return int.from_bytes(client.recv(4), 'little')
+  return struct.unpack('<i', client.recv(4))[0]
 
 def readBool():
   return bool.from_bytes(client.recv(1), 'little')
 
-def getState(fen):
+def getState(fen, uci):
   state = []
 
   sendString(fen)
+  sendString(uci)
 
-  state.append(readFloat())
-  state.append(readFloat())
-  state.append(readInt())
+  for pieceType in range(6):
+    rows = []
+
+    for x in range(8):
+      column = []
+
+      for y in range(8):
+        column.append(readInt())
+
+      rows.append(column)
+    
+    state.append(rows)
 
   return torch.tensor(state, dtype=torch.float32)
+
+def transformTarget(evaluation):
+  return torch.tensor([evaluation], dtype=torch.float32)
 
 device = (
     "cuda"
@@ -67,10 +61,10 @@ device = (
 
 model = EvaluationNeuralNetwork().to(device)
 
-loss_fn = nn.L1Loss()
+loss_fn = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
-modelName = "ARCNET 2"
+modelName = "ARCNET"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\" + modelName + ".pth"
@@ -81,10 +75,10 @@ if os.path.exists(
     )
   )
 
-training_data = PositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Evaluations Medium.txt', getState)
-test_data = PositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Evaluations Small.txt', getState)
+training_data = MovePositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Move Evaluations Small.txt', getState, transformTarget)
+test_data = MovePositionDataset('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Datasets\\Move Evaluations Small.txt', getState, transformTarget)
 
-batch_size = 4
+batch_size = 1
 
 train_dataloader = DataLoader(training_data, batch_size=batch_size, shuffle=True)
 test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
@@ -126,11 +120,11 @@ def test(dataloader, model, loss_fn):
 
     print(f"Test Error: Avg loss: {test_loss:>8f} \n")
 
-epochs = 5
+epochs = 20
 for t in range(epochs):
-    print(f"Epoch {t+1}\n-------------------------------")
-    train(train_dataloader, model, loss_fn, optimizer)
-    test(test_dataloader, model, loss_fn)
+  print(f"Epoch {t+1}\n-------------------------------")
+  train(train_dataloader, model, loss_fn, optimizer)
+  test(test_dataloader, model, loss_fn)
 
-torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth")
-convert(modelName)
+  torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Chess-Challenge\\src\\Models\\{modelName}.pth")
+  convert(modelName)
