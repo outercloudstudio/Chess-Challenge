@@ -13,21 +13,17 @@ public class MyBot : IChessBot
     public int Depth;
     public Move Move;
     public Node[] ChildNodes;
-    public bool WhiteMove;
 
     MyBot _bot;
 
-    public Node(Move move, bool whiteMove, MyBot bot)
+    public Node(Move move, MyBot bot)
     {
       Move = move;
-      WhiteMove = whiteMove;
       _bot = bot;
     }
 
     public void Expand()
     {
-      // Console.WriteLine("Expanding node with " + Move.ToString());
-
       _bot._board.MakeMove(Move);
 
       if (ChildNodes != null)
@@ -38,32 +34,32 @@ public class MyBot : IChessBot
       }
       else
       {
-        ChildNodes = _bot._board.GetLegalMoves().Select(move => new Node(move, !WhiteMove, _bot)).ToArray();
+        ChildNodes = _bot._board.GetLegalMoves().Select(move => new Node(move, _bot)).ToArray();
 
         foreach (Node node in ChildNodes) node.Simulate(3);
 
         Depth = 1;
       }
 
-      if (WhiteMove)
+      if (ChildNodes.Length == 0)
       {
-        Score = ChildNodes.Min(node => node.Score);
+        Depth = 999999999;
+
+        _bot._board.UndoMove(Move);
+
+        return;
       }
-      else
-      {
-        Score = ChildNodes.Max(node => node.Score);
-      }
+
+      Score = ChildNodes.Min(node => -node.Score);
 
       _bot._board.UndoMove(Move);
     }
 
     public void Simulate(int moves)
     {
-      // Console.WriteLine("Simulating node with " + Move.ToString());
-
       _bot._board.MakeMove(Move);
 
-      List<Move> simulatedMoves = new List<Move>();
+      var simulatedMoves = new List<Move>();
 
       for (int i = 0; i < moves; i++)
       {
@@ -73,34 +69,26 @@ public class MyBot : IChessBot
 
         Move nextMove = legalMoves[0];
 
-        if (WhiteMove)
-        {
-          nextMove = legalMoves.MinBy(Evaluate);
-        }
-        else
-        {
-          nextMove = legalMoves.MaxBy(Evaluate);
-        }
-
-        // Console.WriteLine("Next simulated " + nextMove);
+        nextMove = legalMoves.MaxBy(Evaluate);
 
         simulatedMoves.Add(nextMove);
 
         _bot._board.MakeMove(nextMove);
       }
 
-      Score = Evaluate();
+      Score = Evaluate() * (moves % 2 == 0 ? -1 : 1);
 
-      for (int i = simulatedMoves.Count - 1; i >= 0; i--)
-      {
-        _bot._board.UndoMove(simulatedMoves[i]);
-      }
+      simulatedMoves.Reverse();
+
+      foreach (Move move in simulatedMoves) _bot._board.UndoMove(move);
 
       _bot._board.UndoMove(Move);
     }
 
     public int Evaluate()
     {
+      if (_bot._board.IsInCheckmate()) return -999999999;
+
       int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 0 };
 
       int score = 0;
@@ -111,7 +99,7 @@ public class MyBot : IChessBot
         score -= _bot._board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
       }
 
-      return score;
+      return score * (_bot._board.IsWhiteToMove ? 1 : -1);
     }
 
     public int Evaluate(Move move)
@@ -125,33 +113,26 @@ public class MyBot : IChessBot
       return score;
     }
 
-    public void Debug(int maxDepth = 2, int depth = 0)
+    public void Debug(int maxDepth = 2, int depth = 0) // #DEBUG
     {
-      if (depth > maxDepth) return;
+      if (depth > maxDepth) return; // #DEBUG
 
-      Console.WriteLine(new string('\t', depth) + "Node with " + Move.ToString() + " has score " + Score + " and depth " + Depth + " and white move " + WhiteMove);
+      Console.WriteLine(new string('\t', depth) + "Node with " + Move.ToString() + " has score " + Score + " and depth " + Depth); // #DEBUG
 
-      if (ChildNodes != null) foreach (Node node in ChildNodes) node.Debug(maxDepth, depth + 1);
-    }
+      if (ChildNodes != null) foreach (Node node in ChildNodes) node.Debug(maxDepth, depth + 1); // #DEBUG
+    } // #DEBUG
   }
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
 
-    Node rootNode = new Node(Move.NullMove, !board.IsWhiteToMove, this);
+    Node rootNode = new Node(Move.NullMove, this);
 
     while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60) rootNode.Expand();
 
-    rootNode.Debug(0);
+    rootNode.Debug(1); // #DEBUG
 
-    if (board.IsWhiteToMove)
-    {
-      return rootNode.ChildNodes.MaxBy(node => node.Score).Move;
-    }
-    else
-    {
-      return rootNode.ChildNodes.MinBy(node => node.Score).Move;
-    }
+    return rootNode.ChildNodes.MaxBy(node => node.Score).Move;
   }
 }
