@@ -5,212 +5,137 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  /*
-  TODO:
-  PSTS
-  Move Ordering
-  Q Search
-  */
-
   Board _board;
-  Timer _timer;
 
-  record class TranspositionEntry(ulong Hash, int Depth, int Score);
-  TranspositionEntry[] _transpositionTable = new TranspositionEntry[100000];
-
-  class State
+  class Node
   {
-    public Move Move;
     public int Score;
-    public int Interest;
-    public State[] ChildStates = null;
-    public int Key;
-    public ulong Hash;
     public int Depth;
+    public Move Move;
+    public Node[] ChildNodes;
+    public bool WhiteMove;
 
-    MyBot Me;
+    MyBot _bot;
 
-    public void Expand(int targetDepth, int depth = 0, int alpha = -9999999, int beta = 9999999, bool qSearch = false)
+    public Node(Move move, bool whiteMove, MyBot bot)
     {
-      if (depth > targetDepth && !qSearch) return;
+      Move = move;
+      WhiteMove = whiteMove;
+      _bot = bot;
+    }
 
-      if (!qSearch && ChildStates != null && Me._timer.MillisecondsElapsedThisTurn > Me._timer.MillisecondsRemaining / 30) return;
+    public void Expand()
+    {
+      Console.WriteLine("Expanding node with " + Move.ToString());
 
-      TranspositionEntry entry = Me._transpositionTable[Key];
+      _bot._board.MakeMove(Move);
 
-      if (entry != null && entry.Hash == Hash && entry.Depth >= Depth && entry.Depth >= targetDepth && !qSearch)
+      if (ChildNodes != null)
       {
-        Score = entry.Score;
-
-        CalculateInterest();
-
-        return;
-      }
-
-      Me._board.MakeMove(Move);
-
-      if (ChildStates == null)
-      {
-        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).ToArray();
-
-        if (ChildStates.Length != 0)
-        {
-          Score = ChildStates.Max(State => -State.Score);
-
-          CalculateInterest();
-        }
-
-        Depth = 1;
-
-        if (depth < targetDepth)
-        {
-          Me._board.UndoMove(Move);
-
-          Expand(targetDepth, depth, alpha, beta);
-
-          return;
-        }
-        else if ((Move.IsCapture || Me._board.IsInCheck()) && targetDepth > 4)
-        {
-          Me._board.UndoMove(Move);
-
-          Expand(targetDepth, depth, alpha, beta, true);
-
-          return;
-        }
+        ChildNodes.MinBy(node => node.Depth).Expand();
       }
       else
       {
-        ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
+        ChildNodes = _bot._board.GetLegalMoves().Select(move => new Node(move, !WhiteMove, _bot)).ToArray();
 
-        int max = -9999999;
-
-        foreach (State state in ChildStates)
-        {
-          state.Expand(targetDepth, depth + 1, -beta, -alpha, qSearch);
-          if (!qSearch) Depth = Math.Max(state.Depth + 1, Depth);
-
-          int score = -state.Score;
-
-          if (score >= beta)
-          {
-            max = beta;
-
-            break;
-          }
-
-          if (score > max)
-          {
-            max = score;
-
-            if (score > alpha) alpha = score;
-          }
-        }
-
-        Score = max;
-        CalculateInterest();
+        foreach (Node node in ChildNodes) node.Simulate(1);
       }
 
-      if (entry == null || entry.Depth < Depth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, Depth, Score);
+      if (WhiteMove)
+      {
+        Score = ChildNodes.Min(node => node.Score);
+      }
+      else
+      {
+        Score = ChildNodes.Max(node => node.Score);
+      }
 
-      Me._board.UndoMove(Move);
+      _bot._board.UndoMove(Move);
     }
 
-    public State(Move move, MyBot me)
+    public void Simulate(int moves)
     {
-      Me = me;
+      Console.WriteLine("Simulating node with " + Move.ToString());
 
-      Move = move;
+      _bot._board.MakeMove(Move);
 
-      Me._board.MakeMove(move);
+      List<Move> simulatedMoves = new List<Move>();
 
-      Hash = Me._board.ZobristKey;
-      Key = (int)(Hash % (ulong)Me._transpositionTable.Length);
+      for (int i = 0; i < moves; i++)
+      {
+        Move[] legalMoves = _bot._board.GetLegalMoves();
 
-      Score = Me.Evaluate();
+        if (legalMoves.Length == 0) break;
 
-      CalculateInterest();
+        Move nextMove = legalMoves[0];
 
-      Me._board.UndoMove(move);
+        if (WhiteMove)
+        {
+          nextMove = legalMoves.MinBy(Evaluate);
+        }
+        else
+        {
+          nextMove = legalMoves.MaxBy(Evaluate);
+        }
+
+        Console.WriteLine("Next simulated " + nextMove);
+
+        simulatedMoves.Add(nextMove);
+
+        _bot._board.MakeMove(nextMove);
+      }
+
+      Score = Evaluate();
+
+      for (int i = simulatedMoves.Count - 1; i >= 0; i--)
+      {
+        _bot._board.UndoMove(simulatedMoves[i]);
+      }
+
+      _bot._board.UndoMove(Move);
     }
 
-
-    private void CalculateInterest()
+    public int Evaluate()
     {
-      // Interest = Score;
-      // Interest = -Score;
+      int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 0 };
 
-      // if (Move.IsCapture)
-      // {
-      //   Interest -= Me.pieceValues[(int)Move.MovePieceType] / 10;
-      //   Interest += Me.pieceValues[(int)Move.CapturePieceType] / 10;
-      // }
+      int score = 0;
+
+      for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+      {
+        score += _bot._board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
+        score -= _bot._board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+      }
+
+      return score;
+    }
+
+    public int Evaluate(Move move)
+    {
+      _bot._board.MakeMove(move);
+
+      int score = 0;
+
+      _bot._board.UndoMove(move);
+
+      return score;
     }
   }
-
-  int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 0 };
-
-  int ColorEvaluationFactor(bool white) => white ? 1 : -1;
-
-  int Evaluate()
-  {
-    if (_board.IsInCheckmate()) return -100000;
-
-    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -200;
-
-    int materialEvaluation = 0;
-
-    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
-    {
-      materialEvaluation += _board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
-      materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
-    }
-
-    return materialEvaluation * ColorEvaluationFactor(_board.IsWhiteToMove);
-  }
-
-  Dictionary<ulong, State> _reuseableStates = new Dictionary<ulong, State>();
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _timer = timer;
 
-    ulong hash = board.ZobristKey;
+    Node rootNode = new Node(Move.NullMove, board.IsWhiteToMove, this);
+    rootNode.Expand();
 
-    State tree;
-
-    if (_reuseableStates.Count != 0) tree = _reuseableStates[hash];
-    else tree = new State(Move.NullMove, this);
-
-    tree.Move = Move.NullMove;
-
-    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30; targetDepth++)
+    if (board.IsWhiteToMove)
     {
-      int lowerWindow = tree.Score - 100;
-      int upperWindow = tree.Score + 100;
-
-      tree.Expand(targetDepth, 0, lowerWindow, upperWindow);
-
-      if (tree.Score <= lowerWindow || tree.Score >= upperWindow)
-      {
-        tree.Expand(targetDepth);
-      }
-
-      // Console.WriteLine("Expanded with target depth " + targetDepth + " " + tree.Depth + " in " + timer.MillisecondsElapsedThisTurn + "ms"); //#DEBUG
+      return rootNode.ChildNodes.MaxBy(node => node.Score).Move;
     }
-
-    int maxDepth = tree.Depth;
-
-    tree = tree.ChildStates.MaxBy(state => -state.Score);
-
-    _reuseableStates = new Dictionary<ulong, State>();
-
-    if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
-
-    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
-    // Console.WriteLine("My Bot: Current Evaluation: " + tree.Score + " Interest: " + tree.Interest); //#DEBUG
-
-    return tree.Move;
+    else
+    {
+      return rootNode.ChildNodes.MinBy(node => node.Score).Move;
+    }
   }
 }
