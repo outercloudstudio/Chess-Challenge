@@ -26,19 +26,23 @@ public class MyBot : IChessBot
 
     public void Expand()
     {
-      Console.WriteLine("Expanding node with " + Move.ToString());
+      // Console.WriteLine("Expanding node with " + Move.ToString());
 
       _bot._board.MakeMove(Move);
 
       if (ChildNodes != null)
       {
         ChildNodes.MinBy(node => node.Depth).Expand();
+
+        Depth = ChildNodes.Min(node => node.Depth) + 1;
       }
       else
       {
         ChildNodes = _bot._board.GetLegalMoves().Select(move => new Node(move, !WhiteMove, _bot)).ToArray();
 
-        foreach (Node node in ChildNodes) node.Simulate(1);
+        foreach (Node node in ChildNodes) node.Simulate(3);
+
+        Depth = 1;
       }
 
       if (WhiteMove)
@@ -55,7 +59,7 @@ public class MyBot : IChessBot
 
     public void Simulate(int moves)
     {
-      Console.WriteLine("Simulating node with " + Move.ToString());
+      // Console.WriteLine("Simulating node with " + Move.ToString());
 
       _bot._board.MakeMove(Move);
 
@@ -78,7 +82,7 @@ public class MyBot : IChessBot
           nextMove = legalMoves.MaxBy(Evaluate);
         }
 
-        Console.WriteLine("Next simulated " + nextMove);
+        // Console.WriteLine("Next simulated " + nextMove);
 
         simulatedMoves.Add(nextMove);
 
@@ -120,14 +124,26 @@ public class MyBot : IChessBot
 
       return score;
     }
+
+    public void Debug(int maxDepth = 2, int depth = 0)
+    {
+      if (depth > maxDepth) return;
+
+      Console.WriteLine(new string('\t', depth) + "Node with " + Move.ToString() + " has score " + Score + " and depth " + Depth + " and white move " + WhiteMove);
+
+      if (ChildNodes != null) foreach (Node node in ChildNodes) node.Debug(maxDepth, depth + 1);
+    }
   }
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
 
-    Node rootNode = new Node(Move.NullMove, board.IsWhiteToMove, this);
-    rootNode.Expand();
+    Node rootNode = new Node(Move.NullMove, !board.IsWhiteToMove, this);
+
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60) rootNode.Expand();
+
+    rootNode.Debug(0);
 
     if (board.IsWhiteToMove)
     {
