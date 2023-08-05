@@ -7,23 +7,23 @@ public class MyBot : IChessBot
 {
   Board _board;
   Move _bestMove;
+  int _searchedMoves;
+
+  record struct MoveChoice(Move Move, int Interest);
 
   int Search(int depth, int ply, int alpha, int beta)
   {
+    _searchedMoves++;
+
     if (depth == 0) return Evaluate();
 
-    Move[] moves = _board.GetLegalMoves();
-    int[] moveScores = moves.Select(move => Interest(move)).ToArray();
+    MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     int max = -999999999;
 
-    for (int moveIndex = 0; moveIndex < moves.Length; moveIndex++)
+    foreach (MoveChoice moveChoice in moveChoices)
     {
-      for (int otherMoveIndex = moveIndex + 1; otherMoveIndex < moves.Length; otherMoveIndex++)
-        if (moveScores[moveIndex] < moveScores[otherMoveIndex])
-          (moves[moveIndex], moves[otherMoveIndex], moveScores[moveIndex], moveScores[otherMoveIndex]) = (moves[otherMoveIndex], moves[moveIndex], moveScores[otherMoveIndex], moveScores[moveIndex]);
-
-      Move move = moves[moveIndex];
+      Move move = moveChoice.Move;
 
       _board.MakeMove(move);
 
@@ -59,6 +59,8 @@ public class MyBot : IChessBot
   {
     if (move == _bestMove) return 999999;
 
+    if (move.IsCapture) return 1000 * pieceValues[(int)move.CapturePieceType] - pieceValues[(int)move.MovePieceType];
+
     return 0;
   }
 
@@ -83,7 +85,7 @@ public class MyBot : IChessBot
   {
     _board = board;
 
-    int depth = 4;
+    int depth = 5;
     while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
       Search(depth, 0, -9999999, 9999999);
@@ -92,6 +94,8 @@ public class MyBot : IChessBot
 
       depth++;
     }
+
+    Console.WriteLine($"Searched {_searchedMoves} moves");
 
     return _bestMove;
   }
