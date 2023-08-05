@@ -21,6 +21,7 @@ public class MyBot : IChessBot
   {
     public Move Move;
     public int Score;
+    public int Interest;
     public State[] ChildStates = null;
     public int Key;
     public ulong Hash;
@@ -28,15 +29,17 @@ public class MyBot : IChessBot
 
     MyBot Me;
 
-    public void Expand(int targetDepth, int depth = 0, int alpha = -9999999, int beta = 9999999)
+    public void Expand(int targetDepth, int depth = 0, int alpha = -9999999, int beta = 9999999, bool qSearch = false)
     {
-      if (depth > targetDepth) return;
+      if (depth > targetDepth && !qSearch) return;
 
       TranspositionEntry entry = Me._transpositionTable[Key];
 
-      if (entry != null && entry.Hash == Hash && entry.Depth >= Depth && entry.Depth >= targetDepth)
+      if (entry != null && entry.Hash == Hash && entry.Depth >= Depth && entry.Depth >= targetDepth && !qSearch)
       {
         Score = entry.Score;
+
+        CalculateInterest();
 
         return;
       }
@@ -47,9 +50,23 @@ public class MyBot : IChessBot
       {
         ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).ToArray();
 
-        if (ChildStates.Length != 0) Score = ChildStates.Max(State => -State.Score);
+        if (ChildStates.Length != 0)
+        {
+          Score = ChildStates.Max(State => -State.Score);
+
+          CalculateInterest();
+        }
 
         Depth = 1;
+
+        if ((Move.IsCapture || Me._board.IsInCheck()) && targetDepth > 4)
+        {
+          Me._board.UndoMove(Move);
+
+          Expand(targetDepth, depth, alpha, beta, true);
+
+          return;
+        }
       }
       else
       {
@@ -60,7 +77,7 @@ public class MyBot : IChessBot
         foreach (State state in ChildStates)
         {
           state.Expand(targetDepth, depth + 1, -beta, -alpha);
-          Depth = Math.Max(state.Depth + 1, Depth);
+          if (!qSearch) Depth = Math.Max(state.Depth + 1, Depth);
 
           int score = -state.Score;
 
@@ -80,6 +97,7 @@ public class MyBot : IChessBot
         }
 
         Score = max;
+        CalculateInterest();
       }
 
       if (entry == null || entry.Depth < Depth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, Depth, Score);
@@ -100,7 +118,22 @@ public class MyBot : IChessBot
 
       Score = Me.Evaluate();
 
+      CalculateInterest();
+
       Me._board.UndoMove(move);
+    }
+
+
+    private void CalculateInterest()
+    {
+      Interest = Score;
+      Interest = -Score;
+
+      if (Move.IsCapture)
+      {
+        Interest -= Me.pieceValues[(int)Move.MovePieceType] / 10;
+        Interest += Me.pieceValues[(int)Move.CapturePieceType] / 10;
+      }
     }
   }
 
@@ -140,7 +173,7 @@ public class MyBot : IChessBot
 
     tree.Move = Move.NullMove;
 
-    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn * 1.5 < timer.MillisecondsRemaining / 60; targetDepth++)
+    for (int targetDepth = tree.Depth + 1; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn * 1.6 < timer.MillisecondsRemaining / 60; targetDepth++)
     {
       int lowerWindow = tree.Score - 100;
       int upperWindow = tree.Score + 100;
@@ -163,8 +196,8 @@ public class MyBot : IChessBot
 
     if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
 
-    // Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
-    // Console.WriteLine("My Bot: Current Evaluation: " + tree.Score); //#DEBUG
+    Console.WriteLine(String.Format("My Bot: Searched to depth of {0} in {1} with best move depth of {2}", maxDepth, timer.MillisecondsElapsedThisTurn, tree.Depth)); //#DEBUG
+    Console.WriteLine("My Bot: Current Evaluation: " + tree.Score + " Interest: " + tree.Interest); //#DEBUG
 
     return tree.Move;
   }

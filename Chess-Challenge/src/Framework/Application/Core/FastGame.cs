@@ -13,7 +13,7 @@ class FastGame
     Draw
   }
 
-  public static Result Play(IChessBot bot1, IChessBot bot2, Board board, int duration)
+  public static (Result, bool) Play(IChessBot bot1, IChessBot bot2, Board board, int duration)
   {
     int whiteTime = duration;
     int blackTime = duration;
@@ -38,11 +38,58 @@ class FastGame
       }
     }
 
-    if (board.IsInCheckmate()) return board.IsWhiteToMove ? Result.BlackWin : Result.WhiteWin;
-    else if (whiteTime == 0) return Result.BlackWin;
-    else if (blackTime == 0) return Result.WhiteWin;
+    if (board.IsInCheckmate()) return (board.IsWhiteToMove ? Result.BlackWin : Result.WhiteWin, false);
+    else if (whiteTime == 0) return (Result.BlackWin, true);
+    else if (blackTime == 0) return (Result.WhiteWin, true);
 
-    return Result.Draw;
+    return (Result.Draw, false);
+  }
+
+  private static float InverseError(float x)
+  {
+    float a = 8 * (MathF.PI - 3) / (3 * MathF.PI * (4 - MathF.PI));
+    float y = MathF.Log(1 - x * x);
+    float z = 2 / (MathF.PI * a) + y / 2;
+
+    float result = MathF.Sqrt(MathF.Sqrt(z * z - y / a) - z);
+
+    if (x < 0) return -result;
+
+    return result;
+  }
+
+  private static float PhiInverse(float value)
+  {
+    return MathF.Sqrt(2) * InverseError(2 * value - 1);
+  }
+
+  public static float EloDifference(float percentage) => -400 * MathF.Log(1f / percentage - 1f) / MathF.Log(10f);
+
+  public static (int, int) Elo(int wins, int draws, int losses)
+  {
+    float score = wins + draws / 2f;
+    float total = wins + draws + losses;
+    float percentage = score / total;
+    float eloDifference = EloDifference(percentage);
+
+    float winPercent = wins / total;
+    float drawPercent = draws / total;
+    float lossPercent = losses / total;
+
+    float winDeviation = winPercent * MathF.Pow(1f - percentage, 2f);
+    float drawDeviation = drawPercent * MathF.Pow(0.5f - percentage, 2f);
+    float lossDeviation = lossPercent * MathF.Pow(0f - percentage, 2f);
+    float standardDeviation = MathF.Sqrt(winDeviation + drawDeviation + lossDeviation) / MathF.Sqrt(total);
+
+    float confidencePercentage = 0.95f;
+    float minConfidencePercentage = (1f - confidencePercentage) / 2f;
+    float maxConfidencePercentage = 1f - minConfidencePercentage;
+    float deviationMin = percentage + PhiInverse(minConfidencePercentage) * standardDeviation;
+    float deviationMax = percentage + PhiInverse(maxConfidencePercentage) * standardDeviation;
+
+    float difference = (EloDifference(deviationMax) - EloDifference(deviationMin)) / 2f;
+
+    return ((int)MathF.Round(eloDifference), (int)MathF.Round(difference));
   }
 
   public static void Match(Func<IChessBot> bot1Constructor, Func<IChessBot> bot2Constructor, int duration)
@@ -52,6 +99,7 @@ class FastGame
     int wins = 0;
     int draws = 0;
     int losses = 0;
+    int timeouts = 0;
 
     Task[] tasks = new Task[fens.Length * 2];
 
@@ -60,7 +108,7 @@ class FastGame
     {
       Task whiteTask = Task.Factory.StartNew(() =>
       {
-        Result whiteResult = Play(bot1Constructor(), bot2Constructor(), Board.CreateBoardFromFEN(fen), 30 * 1000);
+        (Result whiteResult, bool timeout) = Play(bot1Constructor(), bot2Constructor(), Board.CreateBoardFromFEN(fen), duration);
 
         if (whiteResult == Result.WhiteWin)
         {
@@ -69,6 +117,8 @@ class FastGame
         else if (whiteResult == Result.BlackWin)
         {
           losses++;
+
+          if (timeout) timeouts++;
         }
         else
         {
@@ -76,16 +126,19 @@ class FastGame
         }
 
         Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, whiteResult));
-        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
+        (int elo, int variation) = Elo(wins, draws, losses);
+        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2} My Bot Timeouts: {3} Elo: {4} +- {5}", wins, draws, losses, timeouts, elo, variation));
       });
 
       Task blackTask = Task.Factory.StartNew(() =>
       {
-        FastGame.Result blackResult = FastGame.Play(bot2Constructor(), bot1Constructor(), Board.CreateBoardFromFEN(fen), 30 * 1000);
+        (Result blackResult, bool timeout) = FastGame.Play(bot2Constructor(), bot1Constructor(), Board.CreateBoardFromFEN(fen), duration);
 
         if (blackResult == Result.WhiteWin)
         {
           losses++;
+
+          if (timeout) timeouts++;
         }
         else if (blackResult == Result.BlackWin)
         {
@@ -97,7 +150,8 @@ class FastGame
         }
 
         Console.WriteLine(String.Format("Finished game {0} / {1} {2}", wins + losses + draws, fens.Length * 2, blackResult));
-        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
+        (int elo, int variation) = Elo(wins, draws, losses);
+        Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2} My Bot Timeouts: {3} Elo: {4} +- {5}", wins, draws, losses, timeouts, elo, variation));
       });
 
       tasks[index * 2] = whiteTask;
@@ -105,11 +159,12 @@ class FastGame
 
       index++;
 
-      // if (index % 20 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
+      if (index % 4 == 0) Task.WaitAll(tasks.Where(task => task != null).ToArray());
     }
 
     Task.WaitAll(tasks);
 
-    Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2}", wins, draws, losses));
+    (int elo, int variation) = Elo(wins, draws, losses);
+    Console.WriteLine(String.Format("Wins: {0} Draws: {1} Losses: {2} My Bot Timeouts: {3} Elo: {4} +- {5}", wins, draws, losses, timeouts, elo, variation));
   }
 }
