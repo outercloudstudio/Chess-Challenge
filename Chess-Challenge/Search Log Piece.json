@@ -1,0 +1,8267 @@
+    {
+    "Move": "Move: 'f3d3'",
+		"Children": [
+			{
+			"Move": "Move: 'f5f2'",
+			"Children": [
+				{
+				"Move": "Move: 'd3d7'",
+				"Children": [
+					{
+					"Move": "Move: 'c8d7'",
+					"Children": [
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -200,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": 200,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd1c1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c1b2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd1e1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'e1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 19,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd1c2'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'a1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'a1f1'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": 0,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": 0,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c2b2'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c2d2'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c2b3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c2d3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1d1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1e1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 19,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 32,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c2b2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c2d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c2b3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1d1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1e1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3g6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3h7'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd1d2'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'a1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'a1f1'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": 0,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": 0,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd2c2'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd2d3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd2e3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1d1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1e1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 18,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 32,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd2c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd2e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1d1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1e1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3b1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3g6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3h7'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 29,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'a1b1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'a1c1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'h1g1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'g1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3d2'",
+				"Children": [
+					{
+					"Move": "Move: 'g5g4'",
+					"Children": [
+
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 6,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3e3'",
+				"Children": [
+					{
+					"Move": "Move: 'g5g4'",
+					"Children": [
+
+					],
+					"Score": -600,
+					"q": False,
+					"Move Count": 6,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3f3'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f3'",
+					"Children": [
+						{
+						"Move": "Move: 'e2f3'",
+						"Children": [
+							{
+							"Move": "Move: 'g5f5'",
+							"Children": [
+
+							],
+							"Score": -200,
+							"q": True,
+							"Move Count": 20,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 18,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 22,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3d4'",
+				"Children": [
+					{
+					"Move": "Move: 'c6d4'",
+					"Children": [
+						{
+						"Move": "Move: 'c3d4'",
+						"Children": [
+							{
+							"Move": "Move: 'f2f1'",
+							"Children": [
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": -200,
+									"q": True,
+									"Move Count": 14,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 3,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 3,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1d2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 3,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 26,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3d5'",
+				"Children": [
+					{
+					"Move": "Move: 'g5g4'",
+					"Children": [
+
+					],
+					"Score": -600,
+					"q": False,
+					"Move Count": 5,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3d6'",
+				"Children": [
+					{
+					"Move": "Move: 'c7d6'",
+					"Children": [
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": 300,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'f1g2'",
+				"Children": [
+					{
+					"Move": "Move: 'f2g2'",
+					"Children": [
+						{
+						"Move": "Move: 'd3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'd1c1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1e1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c2'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1d2'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1e1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h3'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h4'",
+								"Children": [
+
+								],
+								"Score": -500,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": 500,
+							"q": True,
+							"Move Count": 23,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1e1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3b1'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3g6'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3h7'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 30,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'f1h3'",
+				"Children": [
+					{
+					"Move": "Move: 'f2e2'",
+					"Children": [
+						{
+						"Move": "Move: 'd1e2'",
+						"Children": [
+							{
+							"Move": "Move: 'g5h5'",
+							"Children": [
+
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e2'",
+						"Children": [
+							{
+							"Move": "Move: 'g5f6'",
+							"Children": [
+
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'd1e2'",
+								"Children": [
+									{
+									"Move": "Move: 'g5g4'",
+									"Children": [
+
+									],
+									"Score": -800,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3e2'",
+								"Children": [
+									{
+									"Move": "Move: 'g5f5'",
+									"Children": [
+
+									],
+									"Score": -800,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d7'",
+								"Children": [
+									{
+									"Move": "Move: 'e2a2'",
+									"Children": [
+										{
+										"Move": "Move: 'a1a2'",
+										"Children": [
+											{
+											"Move": "Move: 'g5h5'",
+											"Children": [
+
+											],
+											"Score": -1000,
+											"q": True,
+											"Move Count": 23,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7c6'",
+										"Children": [
+											{
+											"Move": "Move: 'b7c6'",
+											"Children": [
+												{
+												"Move": "Move: 'a1a2'",
+												"Children": [
+													{
+													"Move": "Move: 'g5g4'",
+													"Children": [
+
+													],
+													"Score": -400,
+													"q": True,
+													"Move Count": 17,
+													"Depth": -7,
+													"Beta": -1000,
+													"Alpha": -1100
+													}
+												],
+												"Score": 1000,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1c1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1e1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'a1b1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'a1c1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'h1e1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'h1f1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'h1g1'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'h2h3'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'g3g4'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'c4c5'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'h2h4'",
+												"Children": [
+
+												],
+												"Score": -100,
+												"q": True,
+												"Move Count": 12,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												}
+											],
+											"Score": -1000,
+											"q": True,
+											"Move Count": 29,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7c7'",
+										"Children": [
+											{
+											"Move": "Move: 'a2a1'",
+											"Children": [
+												{
+												"Move": "Move: 'd1c2'",
+												"Children": [
+
+												],
+												"Score": 100,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1d2'",
+												"Children": [
+
+												],
+												"Score": 100,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1e2'",
+												"Children": [
+
+												],
+												"Score": 100,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												}
+											],
+											"Score": -100,
+											"q": True,
+											"Move Count": 37,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7g7'",
+										"Children": [
+											{
+											"Move": "Move: 'g5f5'",
+											"Children": [
+
+											],
+											"Score": -600,
+											"q": True,
+											"Move Count": 2,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1c1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1e1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1b1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1c1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1e1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1f1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1g1'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d2'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d3'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d4'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d5'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d6'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7e7'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7f7'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7d8'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7h3'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7g4'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7f5'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7e6'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7c8'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7e8'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h3'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'g3g4'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'c4c5'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h4'",
+										"Children": [
+
+										],
+										"Score": 500,
+										"q": True,
+										"Move Count": 29,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": -1000,
+									"q": True,
+									"Move Count": 37,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1e1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d2'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3e3'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3f3'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d4'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d5'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d6'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3b1'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3c2'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3e4'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3f5'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3g6'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3h7'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h3'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h4'",
+								"Children": [
+
+								],
+								"Score": 300,
+								"q": True,
+								"Move Count": 27,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 31,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'd1e2'",
+								"Children": [
+									{
+									"Move": "Move: 'd7h3'",
+									"Children": [
+										{
+										"Move": "Move: 'e2d1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2d2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2f2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2d3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2f3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1b1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1d1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1f1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1g1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1b1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1d1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1f1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1g1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'g3g4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'c4c5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": 100,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3d7'",
+								"Children": [
+									{
+									"Move": "Move: 'e2a2'",
+									"Children": [
+										{
+										"Move": "Move: 'a1a2'",
+										"Children": [
+											{
+											"Move": "Move: 'g5h5'",
+											"Children": [
+
+											],
+											"Score": -400,
+											"q": True,
+											"Move Count": 23,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7c6'",
+										"Children": [
+											{
+											"Move": "Move: 'a2a1'",
+											"Children": [
+												{
+												"Move": "Move: 'd1c2'",
+												"Children": [
+
+												],
+												"Score": -300,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1d2'",
+												"Children": [
+
+												],
+												"Score": -300,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												},
+												{
+												"Move": "Move: 'd1e2'",
+												"Children": [
+
+												],
+												"Score": -300,
+												"q": True,
+												"Move Count": 3,
+												"Depth": -6,
+												"Beta": 1100,
+												"Alpha": 1000
+												}
+											],
+											"Score": 300,
+											"q": True,
+											"Move Count": 31,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1b1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1f1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h1g1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7h3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7g4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7f5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7e6'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7c8'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd7e8'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'g3g4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'c4c5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 19,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": -1000,
+									"q": True,
+									"Move Count": 37,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1e1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3f1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3g2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3g4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3f5'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3e6'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 17,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 32,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1e1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e3'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f3'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d4'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d5'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d6'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3b1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3c2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e4'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f5'",
+						"Children": [
+
+						],
+						"Score": 999993,
+						"q": True,
+						"Move Count": 31,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1100,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					},
+					{
+					"Move": "Move: 'f2h2'",
+					"Children": [
+						{
+						"Move": "Move: 'h1h2'",
+						"Children": [
+							{
+							"Move": "Move: 'g5h5'",
+							"Children": [
+
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'h2h1'",
+							"Children": [
+								{
+								"Move": "Move: 'd1c2'",
+								"Children": [
+
+								],
+								"Score": 100,
+								"q": True,
+								"Move Count": 2,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1d2'",
+								"Children": [
+
+								],
+								"Score": 100,
+								"q": True,
+								"Move Count": 2,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -100,
+							"q": True,
+							"Move Count": 24,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d7'",
+						"Children": [
+							{
+							"Move": "Move: 'c8d7'",
+							"Children": [
+								{
+								"Move": "Move: 'h1h2'",
+								"Children": [
+									{
+									"Move": "Move: 'd7h3'",
+									"Children": [
+										{
+										"Move": "Move: 'h2h3'",
+										"Children": [
+											{
+											"Move": "Move: 'g5g4'",
+											"Children": [
+
+											],
+											"Score": -200,
+											"q": True,
+											"Move Count": 24,
+											"Depth": -5,
+											"Beta": -1000,
+											"Alpha": -1100
+											}
+										],
+										"Score": 1000,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1c2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1d2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1b1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2f2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2g2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'g3g4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'c4c5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 16,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": -1000,
+									"q": True,
+									"Move Count": 29,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3d7'",
+								"Children": [
+									{
+									"Move": "Move: 'h2h1'",
+									"Children": [
+										{
+										"Move": "Move: 'd1c2'",
+										"Children": [
+
+										],
+										"Score": -500,
+										"q": True,
+										"Move Count": 2,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1d2'",
+										"Children": [
+
+										],
+										"Score": -500,
+										"q": True,
+										"Move Count": 2,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": 500,
+									"q": True,
+									"Move Count": 30,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1e1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1d2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1e1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1f1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h1g1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3f1'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3g2'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3g4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3f5'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h3e6'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e3'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'g3g4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e4'",
+								"Children": [
+
+								],
+								"Score": -300,
+								"q": True,
+								"Move Count": 22,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 23,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1e1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e3'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f3'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d4'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d5'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3d6'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3b1'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3c2'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3e4'",
+						"Children": [
+
+						],
+						"Score": 500,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f5'",
+						"Children": [
+
+						],
+						"Score": 999993,
+						"q": True,
+						"Move Count": 35,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1100,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					},
+					{
+					"Move": "Move: 'g5h5'",
+					"Children": [
+
+					],
+					"Score": -600,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3b1'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3c2'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 2,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 2,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3e4'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5h5'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 17,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3f5'",
+				"Children": [
+					{
+					"Move": "Move: 'g5f5'",
+					"Children": [
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": 300,
+					"q": False,
+					"Move Count": 2,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3g6'",
+				"Children": [
+					{
+					"Move": "Move: 'g5g6'",
+					"Children": [
+						{
+						"Move": "Move: 'd1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1b1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a1c1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h1g1'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1g2'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'f1h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h3'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'g3g4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'c4c5'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'a2a4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'e2e4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'h2h4'",
+						"Children": [
+
+						],
+						"Score": -300,
+						"q": True,
+						"Move Count": 17,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": 300,
+					"q": False,
+					"Move Count": 1,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'd3h7'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'a2a3'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'e2e3'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 19,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 33,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'h2h3'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5h5'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 17,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 28,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'g3g4'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+								{
+								"Move": "Move: 'd3d7'",
+								"Children": [
+									{
+									"Move": "Move: 'c8d7'",
+									"Children": [
+										{
+										"Move": "Move: 'd1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1c2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'd1d2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1b1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a1c1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1e1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1g1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1h1'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f2'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f6'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f7'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'f1f8'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h3'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'c4c5'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'a2a4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'e2e4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										},
+										{
+										"Move": "Move: 'h2h4'",
+										"Children": [
+
+										],
+										"Score": -100,
+										"q": True,
+										"Move Count": 23,
+										"Depth": -4,
+										"Beta": 1100,
+										"Alpha": 1000
+										}
+									],
+									"Score": 100,
+									"q": True,
+									"Move Count": 4,
+									"Depth": -3,
+									"Beta": -1000,
+									"Alpha": -1100
+									}
+								],
+								"Score": 1000,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1e1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1c2'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd1d2'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1b1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a1c1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1e1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1g1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1h1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f2'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f5'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f6'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f7'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'f1f8'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d2'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3e3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3f3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3g3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3h3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d5'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3d6'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3b1'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3c2'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3e4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3f5'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3g6'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'd3h7'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h3'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'c4c5'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'a2a4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'e2e4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								},
+								{
+								"Move": "Move: 'h2h4'",
+								"Children": [
+
+								],
+								"Score": 700,
+								"q": True,
+								"Move Count": 38,
+								"Depth": -2,
+								"Beta": 1100,
+								"Alpha": 1000
+								}
+							],
+							"Score": -1000,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 30,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'c4c5'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'a2a4'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 18,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 3,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 29,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'e2e4'",
+				"Children": [
+					{
+					"Move": "Move: 'f2f1'",
+					"Children": [
+						{
+						"Move": "Move: 'h1f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 19,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd3f1'",
+						"Children": [
+							{
+							"Move": "Move: 'g5g4'",
+							"Children": [
+
+							],
+							"Score": -800,
+							"q": True,
+							"Move Count": 19,
+							"Depth": -1,
+							"Beta": -1000,
+							"Alpha": -1100
+							}
+						],
+						"Score": 1000,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1c2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1d2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						},
+						{
+						"Move": "Move: 'd1e2'",
+						"Children": [
+
+						],
+						"Score": 300,
+						"q": True,
+						"Move Count": 5,
+						"Depth": 0,
+						"Beta": 1100,
+						"Alpha": 1000
+						}
+					],
+					"Score": -1000,
+					"q": False,
+					"Move Count": 34,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				},
+				{
+				"Move": "Move: 'h2h4'",
+				"Children": [
+					{
+					"Move": "Move: 'g5g4'",
+					"Children": [
+
+					],
+					"Score": -600,
+					"q": False,
+					"Move Count": 3,
+					"Depth": 1,
+					"Beta": -1000,
+					"Alpha": -1100
+					}
+				],
+				"Score": 1000,
+				"q": False,
+				"Move Count": 30,
+				"Depth": 2,
+				"Beta": 1100,
+				"Alpha": 1000
+				}
+			],
+			"Score": -1000,
+			"q": False,
+			"Move Count": 31,
+			"Depth": 3,
+			"Beta": -1000,
+			"Alpha": -1100
+			}
+		],
+		"Score": 1000,
+		"q": False,
+		"Move Count": 27,
+		"Depth": 4,
+		"Beta": 1100,
+		"Alpha": 1000
+		},

@@ -16,7 +16,7 @@ public class MyBot : IChessBot
 
   record struct MoveChoice(Move Move, int Interest);
 
-  int Search(int depth, int ply, int alpha, int beta, bool qSearch)
+  int Search(int depth, int ply, int alpha, int beta, bool qSearch, bool debug)
   {
     // if (ply != 0 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60 && !qSearch) return 0;
 
@@ -30,23 +30,25 @@ public class MyBot : IChessBot
 
     if (depth <= 0 && !qSearch) return Evaluate();
 
-    MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
+    int moveCount = _board.GetLegalMoves(false).Length;
+    MoveChoice[] moveChoices = _board.GetLegalMoves(false).Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     if (moveChoices.Length == 0) return Evaluate();
 
     int max = -999999995;
 
+    int index = 0;
     foreach (MoveChoice moveChoice in moveChoices)
     {
       Move move = moveChoice.Move;
 
       _board.MakeMove(move);
 
-      _searchLog.Append("{\nMove: \"" + move + "\",\nChildren: [\n");
+      string indentString = new string('\t', ply);
+      if (debug && index != 0) _searchLog.Append(",\n");
+      if (debug) _searchLog.Append(indentString + "{" + $"\n{indentString}\"Move\": \"" + move + $"\",\n{indentString}\"Children\": [\n");
 
-      int score = -Search(depth - 1, ply + 1, -beta, -alpha, depth <= 1 && move.IsCapture);
-
-      _searchLog.Append($"],\nScore: \"{score}\"\n" + "},\n");
+      int score = -Search(depth - 1, ply + 1, -beta, -alpha, depth <= 1 && move.IsCapture, (ply == 0 && move.ToString() == "Move: 'd4f5'") || debug);
 
       _board.UndoMove(move);
 
@@ -54,7 +56,9 @@ public class MyBot : IChessBot
       {
         if (ply == 0) _bestMove = move;
 
-        return beta;
+        if (debug) _searchLog.Append($"\n{indentString}],\n{indentString}\"Score\": {score},\n{indentString}\"q\": {qSearch},\n{indentString}\"Move Count\": {moveCount},\n{indentString}\"Depth\": {depth},\n{indentString}\"Beta\": {beta},\n{indentString}\"Alpha\": {alpha}\n{indentString}" + "}");
+
+        return score;
       }
 
       if (score > max)
@@ -65,6 +69,10 @@ public class MyBot : IChessBot
 
         if (score > alpha) alpha = score;
       };
+
+      if (debug) _searchLog.Append($"\n{indentString}],\n{indentString}\"Score\": {score},\n{indentString}\"q\": {qSearch},\n{indentString}\"Move Count\": {moveCount},\n{indentString}\"Depth\": {depth},\n{indentString}\"Beta\": {beta},\n{indentString}\"Alpha\": {alpha}\n{indentString}" + "}");
+
+      index++;
     }
 
     if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max);
@@ -114,11 +122,11 @@ public class MyBot : IChessBot
     {
       _searchLog = new System.Text.StringBuilder("[\n");
 
-      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false);
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, false);
 
       if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
       {
-        bestMoveScore = Search(depth, 0, -999999991, 999999992, false);
+        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, false);
       }
       else
       {
@@ -136,5 +144,7 @@ public class MyBot : IChessBot
     // Console.WriteLine($"Searched {_searchedMoves} moves");
 
     return _bestMove;
+
+    return Move.NullMove;
   }
 }
