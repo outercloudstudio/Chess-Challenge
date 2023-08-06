@@ -9,15 +9,16 @@ public class MyBot : IChessBot
   Timer _timer;
   Move _bestMove;
   int _searchedMoves;
+  System.Text.StringBuilder _searchLog = new System.Text.StringBuilder("[\n");
 
   record struct TranspositionEntry(ulong Hash, int Depth, int Score);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
   record struct MoveChoice(Move Move, int Interest);
 
-  int Search(int depth, int ply, int alpha, int beta)
+  int Search(int depth, int ply, int alpha, int beta, bool qSearch)
   {
-    if (ply != 0 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60) return 0;
+    // if (ply != 0 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60 && !qSearch) return 0;
 
     _searchedMoves++;
 
@@ -25,13 +26,15 @@ public class MyBot : IChessBot
     int key = (int)(hash % 100000);
     TranspositionEntry entry = _transpositionTable[key];
 
-    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash) return entry.Score;
+    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash && !qSearch) return entry.Score;
 
-    if (depth == 0) return Evaluate();
+    if (depth <= 0 && !qSearch) return Evaluate();
 
     MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
-    int max = -999999999;
+    if (moveChoices.Length == 0) return Evaluate();
+
+    int max = -999999995;
 
     foreach (MoveChoice moveChoice in moveChoices)
     {
@@ -39,7 +42,11 @@ public class MyBot : IChessBot
 
       _board.MakeMove(move);
 
-      int score = -Search(depth - 1, ply + 1, -beta, -alpha);
+      _searchLog.Append("{\nMove: \"" + move + "\",\nChildren: [\n");
+
+      int score = -Search(depth - 1, ply + 1, -beta, -alpha, depth <= 1 && move.IsCapture);
+
+      _searchLog.Append($"],\nScore: \"{score}\"\n" + "},\n");
 
       _board.UndoMove(move);
 
@@ -71,18 +78,18 @@ public class MyBot : IChessBot
 
   int Interest(Move move)
   {
-    if (move == _bestMove) return 999999;
+    if (move == _bestMove) return 999;
 
-    if (move.IsCapture) return 1000 * pieceValues[(int)move.CapturePieceType] - pieceValues[(int)move.MovePieceType];
+    if (move.IsCapture) return pieceValues[(int)move.CapturePieceType] - pieceValues[(int)move.MovePieceType] / 100;
 
     return 0;
   }
 
   int Evaluate()
   {
-    if (_board.IsInCheckmate()) return -999999999;
+    if (_board.IsInCheckmate()) return -999993;
 
-    if (_board.IsDraw()) return -200;
+    if (_board.IsDraw()) return 0;
 
     int materialEvaluation = 0;
 
@@ -102,20 +109,26 @@ public class MyBot : IChessBot
 
     int depth = 5;
     int bestMoveScore = 0;
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
+    // while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
+    while (depth < 7)
     {
-      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100);
+      _searchLog = new System.Text.StringBuilder("[\n");
+
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false);
 
       if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
       {
-        bestMoveScore = Search(depth, 0, -9999999, 9999999);
+        bestMoveScore = Search(depth, 0, -999999991, 999999992, false);
       }
       else
       {
         bestMoveScore = score;
       }
 
-      // Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms");
+      Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms");
+
+      _searchLog.Append("]");
+      System.IO.File.WriteAllText(@"D:\Chess-Challenge\Chess-Challenge\Search Log.json", _searchLog.ToString());
 
       depth++;
     }
