@@ -53,6 +53,14 @@ namespace ChessChallenge.Application
       {
         FastGame.Match(() => new MyBot(), () => new MyBotEvil(), 30 * 1000);
       }
+      if (NextButtonInRow("My Bot vs FrederoxQ", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.FrederoxQ);
+      }
+      if (NextButtonInRow("My Bot vs FrederoxQ Threaded", ref buttonPos, spacing, buttonSize))
+      {
+        FastGame.Match(() => new MyBot(), () => new Frederox.Quiescence.Quiescence(), 30 * 1000);
+      }
       // if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       // {
       //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);

@@ -6,14 +6,26 @@ using ChessChallenge.API;
 public class MyBot : IChessBot
 {
   Board _board;
+  Timer _timer;
   Move _bestMove;
   int _searchedMoves;
+
+  record struct TranspositionEntry(ulong Hash, int Depth, int Score);
+  TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
   record struct MoveChoice(Move Move, int Interest);
 
   int Search(int depth, int ply, int alpha, int beta)
   {
+    if (ply != 0 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60) return 0;
+
     _searchedMoves++;
+
+    ulong hash = _board.ZobristKey;
+    int key = (int)(hash % 100000);
+    TranspositionEntry entry = _transpositionTable[key];
+
+    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash) return entry.Score;
 
     if (depth == 0) return Evaluate();
 
@@ -47,6 +59,8 @@ public class MyBot : IChessBot
         if (score > alpha) alpha = score;
       };
     }
+
+    if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max);
 
     return max;
   }
@@ -84,18 +98,29 @@ public class MyBot : IChessBot
   public Move Think(Board board, Timer timer)
   {
     _board = board;
+    _timer = timer;
 
     int depth = 5;
+    int bestMoveScore = 0;
     while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
-      Search(depth, 0, -9999999, 9999999);
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100);
 
-      Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms");
+      if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
+      {
+        bestMoveScore = Search(depth, 0, -9999999, 9999999);
+      }
+      else
+      {
+        bestMoveScore = score;
+      }
+
+      // Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms");
 
       depth++;
     }
 
-    Console.WriteLine($"Searched {_searchedMoves} moves");
+    // Console.WriteLine($"Searched {_searchedMoves} moves");
 
     return _bestMove;
   }

@@ -25,7 +25,8 @@ namespace ChessChallenge.Application
       EvilBot,
       Tyrant,
       MyBotEvil,
-      StockFish
+      StockFish,
+      FrederoxQ,
     }
 
     // Game state
@@ -224,6 +225,7 @@ namespace ChessChallenge.Application
         PlayerType.EvilBot => new ChessPlayer(new EvilBot(), type, GameDurationMilliseconds),
         PlayerType.Tyrant => new ChessPlayer(new Tyrant(), type, GameDurationMilliseconds),
         PlayerType.StockFish => new ChessPlayer(new StockFish(), type, GameDurationMilliseconds),
+        PlayerType.FrederoxQ => new ChessPlayer(new Frederox.Quiescence.Quiescence(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
     }
