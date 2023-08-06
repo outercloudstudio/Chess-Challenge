@@ -10,14 +10,16 @@ public class MyBot : IChessBot
   Move _bestMove;
   int _searchedMoves;
 
-  record struct TranspositionEntry(ulong Hash, int Depth, int Score);
+  record struct TranspositionEntry(ulong Hash, int Depth, int Score, int Bound);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
   record struct MoveChoice(Move Move, int Interest);
 
-  int Search(int depth, int ply, int alpha, int beta, bool qSearch, bool debug)
+  int Search(int depth, int ply, int alpha, int beta, bool isLoud)
   {
-    if (ply != 0 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60 && !qSearch) return 0;
+    if (ply > 4 && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60) depth = 0;
+
+    bool qSearch = isLoud && depth <= 0;
 
     _searchedMoves++;
 
@@ -25,12 +27,20 @@ public class MyBot : IChessBot
     int key = (int)(hash % 100000);
     TranspositionEntry entry = _transpositionTable[key];
 
-    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash && !qSearch) return entry.Score;
+    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash && !qSearch)
+    {
+      if (entry.Bound == 0) return entry.Score;
 
-    if (depth <= 0 && !qSearch) return Evaluate();
+      if (entry.Bound == 1) alpha = Math.Max(alpha, entry.Score);
 
-    int moveCount = _board.GetLegalMoves(false).Length;
-    MoveChoice[] moveChoices = _board.GetLegalMoves(false).Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
+      if (entry.Bound == -1) beta = Math.Min(beta, entry.Score);
+
+      if (alpha >= beta) return entry.Score;
+    }
+
+    if (depth <= 0 && !(qSearch && ply < 12)) return Evaluate();
+
+    MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     if (moveChoices.Length == 0) return Evaluate();
 
@@ -42,13 +52,15 @@ public class MyBot : IChessBot
 
       _board.MakeMove(move);
 
-      int score = -Search(depth - 1, ply + 1, -beta, -alpha, depth <= 1 && move.IsCapture, (ply == 0 && move.ToString() == "Move: 'd4f5'") || debug);
+      int score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture);
 
       _board.UndoMove(move);
 
       if (score >= beta)
       {
         if (ply == 0) _bestMove = move;
+
+        if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max, 1);
 
         return score;
       }
@@ -63,7 +75,7 @@ public class MyBot : IChessBot
       };
     }
 
-    if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max);
+    if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max, max <= alpha ? -1 : 0);
 
     return max;
   }
@@ -107,11 +119,11 @@ public class MyBot : IChessBot
     int bestMoveScore = 0;
     while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
-      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, false);
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false);
 
       if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
       {
-        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, false);
+        bestMoveScore = Search(depth, 0, -999999991, 999999992, false);
       }
       else
       {
