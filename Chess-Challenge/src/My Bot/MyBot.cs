@@ -19,7 +19,7 @@ public class MyBot : IChessBot
 
   int Search(int depth, int ply, int alpha, int beta, bool isLoud, bool initial)
   {
-    if (!initial && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 30)
+    if (!initial && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60)
     {
       _cancelledSearchEarly = true;
 
@@ -50,6 +50,8 @@ public class MyBot : IChessBot
     MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     if (moveChoices.Length == 0) return Evaluate();
+
+    if (ply == 0) _bestMove = moveChoices[0].Move;
 
     int max = -999999995;
 
@@ -119,11 +121,13 @@ public class MyBot : IChessBot
 
     for (int typeIndex = 1; typeIndex < 7; typeIndex++)
     {
-      materialEvaluation += _board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
-      materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+      materialEvaluation += _board.GetPieceList((PieceType)typeIndex, _board.IsWhiteToMove).Count * pieceValues[typeIndex];
+      materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, !_board.IsWhiteToMove).Count * pieceValues[typeIndex];
     }
 
-    return materialEvaluation * ColorEvaluationFactor(_board.IsWhiteToMove);
+    int mobilityEvaluation = _board.GetLegalMoves().Length / 20;
+
+    return materialEvaluation + mobilityEvaluation;
   }
 
   public Move Think(Board board, Timer timer)
@@ -133,18 +137,18 @@ public class MyBot : IChessBot
 
     _cancelledSearchEarly = false;
 
-    int depth = 2;
+    int depth = 4;
     int bestMoveScore = 0;
     Move lastSearchBestMove = Move.NullMove;
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30)
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
       // _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
 
-      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, depth == 2);
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, depth == 4);
 
       if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
       {
-        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, depth == 2);
+        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, depth == 4);
       }
       else
       {
