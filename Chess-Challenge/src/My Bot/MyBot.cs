@@ -10,7 +10,7 @@ public class MyBot : IChessBot
   Move _bestMove;
   int _searchedMoves;
   bool _cancelledSearchEarly;
-  System.Text.StringBuilder _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
+  // System.Text.StringBuilder _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
 
   record struct TranspositionEntry(ulong Hash, int Depth, int Score, int Bound);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
@@ -59,16 +59,16 @@ public class MyBot : IChessBot
 
       _board.MakeMove(move);
 
-      _log.AppendLine(new string('\t', ply * 2 + 1) + "- " + move + ":"); // #DEBUG
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Alpha: {alpha}"); // #DEBUG
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Beta: {beta}"); // #DEBUG
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Loud: {isLoud}"); // #DEBUG
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Depth: {depth}"); // #DEBUG
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Children:"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 1) + "- " + move + ":"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Alpha: {alpha}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Beta: {beta}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Loud: {isLoud}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Depth: {depth}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Children:"); // #DEBUG
 
       int score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
 
-      _log.AppendLine(new string('\t', ply * 2 + 2) + $"Score: {score}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Score: {score}"); // #DEBUG
 
       _board.UndoMove(move);
 
@@ -138,30 +138,29 @@ public class MyBot : IChessBot
     Move lastSearchBestMove = Move.NullMove;
     while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30)
     {
-      _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
+      // _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
 
-      bestMoveScore = Search(depth, 0, -999999991, 999999992, false, depth == 2);
+      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, depth == 2);
+
+      if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
+      {
+        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, depth == 2);
+      }
+      else
+      {
+        bestMoveScore = score;
+      }
+
       if (!_cancelledSearchEarly) lastSearchBestMove = _bestMove;
-
-      // int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false);
-
-      // if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
-      // {
-      //   bestMoveScore = Search(depth, 0, -999999991, 999999992, false);
-      // }
-      // else
-      // {
-      //   bestMoveScore = score;
-      // }
 
       Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms, cancelled early {_cancelledSearchEarly}"); // #DEBUG
 
-      System.IO.File.WriteAllText(@"D:\Chess-Challenge\Chess-Challenge\log.yml", _log.ToString()); // #DEBUG
+      // System.IO.File.WriteAllText(@"D:\Chess-Challenge\Chess-Challenge\log.yml", _log.ToString()); // #DEBUG
 
       depth++;
     }
 
-    // Console.WriteLine($"Searched {_searchedMoves} moves");
+    Console.WriteLine($"Searched {_searchedMoves} moves");
 
     return lastSearchBestMove;
   }
