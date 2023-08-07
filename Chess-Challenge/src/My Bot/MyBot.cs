@@ -47,13 +47,21 @@ public class MyBot : IChessBot
 
     if (depth <= 0 && !(qSearch && ply < 12)) return Evaluate();
 
+    int max = -999999995;
+
+    if (isLoud)
+    {
+      max = Evaluate();
+      alpha = Math.Max(alpha, max);
+
+      if (alpha >= beta) return max;
+    }
+
     MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     if (moveChoices.Length == 0) return Evaluate();
 
     if (ply == 0) _bestMove = moveChoices[0].Move;
-
-    int max = -999999995;
 
     foreach (MoveChoice moveChoice in moveChoices)
     {
@@ -140,7 +148,7 @@ public class MyBot : IChessBot
     int depth = 4;
     int bestMoveScore = 0;
     Move lastSearchBestMove = Move.NullMove;
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60 || depth == 4)
     {
       // _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
 
