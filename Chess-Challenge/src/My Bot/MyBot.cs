@@ -47,21 +47,13 @@ public class MyBot : IChessBot
 
     if (depth <= 0 && !(qSearch && ply < 12)) return Evaluate();
 
-    int max = -999999995;
-
-    if (isLoud)
-    {
-      max = Evaluate();
-      alpha = Math.Max(alpha, max);
-
-      if (alpha >= beta) return max;
-    }
-
     MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
 
     if (moveChoices.Length == 0) return Evaluate();
 
     if (ply == 0) _bestMove = moveChoices[0].Move;
+
+    int max = -999999995;
 
     foreach (MoveChoice moveChoice in moveChoices)
     {
@@ -74,9 +66,21 @@ public class MyBot : IChessBot
       // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Beta: {beta}"); // #DEBUG
       // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Loud: {isLoud}"); // #DEBUG
       // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Depth: {depth}"); // #DEBUG
+      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Other Moves: {moveChoices.Length}"); // #DEBUG
       // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Children:"); // #DEBUG
 
-      int score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
+      int score;
+
+      if (ply == 3)
+      {
+        score = -Search(depth - 3, ply + 1, -beta, -alpha, move.IsCapture, initial);
+
+        if (score >= beta) score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
+      }
+      else
+      {
+        score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
+      }
 
       // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Score: {score}"); // #DEBUG
 
@@ -106,7 +110,7 @@ public class MyBot : IChessBot
     return max;
   }
 
-  int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 0 };
+  int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 10000 };
 
   int ColorEvaluationFactor(bool white) => white ? 1 : -1;
 
