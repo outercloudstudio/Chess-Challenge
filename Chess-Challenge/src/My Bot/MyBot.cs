@@ -1,120 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  Board _board;
-  Timer _timer;
-  Move _bestMove;
-  int _searchedMoves;
-  bool _cancelledSearchEarly;
-  // System.Text.StringBuilder _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
-
-  record struct TranspositionEntry(ulong Hash, int Depth, int Score, int Bound);
+  record struct TranspositionEntry(ulong Hash, int Depth, int lowerBound, int upperBound);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
-  record struct MoveChoice(Move Move, int Interest);
+  Board _board;
+  Move _bestMove;
 
-  int Search(int depth, int ply, int alpha, int beta, bool isLoud, bool initial)
+  (TranspositionEntry, bool) RetrieveTransposition(int depth)
   {
-    if (!initial && _timer.MillisecondsElapsedThisTurn > _timer.MillisecondsRemaining / 60)
-    {
-      _cancelledSearchEarly = true;
-
-      return 0;
-    }
-
-    bool qSearch = isLoud && depth <= 0;
-
-    _searchedMoves++;
-
     ulong hash = _board.ZobristKey;
     int key = (int)(hash % 100000);
     TranspositionEntry entry = _transpositionTable[key];
 
-    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash && !qSearch)
-    {
-      if (entry.Bound == 0) return entry.Score;
+    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash) return (entry, true);
 
-      if (entry.Bound == 1) alpha = Math.Max(alpha, entry.Score);
-
-      if (entry.Bound == -1) beta = Math.Min(beta, entry.Score);
-
-      if (alpha >= beta) return entry.Score;
-    }
-
-    if (depth <= 0 && !(qSearch && ply < 12)) return Evaluate();
-
-    MoveChoice[] moveChoices = _board.GetLegalMoves().Select(move => new MoveChoice(move, Interest(move))).OrderByDescending(moveChoice => moveChoice.Interest).ToArray();
-
-    if (moveChoices.Length == 0) return Evaluate();
-
-    if (ply == 0) _bestMove = moveChoices[0].Move;
-
-    int max = -999999995;
-
-    foreach (MoveChoice moveChoice in moveChoices)
-    {
-      Move move = moveChoice.Move;
-
-      _board.MakeMove(move);
-
-      // _log.AppendLine(new string('\t', ply * 2 + 1) + "- " + move + ":"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Alpha: {alpha}"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Beta: {beta}"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Loud: {isLoud}"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Depth: {depth}"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Other Moves: {moveChoices.Length}"); // #DEBUG
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Children:"); // #DEBUG
-
-      int score;
-
-      if (ply == 3)
-      {
-        score = -Search(depth - 3, ply + 1, -beta, -alpha, move.IsCapture, initial);
-
-        if (score >= beta) score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
-      }
-      else
-      {
-        score = -Search(depth - 1, ply + 1, -beta, -alpha, move.IsCapture, initial);
-      }
-
-      // _log.AppendLine(new string('\t', ply * 2 + 2) + $"Score: {score}"); // #DEBUG
-
-      _board.UndoMove(move);
-
-      if (score >= beta)
-      {
-        if (ply == 0) _bestMove = move;
-
-        if (depth > entry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, max, 1);
-
-        return score;
-      }
-
-      if (score > max)
-      {
-        max = score;
-
-        if (ply == 0) _bestMove = move;
-
-        if (score > alpha) alpha = score;
-      };
-    }
-
-    if (depth > entry.Depth && !_cancelledSearchEarly) _transpositionTable[key] = new TranspositionEntry(hash, depth, max, max <= alpha ? -1 : 0);
-
-    return max;
+    return (entry, false);
   }
 
   int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 10000 };
-  int[] piecePhases = { 0, 0, 1, 1, 2, 4, 0 };
-  ulong[] pieceSquareTables = { 657614902731556116, 420894446315227099, 384592972471695068, 312245244820264086, 364876803783607569, 366006824779723922, 366006826859316500, 786039115310605588, 421220596516513823, 366011295806342421, 366006826859316436, 366006896669578452, 162218943720801556, 440575073001255824, 657087419459913430, 402634039558223453, 347425219986941203, 365698755348489557, 311382605788951956, 147850316371514514, 329107007234708689, 402598430990222677, 402611905376114006, 329415149680141460, 257053881053295759, 291134268204721362, 492947507967247313, 367159395376767958, 384021229732455700, 384307098409076181, 402035762391246293, 328847661003244824, 365712019230110867, 366002427738801364, 384307168185238804, 347996828560606484, 329692156834174227, 365439338182165780, 386018218798040211, 456959123538409047, 347157285952386452, 365711880701965780, 365997890021704981, 221896035722130452, 384289231362147538, 384307167128540502, 366006826859320596, 366006826876093716, 366002360093332756, 366006824694793492, 347992428333053139, 457508666683233428, 329723156783776785, 329401687190893908, 366002356855326100, 366288301819245844, 329978030930875600, 420621693221156179, 422042614449657239, 384602117564867863, 419505151144195476, 366274972473194070, 329406075454444949, 275354286769374224, 366855645423297932, 329991151972070674, 311105941360174354, 256772197720318995, 365993560693875923, 258219435335676691, 383730812414424149, 384601907111998612, 401758895947998613, 420612834953622999, 402607438610388375, 329978099633296596, 67159620133902 };
-
-  int ColorEvaluationFactor(bool white) => white ? 1 : -1;
 
   int Interest(Move move)
   {
@@ -125,82 +32,116 @@ public class MyBot : IChessBot
     return 0;
   }
 
-  public int getPieceSquareTableValue(int index)
-  {
-    return (int)(((pieceSquareTables[index / 10] >> (6 * (index % 10))) & 63) - 20) * 8;
-  }
-
   int Evaluate()
   {
-    if (_board.IsInCheckmate()) return -999993;
-
-    if (_board.IsDraw()) return 0;
-
-    int middleGameEvaluation = 0;
-    int endGameEvaluation = 0;
-    int phase = 0;
-
-    foreach (bool white in new[] { true, false })
+    int materialEvaluation = 0;
+    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
     {
-      for (var pieceType = PieceType.Pawn; pieceType <= PieceType.King; pieceType++)
-      {
-        int piece = (int)pieceType;
-        ulong mask = _board.GetPieceBitboard(pieceType, white);
+      materialEvaluation += _board.GetPieceList((PieceType)typeIndex, _board.IsWhiteToMove).Count * pieceValues[typeIndex];
+      materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, !_board.IsWhiteToMove).Count * pieceValues[typeIndex];
+    }
+    int mobilityEvaluation = _board.GetLegalMoves().Length / 20;
+    return materialEvaluation + mobilityEvaluation;
+  }
 
-        while (mask != 0)
-        {
-          phase += piecePhases[piece];
+  record struct OrderedMove(Move Move, int Interest);
 
-          int index = 128 * (piece - 1) + BitboardHelper.ClearAndGetIndexOfLSB(ref mask) ^ (white ? 56 : 0);
+  int AlphaBetaWM(int lowerBound, int upperBound, int ply, int depth)
+  {
+    (TranspositionEntry transpositionEntry, bool found) = RetrieveTransposition(depth);
 
-          middleGameEvaluation += getPieceSquareTableValue(index) + pieceValues[piece];
-          endGameEvaluation += getPieceSquareTableValue(index + 64) + pieceValues[piece];
-        }
-      }
+    if (found)
+    {
+      if (transpositionEntry.lowerBound >= upperBound) return transpositionEntry.lowerBound;
+      if (transpositionEntry.upperBound <= lowerBound) return transpositionEntry.upperBound;
 
-      middleGameEvaluation = -middleGameEvaluation;
-      endGameEvaluation = -endGameEvaluation;
+      lowerBound = Math.Max(lowerBound, transpositionEntry.lowerBound);
+      upperBound = Math.Min(upperBound, transpositionEntry.upperBound);
     }
 
-    return (middleGameEvaluation * phase + endGameEvaluation * (24 - phase)) / 24 * ColorEvaluationFactor(_board.IsWhiteToMove);
+    if (_board.IsInCheckmate()) return -99999999;
+
+    int max = 0;
+
+    if (depth == 0) max = Evaluate();
+    else
+    {
+      Move[] moves = _board.GetLegalMoves();
+
+      if (moves.Length == 0) return Evaluate();
+
+      var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
+
+      if (ply == 0) _bestMove = orderedMoves.First().Move;
+
+      foreach (OrderedMove orderedMove in orderedMoves)
+      {
+        Move move = orderedMove.Move;
+
+        _board.MakeMove(move);
+
+        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1);
+
+        _board.UndoMove(move);
+
+        if (score >= upperBound)
+        {
+          if (ply == 0) _bestMove = move;
+
+          break;
+        }
+
+        if (score > max)
+        {
+          max = score;
+
+          if (ply == 0) _bestMove = move;
+
+          if (score > lowerBound) lowerBound = score;
+        }
+      }
+    }
+
+    return max;
   }
+
+  int MTDF(int initialGuess, int depth)
+  {
+    int max = initialGuess;
+
+    int upperBound = 99999999;
+    int lowerBound = -99999999;
+
+    while (lowerBound < upperBound)
+    {
+      int beta = max == lowerBound ? max + 1 : max;
+
+      max = AlphaBetaWM(beta - 1, beta, 0, depth);
+
+      if (max < beta) upperBound = max;
+      else lowerBound = max;
+    }
+
+    return max;
+  }
+
+  int bestMoveGuess = 0;
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _timer = timer;
 
-    _cancelledSearchEarly = false;
+    int depth = 1;
 
-    int depth = 2;
-    int bestMoveScore = 0;
-    Move lastSearchBestMove = Move.NullMove;
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60 || depth == 2)
+    while (depth == 1 || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
-      // _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
+      bestMoveGuess = MTDF(bestMoveGuess, depth);
 
-      int score = Search(depth, 0, bestMoveScore - 100, bestMoveScore + 100, false, depth == 2);
-
-      if (score <= bestMoveScore - 100 || score >= bestMoveScore + 100)
-      {
-        bestMoveScore = Search(depth, 0, -999999991, 999999992, false, depth == 2);
-      }
-      else
-      {
-        bestMoveScore = score;
-      }
-
-      if (!_cancelledSearchEarly) lastSearchBestMove = _bestMove;
-
-      Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn} ms, cancelled early {_cancelledSearchEarly}"); // #DEBUG
-
-      // System.IO.File.WriteAllText(@"D:\Chess-Challenge\Chess-Challenge\log.yml", _log.ToString()); // #DEBUG
+      Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms");
 
       depth++;
     }
 
-    Console.WriteLine($"Searched {_searchedMoves} moves");
-
-    return lastSearchBestMove;
+    return _bestMove;
   }
 }
