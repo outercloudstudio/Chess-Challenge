@@ -4,29 +4,18 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  record struct TranspositionEntry(ulong Hash, int Depth, int lowerBound, int upperBound);
+  System.Text.StringBuilder _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
+
+  record struct TranspositionEntry(ulong Hash, int Depth, int LowerBound, int UpperBound);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
   Board _board;
   Move _bestMove;
 
-  (TranspositionEntry, bool) RetrieveTransposition(int depth)
-  {
-    ulong hash = _board.ZobristKey;
-    int key = (int)(hash % 100000);
-    TranspositionEntry entry = _transpositionTable[key];
-
-    if (entry.Depth > 0 && entry.Depth >= depth && entry.Hash == hash) return (entry, true);
-
-    return (entry, false);
-  }
-
   int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 10000 };
 
   int Interest(Move move)
   {
-    if (move == _bestMove) return 999;
-
     if (move.IsCapture) return pieceValues[(int)move.CapturePieceType] - pieceValues[(int)move.MovePieceType] / 100;
 
     return 0;
@@ -35,40 +24,41 @@ public class MyBot : IChessBot
   int Evaluate()
   {
     int materialEvaluation = 0;
+
     for (int typeIndex = 1; typeIndex < 7; typeIndex++)
     {
       materialEvaluation += _board.GetPieceList((PieceType)typeIndex, _board.IsWhiteToMove).Count * pieceValues[typeIndex];
       materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, !_board.IsWhiteToMove).Count * pieceValues[typeIndex];
     }
-    int mobilityEvaluation = _board.GetLegalMoves().Length / 20;
-    return materialEvaluation + mobilityEvaluation;
+
+    return materialEvaluation;
   }
 
   record struct OrderedMove(Move Move, int Interest);
 
-  int AlphaBetaWM(int lowerBound, int upperBound, int ply, int depth)
+  int AlphaBetaWM(int lowerBound, int upperBound, int ply, int depth, bool qSearch)
   {
-    (TranspositionEntry transpositionEntry, bool found) = RetrieveTransposition(depth);
+    ulong hash = _board.ZobristKey;
+    int key = (int)(hash % 100000);
+    TranspositionEntry transpositionEntry = _transpositionTable[key];
 
-    if (found)
+    if (transpositionEntry.Depth > 0 && transpositionEntry.Depth >= depth && transpositionEntry.Hash == hash)
     {
-      if (transpositionEntry.lowerBound >= upperBound) return transpositionEntry.lowerBound;
-      if (transpositionEntry.upperBound <= lowerBound) return transpositionEntry.upperBound;
+      if (transpositionEntry.LowerBound >= upperBound) return transpositionEntry.LowerBound;
+      if (transpositionEntry.UpperBound <= lowerBound) return transpositionEntry.UpperBound;
 
-      lowerBound = Math.Max(lowerBound, transpositionEntry.lowerBound);
-      upperBound = Math.Min(upperBound, transpositionEntry.upperBound);
+      lowerBound = Math.Max(lowerBound, transpositionEntry.LowerBound);
+      upperBound = Math.Min(upperBound, transpositionEntry.UpperBound);
     }
 
-    if (_board.IsInCheckmate()) return -99999999;
+    int max = -99999999;
 
-    int max = 0;
-
-    if (depth == 0) max = Evaluate();
+    if (depth <= 0 && !qSearch) max = Evaluate();
     else
     {
       Move[] moves = _board.GetLegalMoves();
 
-      if (moves.Length == 0) return Evaluate();
+      if (moves.Length == 0) return _board.IsInCheck() ? -99999999 : 0;
 
       var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
 
@@ -80,13 +70,27 @@ public class MyBot : IChessBot
 
         _board.MakeMove(move);
 
-        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1);
+        _log.AppendLine(new string('\t', ply * 2 + 1) + "- " + move + ":"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Lower Bound: {lowerBound}"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Upper Bound: {upperBound}"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Q: {qSearch}"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Depth: {depth}"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Other Moves: {moves.Length}"); // #DEBUG
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Children:"); // #DEBUG
+
+        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1, depth == 1 && move.IsCapture);
+
+        _log.AppendLine(new string('\t', ply * 2 + 2) + $"Score: {score}"); // #DEBUG
 
         _board.UndoMove(move);
 
         if (score >= upperBound)
         {
           if (ply == 0) _bestMove = move;
+
+          max = score;
+
+          upperBound = score;
 
           break;
         }
@@ -102,6 +106,8 @@ public class MyBot : IChessBot
       }
     }
 
+    if (!qSearch && depth >= transpositionEntry.Depth) _transpositionTable[key] = new TranspositionEntry(hash, depth, lowerBound, upperBound);
+
     return max;
   }
 
@@ -116,7 +122,7 @@ public class MyBot : IChessBot
     {
       int beta = max == lowerBound ? max + 1 : max;
 
-      max = AlphaBetaWM(beta - 1, beta, 0, depth);
+      max = AlphaBetaWM(beta - 1, beta, 0, depth, false);
 
       if (max < beta) upperBound = max;
       else lowerBound = max;
@@ -135,11 +141,15 @@ public class MyBot : IChessBot
 
     while (depth == 1 || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60)
     {
+      _log = new System.Text.StringBuilder("Search:\n"); // #DEBUG
+
       bestMoveGuess = MTDF(bestMoveGuess, depth);
 
       Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms");
 
       depth++;
+
+      // System.IO.File.WriteAllText(@"D:\Chess-Challenge\Chess-Challenge\log.yml", _log.ToString()); // #DEBUG
     }
 
     return _bestMove;
