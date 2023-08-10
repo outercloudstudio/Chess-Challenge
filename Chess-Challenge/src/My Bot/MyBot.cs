@@ -4,11 +4,6 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  /*
-  History Heuristic
-  Killer Heuristic
-  */
-
   record struct TranspositionEntry(ulong Hash, int Depth, int LowerBound, int UpperBound, Move BestMove);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
@@ -16,6 +11,7 @@ public class MyBot : IChessBot
 
   Board _board;
   Move _bestMove;
+  bool _white;
 
   int nodesSearched = 0;
 
@@ -30,8 +26,12 @@ public class MyBot : IChessBot
     return _historyTable[_board.IsWhiteToMove ? 0 : 1, (int)move.MovePieceType - 1, move.TargetSquare.Index];
   }
 
-  int Evaluate()
+  int Evaluate(int legalMoves)
   {
+    if (legalMoves == 0) return -99999999;
+
+    if (_board.IsRepeatedPosition()) return _board.IsWhiteToMove == _white ? -5 : 5;
+
     int materialEvaluation = 0;
 
     for (int typeIndex = 1; typeIndex < 7; typeIndex++)
@@ -52,7 +52,7 @@ public class MyBot : IChessBot
     Move bestMove = Move.NullMove;
 
     ulong hash = _board.ZobristKey;
-    int key = (int)(hash % 100000);
+    ulong key = hash % 100000L;
     TranspositionEntry transpositionEntry = _transpositionTable[key];
 
     if (transpositionEntry.Depth > 0 && transpositionEntry.Hash == hash)
@@ -71,14 +71,14 @@ public class MyBot : IChessBot
       bestMove = transpositionEntry.BestMove;
     }
 
+    Move[] moves = _board.GetLegalMoves();
+
     int max = -99999999;
 
-    if (depth <= 0 && !qSearch) max = Evaluate();
+    if (depth <= 0 && !qSearch) return Evaluate(moves.Length);
     else
     {
-      Move[] moves = _board.GetLegalMoves();
-
-      if (moves.Length == 0) return _board.IsInCheck() ? -99999999 : -50;
+      if (moves.Length == 0) return Evaluate(moves.Length);
 
       var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move, bestMove))).OrderByDescending(orderedMove => orderedMove.Interest);
 
@@ -149,6 +149,7 @@ public class MyBot : IChessBot
   public Move Think(Board board, Timer timer)
   {
     _board = board;
+    _white = board.IsWhiteToMove;
 
     _historyTable = new int[2, 6, 64];
 
