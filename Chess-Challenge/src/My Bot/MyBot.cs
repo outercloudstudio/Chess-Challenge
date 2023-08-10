@@ -12,10 +12,14 @@ public class MyBot : IChessBot
   Board _board;
   Move _bestMove;
   bool _white;
+  Timer _timer;
+  bool _initialSearch;
 
   int nodesSearched = 0;
 
   int[] pieceValues = new int[] { 0, 100, 300, 300, 500, 900, 10000 };
+
+  bool hasTime => _timer.MillisecondsElapsedThisTurn < _timer.MillisecondsRemaining / 60;
 
   int Interest(Move move, Move bestHashMove)
   {
@@ -26,12 +30,8 @@ public class MyBot : IChessBot
     return _historyTable[_board.IsWhiteToMove ? 0 : 1, (int)move.MovePieceType - 1, move.TargetSquare.Index];
   }
 
-  int Evaluate(int legalMoves)
+  int Evaluate()
   {
-    if (legalMoves == 0) return -99999999;
-
-    if (_board.IsRepeatedPosition() || _board.IsFiftyMoveDraw()) return _board.IsWhiteToMove == _white ? -5 : 5;
-
     int materialEvaluation = 0;
 
     for (int typeIndex = 1; typeIndex < 7; typeIndex++)
@@ -71,24 +71,28 @@ public class MyBot : IChessBot
       bestMove = transpositionEntry.BestMove;
     }
 
-    Move[] moves = _board.GetLegalMoves();
+    Move[] moves = _board.GetLegalMoves(qSearch);
 
-    int max = -99999999;
+    int max = -99999999 + ply;
 
-    if (depth <= 0 && !qSearch) return Evaluate(moves.Length);
+    if (qSearch) max = Evaluate();
+
+    if (depth <= 0 && !qSearch) return Evaluate();
     else
     {
-      if (moves.Length == 0) return Evaluate(moves.Length);
+      if (_board.IsRepeatedPosition() || _board.IsFiftyMoveDraw()) return _white == _board.IsWhiteToMove ? -5 : 5;
 
       var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move, bestMove))).OrderByDescending(orderedMove => orderedMove.Interest);
 
       foreach (OrderedMove orderedMove in orderedMoves)
       {
+        if (!_initialSearch && !hasTime) break;
+
         Move move = orderedMove.Move;
 
         _board.MakeMove(move);
 
-        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1, depth == 1 && move.IsCapture && ply < 10);
+        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1, depth == 1 && move.IsCapture);
 
         _board.UndoMove(move);
 
@@ -150,14 +154,26 @@ public class MyBot : IChessBot
   {
     _board = board;
     _white = board.IsWhiteToMove;
+    _timer = timer;
 
     _historyTable = new int[2, 6, 64];
 
     int depth = 1;
 
-    while (depth == 1 || timer.MillisecondsElapsedThisTurn < Math.Min(200, timer.MillisecondsRemaining / 60))
+    while (_initialSearch || hasTime)
     {
+      _initialSearch = depth < 5;
+
+      Move lastBestMove = _bestMove;
+
       bestMoveGuess = MTDF(bestMoveGuess, depth);
+
+      if (!_initialSearch && !hasTime)
+      {
+        _bestMove = lastBestMove;
+
+        break;
+      }
 
       Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms"); // #DEBUG
 
