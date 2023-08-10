@@ -30,7 +30,7 @@ public class MyBot : IChessBot
   {
     if (legalMoves == 0) return -99999999;
 
-    if (_board.IsRepeatedPosition()) return _board.IsWhiteToMove == _white ? -5 : 5;
+    if (_board.IsRepeatedPosition() || _board.IsFiftyMoveDraw()) return _board.IsWhiteToMove == _white ? -5 : 5;
 
     int materialEvaluation = 0;
 
