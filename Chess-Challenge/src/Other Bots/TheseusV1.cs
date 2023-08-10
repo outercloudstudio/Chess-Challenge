@@ -2,7 +2,7 @@
 using System.Linq;
 using ChessChallenge.API;
 
-public class MyBot : IChessBot
+public class TheseusV1 : IChessBot
 {
   /*
   History Heuristic
