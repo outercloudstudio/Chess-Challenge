@@ -98,7 +98,7 @@ public class MyBot : IChessBot
     ulong key = hash % 100000L;
     TranspositionEntry transpositionEntry = _transpositionTable[key];
 
-    if (transpositionEntry.Depth > 0 && transpositionEntry.Hash == hash)
+    if (!qSearch && transpositionEntry.Depth > 0 && transpositionEntry.Hash == hash)
     {
       if (transpositionEntry.Depth >= depth)
       {
@@ -189,7 +189,8 @@ public class MyBot : IChessBot
 
     while (lowerBound < upperBound)
     {
-      int beta = max == lowerBound ? max + 1 : max;
+      int beta = max;
+      if (max == lowerBound) beta++;
 
       max = AlphaBetaWM(beta - 1, beta, 0, depth, false);
 
@@ -214,7 +215,7 @@ public class MyBot : IChessBot
 
     while (_initialSearch || hasTime)
     {
-      _initialSearch = depth < 5;
+      _initialSearch = depth == 1;
 
       Move lastBestMove = _bestMove;
 
