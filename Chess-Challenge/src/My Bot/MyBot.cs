@@ -121,9 +121,18 @@ public class MyBot : IChessBot
     {
       Move[] moves = _board.GetLegalMoves(qSearch);
 
-      if (_board.IsRepeatedPosition() || _board.IsFiftyMoveDraw()) return _white == _board.IsWhiteToMove ? -5 : 5;
+      // if (_board.IsRepeatedPosition() || _board.IsFiftyMoveDraw()) return _white == _board.IsWhiteToMove ? -5 : 5;
 
-      if (qSearch && moves.Length == 0) return Evaluate();
+      if (qSearch)
+      {
+        if (moves.Length == 0) return Evaluate();
+
+        int standingScore = Evaluate();
+
+        if (standingScore >= upperBound) return standingScore;
+
+        if (standingScore > lowerBound) lowerBound = standingScore;
+      }
 
       var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move, bestMove))).OrderByDescending(orderedMove => orderedMove.Interest);
 
