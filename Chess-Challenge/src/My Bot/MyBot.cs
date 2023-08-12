@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using ChessChallenge.API;
-using Frederox.AlphaBeta;
 
 public class MyBot : IChessBot
 {
-  record struct TranspositionEntry(ulong Hash, int Depth, int Score, int Bound, Move BestMove);
+  // Bounds:
+  // 0 = Exact
+  // 1 = Lower, Never found a move greater than alpha
+  // 2 = Upper, found a move better than oponent reposonses
+  record struct TranspositionEntry(ulong Hash, int Score, int Bound, Move BestMove, int Depth = -1);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
   Board _board;
@@ -88,13 +91,35 @@ public class MyBot : IChessBot
   {
     nodesSearched++;
 
+    Move bestMove = Move.NullMove;
+
+    ulong hash = _board.ZobristKey;
+    ulong key = hash % 400000L;
+
+    TranspositionEntry transpositionEntry = _transpositionTable[key];
+
+    if (transpositionEntry.Depth > -1 && transpositionEntry.Hash == hash)
+    {
+      bestMove = transpositionEntry.BestMove;
+
+      if (depth <= transpositionEntry.Depth)
+      {
+        if (transpositionEntry.Bound == 0) return transpositionEntry.Score;
+        if (transpositionEntry.Bound == 1 && transpositionEntry.Score >= upperBound) return transpositionEntry.Score;
+        if (transpositionEntry.Bound == 2 && transpositionEntry.Score <= lowerBound) return transpositionEntry.Score;
+
+        lowerBound = Math.Max(lowerBound, transpositionEntry.Score);
+        upperBound = Math.Min(upperBound, transpositionEntry.Score);
+      }
+    }
+
     if (depth <= 0) return Evaluate();
+
+    int originalLowerBound = lowerBound;
 
     Move[] moves = _board.GetLegalMoves();
 
     var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
-
-    Move bestMove = Move.NullMove;
 
     foreach (OrderedMove orderedMove in orderedMoves)
     {
@@ -114,7 +139,7 @@ public class MyBot : IChessBot
       {
         bestMove = move;
 
-        lowerBound = upperBound;
+        lowerBound = score;
 
         break;
       }
@@ -128,6 +153,12 @@ public class MyBot : IChessBot
     }
 
     if (ply == 0) _bestMove = bestMove;
+
+    int bound = 0;
+    if (lowerBound <= originalLowerBound) bound = 1;
+    if (lowerBound >= upperBound) bound = 2;
+
+    if (depth >= transpositionEntry.Depth) transpositionEntry = new TranspositionEntry(hash, lowerBound, bound, bestMove, depth);
 
     return lowerBound;
   }
