@@ -164,7 +164,9 @@ public class MyBot : IChessBot
         {
           bestMove = move;
 
-          max = upperBound;
+          max = score;
+
+          upperBound = score;
 
           if (!move.IsCapture)
             _historyTable[_board.IsWhiteToMove ? 0 : 1, (int)move.MovePieceType - 1, move.TargetSquare.Index] += depth * depth;
