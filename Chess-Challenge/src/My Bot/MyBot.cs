@@ -11,6 +11,7 @@ public class MyBot : IChessBot
 
   Board _board;
   Move _bestMove;
+  bool _white;
   Timer _timer;
   bool _initialSearch;
 
@@ -87,7 +88,7 @@ public class MyBot : IChessBot
 
   record struct OrderedMove(Move Move, int Interest);
 
-  int PrincipalVariationSearch(int lowerBound, int upperBound, int ply, int depth, bool qSearch)
+  int AlphaBetaWM(int lowerBound, int upperBound, int ply, int depth, bool qSearch)
   {
     nodesSearched++;
 
@@ -133,8 +134,6 @@ public class MyBot : IChessBot
         if (standingScore > lowerBound) lowerBound = standingScore;
       }
 
-      bool isPrincipal = true;
-
       var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move, bestMove))).OrderByDescending(orderedMove => orderedMove.Interest);
 
       foreach (OrderedMove orderedMove in orderedMoves)
@@ -145,18 +144,7 @@ public class MyBot : IChessBot
 
         _board.MakeMove(move);
 
-        int score;
-
-        if (isPrincipal)
-        {
-          score = -PrincipalVariationSearch(-upperBound, -lowerBound, ply + 1, depth - 1, depth <= 1 && move.IsCapture);
-        }
-        else
-        {
-          score = -PrincipalVariationSearch(-lowerBound - 1, -lowerBound, ply + 1, depth - 1, depth <= 1 && move.IsCapture);
-
-          if (score > lowerBound) score = -PrincipalVariationSearch(-upperBound, -lowerBound, ply + 1, depth - 1, depth <= 1 && move.IsCapture);
-        }
+        int score = -AlphaBetaWM(-upperBound, -lowerBound, ply + 1, depth - 1, depth <= 1 && move.IsCapture);
 
         _board.UndoMove(move);
 
@@ -182,8 +170,6 @@ public class MyBot : IChessBot
 
           if (score > lowerBound) lowerBound = score;
         }
-
-        isPrincipal = false;
       }
     }
 
@@ -194,11 +180,33 @@ public class MyBot : IChessBot
     return max;
   }
 
+  int MTDF(int initialGuess, int depth)
+  {
+    int max = initialGuess;
+
+    int upperBound = 99999999;
+    int lowerBound = -99999999;
+
+    while (lowerBound < upperBound)
+    {
+      int beta = max;
+      if (max == lowerBound) beta++;
+
+      max = AlphaBetaWM(beta - 1, beta, 0, depth, false);
+
+      if (max < beta) upperBound = max;
+      else lowerBound = max;
+    }
+
+    return max;
+  }
+
   int bestMoveGuess = 0;
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
+    _white = board.IsWhiteToMove;
     _timer = timer;
 
     _historyTable = new int[2, 6, 64];
@@ -211,7 +219,7 @@ public class MyBot : IChessBot
 
       Move lastBestMove = _bestMove;
 
-      bestMoveGuess = PrincipalVariationSearch(-999999999, 999999999, 0, depth, false);
+      bestMoveGuess = MTDF(bestMoveGuess, depth);
 
       if (!_initialSearch && !hasTime)
       {
