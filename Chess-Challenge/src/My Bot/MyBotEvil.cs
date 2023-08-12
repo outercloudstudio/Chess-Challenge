@@ -6,8 +6,6 @@ public class MyBotEvil : IChessBot
 {
   /*
     TODO:
-    - Best move ordering
-    - History heuristic
     - Experiment with MTDf and PV again
     - Aspiration windows
     - Bad move pruning experiment
@@ -20,8 +18,11 @@ public class MyBotEvil : IChessBot
   record struct TranspositionEntry(ulong Hash, int Score, int Bound, Move BestMove, int Depth = -1);
   TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
 
+  int[,,] _historyTable;
+
   Board _board;
   Move _bestMove;
+  int _evaluation = 0;
   Timer _timer;
   bool _initialSearch;
 
@@ -58,11 +59,13 @@ public class MyBotEvil : IChessBot
 
   bool hasTime => _timer.MillisecondsElapsedThisTurn < _timer.MillisecondsRemaining / 60;
 
-  int Interest(Move move)
+  int Interest(Move move, Move bestMove)
   {
+    if (move == bestMove) return 999999999;
+
     if (move.IsCapture) return 100 * pieceValues[(int)move.CapturePieceType - 1] - pieceValues[(int)move.MovePieceType - 1];
 
-    return 0;
+    return _historyTable[_board.IsWhiteToMove ? 0 : 1, (int)move.MovePieceType - 1, move.TargetSquare.Index];
   }
 
   int Evaluate()
@@ -109,7 +112,7 @@ public class MyBotEvil : IChessBot
 
     TranspositionEntry transpositionEntry = _transpositionTable[key];
 
-    // Don't get transposition table since we are going to search to an undefined depth
+    // Don't get transposition table if qSearch since we are going to search to an undefined depth
     if (!qSearch && transpositionEntry.Depth > -1 && transpositionEntry.Hash == hash)
     {
       bestMove = transpositionEntry.BestMove;
@@ -141,7 +144,7 @@ public class MyBotEvil : IChessBot
 
     Move[] moves = _board.GetLegalMoves(qSearch);
 
-    var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
+    var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move, bestMove))).OrderByDescending(orderedMove => orderedMove.Interest);
 
     foreach (OrderedMove orderedMove in orderedMoves)
     {
@@ -162,6 +165,9 @@ public class MyBotEvil : IChessBot
         bestMove = move;
 
         lowerBound = score;
+
+        if (!move.IsCapture && !qSearch)
+          _historyTable[_board.IsWhiteToMove ? 0 : 1, (int)move.MovePieceType - 1, move.TargetSquare.Index] += depth * depth;
 
         break;
       }
@@ -188,6 +194,8 @@ public class MyBotEvil : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
+    _historyTable = new int[2, 6, 64];
+
     _board = board;
     _timer = timer;
 
@@ -197,12 +205,14 @@ public class MyBotEvil : IChessBot
     while (_initialSearch || hasTime)
     {
       Move lastBestMove = _bestMove;
+      int lastEvaluation = _evaluation;
 
-      int score = Search(-99999999, 99999999, 0, depth, false);
+      int score = Search(-999999999, 999999999, 0, depth, false);
 
       if (!_initialSearch && !hasTime)
       {
         _bestMove = lastBestMove;
+        _evaluation = lastEvaluation;
 
         break;
       }
