@@ -11,7 +11,6 @@ public class MyBot : IChessBot
 
   Board _board;
   Move _bestMove;
-  bool _white;
   Timer _timer;
   bool _initialSearch;
 
@@ -206,7 +205,6 @@ public class MyBot : IChessBot
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _white = board.IsWhiteToMove;
     _timer = timer;
 
     _historyTable = new int[2, 6, 64];
