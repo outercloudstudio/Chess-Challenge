@@ -108,7 +108,7 @@ public class MyBot : IChessBot
 
       _board.UndoMove(move);
 
-      if (_bestMove == Move.NullMove) _bestMove = move;
+      if (bestMove == Move.NullMove) bestMove = move;
 
       if (score >= upperBound)
       {
