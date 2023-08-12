@@ -1,158 +1,225 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ChessChallenge.API;
 
 public class MyBotEvil : IChessBot
 {
+  /*
+    TODO:
+    - Best move ordering
+    - History heuristic
+    - Experiment with MTDf and PV again
+    - Aspiration windows
+    - Bad move pruning experiment
+  */
+
+  // Bounds:
+  // 0 = Exact
+  // 1 = Lower, Never found a move greater than alpha
+  // 2 = Upper, found a move better than oponent reposonses
+  record struct TranspositionEntry(ulong Hash, int Score, int Bound, Move BestMove, int Depth = -1);
+  TranspositionEntry[] _transpositionTable = new TranspositionEntry[400000];
+
   Board _board;
-  int _maxDepth = 0;
+  Move _bestMove;
+  Timer _timer;
+  bool _initialSearch;
 
-  record class TranspositionEntry(ulong Hash, int Depth, int Score);
-  TranspositionEntry[] _transpositionTable = new TranspositionEntry[100000];
+  int nodesSearched = 0;
 
-  class State
+  int[] phase_weight = { 0, 1, 1, 2, 4, 0 };
+  int[] pieceValues = { 82, 337, 365, 477, 1025, 20000, 94, 281, 297, 512, 936, 20000 };
+
+  decimal[] packedPieceTables = {
+    63746705523041458768562654720m, 71818693703096985528394040064m, 75532537544690978830456252672m, 75536154932036771593352371712m, 76774085526445040292133284352m, 3110608541636285947269332480m, 936945638387574698250991104m, 75531285965747665584902616832m,
+    77047302762000299964198997571m, 3730792265775293618620982364m, 3121489077029470166123295018m, 3747712412930601838683035969m, 3763381335243474116535455791m, 8067176012614548496052660822m, 4977175895537975520060507415m, 2475894077091727551177487608m,
+    2458978764687427073924784380m, 3718684080556872886692423941m, 4959037324412353051075877138m, 3135972447545098299460234261m, 4371494653131335197311645996m, 9624249097030609585804826662m, 9301461106541282841985626641m, 2793818196182115168911564530m,
+    77683174186957799541255830262m, 4660418590176711545920359433m, 4971145620211324499469864196m, 5608211711321183125202150414m, 5617883191736004891949734160m, 7150801075091790966455611144m, 5619082524459738931006868492m, 649197923531967450704711664m,
+    75809334407291469990832437230m, 78322691297526401047122740223m, 4348529951871323093202439165m, 4990460191572192980035045640m, 5597312470813537077508379404m, 4980755617409140165251173636m, 1890741055734852330174483975m, 76772801025035254361275759599m,
+    75502243563200070682362835182m, 78896921543467230670583692029m, 2489164206166677455700101373m, 4338830174078735659125311481m, 4960199192571758553533648130m, 3420013420025511569771334658m, 1557077491473974933188251927m, 77376040767919248347203368440m,
+    73949978050619586491881614568m, 77043619187199676893167803647m, 1212557245150259869494540530m, 3081561358716686153294085872m, 3392217589357453836837847030m, 1219782446916489227407330320m, 78580145051212187267589731866m, 75798434925965430405537592305m,
+    68369566912511282590874449920m, 72396532057599326246617936384m, 75186737388538008131054524416m, 77027917484951889231108827392m, 73655004947793353634062267392m, 76417372019396591550492896512m, 74568981255592060493492515584m, 70529879645288096380279255040m,
+  };
+
+  int[][] pieceTables;
+
+  public MyBotEvil()
   {
-    public Move Move;
-    public int Score;
-    public State[] ChildStates = null;
-    public int Key;
-    public ulong Hash;
-
-    MyBotEvil Me;
-
-    public void Expand(int targetDepth, int depth = 0, int alpha = -99999, int beta = 99999)
+    pieceTables = new int[64][];
+    pieceTables = packedPieceTables.Select(packedTable =>
     {
-      TranspositionEntry entry = Me._transpositionTable[Key];
-
-      int evaluationDepth = targetDepth - depth;
-
-      if (entry != null && entry.Hash == Hash && entry.Depth >= evaluationDepth)
-      {
-        Score = entry.Score;
-
-        return;
-      }
-
-      if (depth > targetDepth) return;
-
-      Me._board.MakeMove(Move);
-
-      Me._maxDepth = Math.Max(Me._maxDepth, depth);
-
-      if (ChildStates == null)
-      {
-        ChildStates = Me._board.GetLegalMoves().Select(move => new State(move, Me)).OrderByDescending(state => -state.Score).ToArray();
-
-        if (ChildStates.Length != 0) Score = -ChildStates[0].Score;
-      }
-      else
-      {
-        int max = -99999;
-
-        foreach (State state in ChildStates)
-        {
-          state.Expand(targetDepth, depth + 1, -beta, -alpha);
-
-          int score = -state.Score;
-
-          if (score >= beta)
-          {
-            max = beta;
-
-            break;
-          }
-
-          if (score > max)
-          {
-            max = score;
-
-            if (score > alpha) alpha = score;
-          }
-        }
-
-        Score = max;
-
-        ChildStates = ChildStates.OrderByDescending(state => -state.Score).ToArray();
-      }
-
-      if (entry == null || entry.Depth < evaluationDepth) Me._transpositionTable[Key] = new TranspositionEntry(Hash, evaluationDepth, Score);
-
-      Me._board.UndoMove(Move);
-    }
-
-    public State(Move move, MyBotEvil me)
-    {
-      Me = me;
-
-      Move = move;
-
-      Me._board.MakeMove(move);
-
-      Hash = Me._board.ZobristKey;
-      Key = (int)(Hash % (ulong)Me._transpositionTable.Length);
-
-      Score = Me.Evaluate();
-
-      Me._board.UndoMove(move);
-    }
+      int pieceType = 0;
+      return decimal.GetBits(packedTable).Take(3)
+        .SelectMany(c => BitConverter.GetBytes(c)
+          .Select((byte square) => (int)((sbyte)square * 1.461) + pieceValues[pieceType++]))
+        .ToArray();
+    }).ToArray();
   }
 
-  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 0 };
+  bool hasTime => _timer.MillisecondsElapsedThisTurn < _timer.MillisecondsRemaining / 60;
 
-  int ColorEvaluationFactor(bool white) => white ? 1 : -1;
+  int Interest(Move move)
+  {
+    if (move.IsCapture) return 100 * pieceValues[(int)move.CapturePieceType - 1] - pieceValues[(int)move.MovePieceType - 1];
+
+    return 0;
+  }
 
   int Evaluate()
   {
-    if (_board.IsInCheckmate()) return -1000;
+    int middleGame = 0, endGame = 0, phase = 0;
 
-    if (_board.IsInsufficientMaterial() || _board.IsRepeatedPosition() || _board.FiftyMoveCounter >= 100) return -2;
-
-    int materialEvaluation = 0;
-
-    for (int typeIndex = 1; typeIndex < 7; typeIndex++)
+    foreach (bool white in new[] { true, false })
     {
-      materialEvaluation += _board.GetPieceList((PieceType)typeIndex, true).Count * pieceValues[typeIndex];
-      materialEvaluation -= _board.GetPieceList((PieceType)typeIndex, false).Count * pieceValues[typeIndex];
+      for (int piece = -1; ++piece < 6;)
+      {
+        ulong bitBoard = _board.GetPieceBitboard((PieceType)(piece + 1), white);
+
+        while (bitBoard != 0)
+        {
+          int sq = BitboardHelper.ClearAndGetIndexOfLSB(ref bitBoard) ^ (white ? 56 : 0);
+
+          middleGame += pieceTables[sq][piece];
+          endGame += pieceTables[sq][piece + 6];
+
+          phase += phase_weight[piece];
+        }
+      }
+      middleGame = -middleGame;
+      endGame = -endGame;
     }
 
-    return materialEvaluation * ColorEvaluationFactor(_board.IsWhiteToMove);
+    phase = Math.Min(phase, 24);
+
+    return (middleGame * phase + endGame * (24 - phase)) / 24 * (_board.IsWhiteToMove ? 1 : -1);
   }
 
-  Dictionary<ulong, State> _reuseableStates = new Dictionary<ulong, State>();
+  record struct OrderedMove(Move Move, int Interest);
+
+  int Search(int lowerBound, int upperBound, int ply, int depth, bool isLoud)
+  {
+    nodesSearched++;
+
+    bool qSearch = depth <= 0 && isLoud;
+
+    Move bestMove = Move.NullMove;
+
+    ulong hash = _board.ZobristKey;
+    ulong key = hash % 400000L;
+
+    TranspositionEntry transpositionEntry = _transpositionTable[key];
+
+    // Don't get transposition table since we are going to search to an undefined depth
+    if (!qSearch && transpositionEntry.Depth > -1 && transpositionEntry.Hash == hash)
+    {
+      bestMove = transpositionEntry.BestMove;
+
+      if (depth <= transpositionEntry.Depth)
+      {
+        if (transpositionEntry.Bound == 0) return transpositionEntry.Score;
+        if (transpositionEntry.Bound == 1 && transpositionEntry.Score >= upperBound) return transpositionEntry.Score;
+        if (transpositionEntry.Bound == 2 && transpositionEntry.Score <= lowerBound) return transpositionEntry.Score;
+
+        lowerBound = Math.Max(lowerBound, transpositionEntry.Score);
+        upperBound = Math.Min(upperBound, transpositionEntry.Score);
+      }
+    }
+
+    // we can't return cause we need to keep q searching
+    if (!qSearch && depth <= 0) return Evaluate();
+
+    if (qSearch)
+    {
+      int standingEvaluation = Evaluate();
+
+      if (standingEvaluation >= upperBound) return standingEvaluation;
+
+      lowerBound = Math.Max(lowerBound, standingEvaluation);
+    }
+
+    int originalLowerBound = lowerBound;
+
+    Move[] moves = _board.GetLegalMoves(qSearch);
+
+    var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
+
+    foreach (OrderedMove orderedMove in orderedMoves)
+    {
+      if (!_initialSearch && !hasTime) break;
+
+      Move move = orderedMove.Move;
+
+      _board.MakeMove(move);
+
+      int score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
+
+      _board.UndoMove(move);
+
+      if (bestMove == Move.NullMove) bestMove = move;
+
+      if (score >= upperBound)
+      {
+        bestMove = move;
+
+        lowerBound = score;
+
+        break;
+      }
+
+      if (score > lowerBound)
+      {
+        bestMove = move;
+
+        lowerBound = score;
+      }
+    }
+
+    if (ply == 0) _bestMove = bestMove;
+
+    int bound = 0;
+    if (lowerBound <= originalLowerBound) bound = 1;
+    if (lowerBound >= upperBound) bound = 2;
+
+    // Can't save qSearch results cause it's incomplete information
+    if (!qSearch && depth >= transpositionEntry.Depth) transpositionEntry = new TranspositionEntry(hash, lowerBound, bound, bestMove, depth);
+
+    return lowerBound;
+  }
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
-    _maxDepth = 0;
+    _timer = timer;
 
-    ulong hash = board.ZobristKey;
+    int depth = 1;
+    _initialSearch = true;
 
-    State tree;
-
-    if (_reuseableStates.Count != 0) tree = _reuseableStates[hash];
-    else tree = new State(Move.NullMove, this);
-
-    tree.Move = Move.NullMove;
-
-    for (int targetDepth = 0; tree.ChildStates == null || timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60; targetDepth++)
+    while (_initialSearch || hasTime)
     {
-      int lowerWindow = tree.Score - 1;
-      int upperWindow = tree.Score + 1;
+      Move lastBestMove = _bestMove;
 
-      tree.Expand(targetDepth, 0, lowerWindow, upperWindow);
+      int score = Search(-99999999, 99999999, 0, depth, false);
 
-      if (tree.Score <= lowerWindow || tree.Score >= upperWindow) tree.Expand(targetDepth);
+      if (!_initialSearch && !hasTime)
+      {
+        _bestMove = lastBestMove;
+
+        break;
+      }
+
+      // Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms"); // #DEBUG
+
+      depth++;
+
+      _initialSearch = false;
+
+      if (score > 99999999 / 2) break;
     }
 
-    tree = tree.ChildStates.MaxBy(state => -state.Score);
+    depth--;
 
-    _reuseableStates = new Dictionary<ulong, State>();
+    // Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms {nodesSearched / (timer.MillisecondsElapsedThisTurn / (float)1000)} nodes/sec"); // #DEBUG
 
-    if (tree.ChildStates != null) foreach (State state in tree.ChildStates) _reuseableStates[state.Hash] = state;
-
-    // Console.WriteLine(String.Format("My Bot Evil: Searched to depth of {0} in {1}", _maxDepth, timer.MillisecondsElapsedThisTurn)); //#DEBUG
-
-    return tree.Move;
+    return _bestMove;
   }
 }
