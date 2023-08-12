@@ -4,6 +4,15 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
+  /*
+    TODO:
+    - Best move ordering
+    - History heuristic
+    - Experiment with MTDf and PV again
+    - Aspiration windows
+    - Bad move pruning experiment
+  */
+
   // Bounds:
   // 0 = Exact
   // 1 = Lower, Never found a move greater than alpha
