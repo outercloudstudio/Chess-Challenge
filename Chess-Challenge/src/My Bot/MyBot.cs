@@ -87,9 +87,11 @@ public class MyBot : IChessBot
 
   record struct OrderedMove(Move Move, int Interest);
 
-  int Search(int lowerBound, int upperBound, int ply, int depth)
+  int Search(int lowerBound, int upperBound, int ply, int depth, bool isLoud)
   {
     nodesSearched++;
+
+    bool qSearch = depth <= 0 && isLoud;
 
     Move bestMove = Move.NullMove;
 
@@ -98,7 +100,8 @@ public class MyBot : IChessBot
 
     TranspositionEntry transpositionEntry = _transpositionTable[key];
 
-    if (transpositionEntry.Depth > -1 && transpositionEntry.Hash == hash)
+    // Don't get transposition table since we are going to search to an undefined depth
+    if (!qSearch && transpositionEntry.Depth > -1 && transpositionEntry.Hash == hash)
     {
       bestMove = transpositionEntry.BestMove;
 
@@ -113,11 +116,21 @@ public class MyBot : IChessBot
       }
     }
 
-    if (depth <= 0) return Evaluate();
+    // we can't return cause we need to keep q searching
+    if (!qSearch && depth <= 0) return Evaluate();
+
+    if (qSearch)
+    {
+      int standingEvaluation = Evaluate();
+
+      if (standingEvaluation >= upperBound) return standingEvaluation;
+
+      lowerBound = Math.Max(lowerBound, standingEvaluation);
+    }
 
     int originalLowerBound = lowerBound;
 
-    Move[] moves = _board.GetLegalMoves();
+    Move[] moves = _board.GetLegalMoves(qSearch);
 
     var orderedMoves = moves.Select(move => new OrderedMove(move, Interest(move))).OrderByDescending(orderedMove => orderedMove.Interest);
 
@@ -129,7 +142,7 @@ public class MyBot : IChessBot
 
       _board.MakeMove(move);
 
-      int score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1);
+      int score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
 
       _board.UndoMove(move);
 
@@ -158,7 +171,8 @@ public class MyBot : IChessBot
     if (lowerBound <= originalLowerBound) bound = 1;
     if (lowerBound >= upperBound) bound = 2;
 
-    if (depth >= transpositionEntry.Depth) transpositionEntry = new TranspositionEntry(hash, lowerBound, bound, bestMove, depth);
+    // Can't save qSearch results cause it's incomplete information
+    if (!qSearch && depth >= transpositionEntry.Depth) transpositionEntry = new TranspositionEntry(hash, lowerBound, bound, bestMove, depth);
 
     return lowerBound;
   }
@@ -175,7 +189,7 @@ public class MyBot : IChessBot
     {
       Move lastBestMove = _bestMove;
 
-      Search(-99999999, 99999999, 0, depth);
+      Search(-99999999, 99999999, 0, depth, false);
 
       if (!_initialSearch && !hasTime)
       {
