@@ -46,6 +46,28 @@
 				"${workspaceFolder}/Chess-Challenge/Chess-Challenge.csproj"
 			],
 			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "build CLI",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/UCI/Chess-Challenge.CLI.csproj",
+				// "-c",
+				// "Release",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile",
+			"presentation": {
+				"echo": true,
+				"reveal": "never",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
 		}
 	]
 }
