@@ -97,6 +97,8 @@ public class MyBot : IChessBot
     return (middleGame * phase + endGame * (24 - phase)) / 24 * (_board.IsWhiteToMove ? 1 : -1);
   }
 
+  record struct OrderedMove(Move Move, int Interest);
+
   int Search(int lowerBound, int upperBound, int ply, int depth, bool isLoud)
   {
     nodesSearched++;
@@ -115,7 +117,6 @@ public class MyBot : IChessBot
     {
       bestMove = transpositionEntry.BestMove;
 
-      //  || (_evaluation - transpositionEntry.Score > Math.Pow(50, depth - transpositionEntry.Depth))
       if (depth <= transpositionEntry.Depth)
       {
         if (transpositionEntry.Bound == 0) return transpositionEntry.Score;
@@ -125,6 +126,8 @@ public class MyBot : IChessBot
         lowerBound = Math.Max(lowerBound, transpositionEntry.Score);
         upperBound = Math.Min(upperBound, transpositionEntry.Score);
       }
+      // losing move prune (my custom idea)
+      else if (_evaluation - transpositionEntry.Score > Math.Pow(50, depth - transpositionEntry.Depth)) return transpositionEntry.Score;
     }
 
     // we can't return cause we need to keep q searching
@@ -141,14 +144,10 @@ public class MyBot : IChessBot
 
     int originalLowerBound = lowerBound;
 
-    Move[] moves = _board.GetLegalMoves(qSearch);
-
-    // We have to invert the interest here so that high interest nodes are sorted first
-    int[] interest = moves.Select(move => -Interest(move, bestMove)).ToArray();
+    var moves = _board.GetLegalMoves(qSearch);
+    var interest = moves.Select(move => -Interest(move, bestMove)).ToArray();
 
     Array.Sort(interest, moves);
-
-    bool principalVariation = true;
 
     foreach (Move move in moves)
     {
@@ -157,16 +156,6 @@ public class MyBot : IChessBot
       _board.MakeMove(move);
 
       int score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
-
-      // if (principalVariation)
-      // {
-      //   score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
-      // }
-      // else
-      // {
-      //   score = -Search(-lowerBound - 1, -lowerBound, ply + 1, depth - 1, move.IsCapture);
-      //   if (score > lowerBound && score < upperBound) score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
-      // }
 
       _board.UndoMove(move);
 
@@ -190,8 +179,6 @@ public class MyBot : IChessBot
 
         lowerBound = score;
       }
-
-      principalVariation = false;
     }
 
     if (ply == 0) _bestMove = bestMove;
