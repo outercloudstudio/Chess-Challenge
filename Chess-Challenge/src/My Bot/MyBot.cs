@@ -215,7 +215,7 @@ public class MyBot : IChessBot
       Move lastBestMove = _bestMove;
       int lastEvaluation = _evaluation;
 
-      int score = Search(-999999999, 999999999, 0, depth, false);
+      int score = Search(-1000000, 1000000, 0, depth, false);
 
       if (!_initialSearch && !hasTime)
       {
@@ -225,13 +225,11 @@ public class MyBot : IChessBot
         break;
       }
 
-      // Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms"); // #DEBUG
-
       depth++;
 
       _initialSearch = false;
 
-      if (score > 99999999 / 2) break;
+      if (score > 999000) break;
     }
 
     depth--;
