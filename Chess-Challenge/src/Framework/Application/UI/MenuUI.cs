@@ -122,6 +122,37 @@ namespace ChessChallenge.Application
 
 
       // Page buttons
+      if (NextButtonInRow("Random PSQT Test", ref buttonPos, spacing, buttonSize))
+      {
+        int[] targets = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+        for (int seed = 0; ; seed++)
+        {
+          Random random = new Random(seed);
+
+          if (seed % 10000 == 0) Console.WriteLine($"Trying seed {seed}");
+
+          bool failed = false;
+
+          for (int index = 0; index < 16; index++)
+          {
+            int item = random.Next(0, targets.Length);
+
+            if (targets[index] != item)
+            {
+              failed = true;
+
+              continue;
+            }
+          }
+
+          if (failed) continue;
+
+          Console.WriteLine($"Found Seed {seed}");
+
+          break;
+        }
+      }
       if (NextButtonInRow("Start Training Server", ref buttonPos, spacing, buttonSize))
       {
         if (Trainer != null)

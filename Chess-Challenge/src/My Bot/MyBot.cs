@@ -4,13 +4,6 @@ using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  /*
-    TODO:
-    - Experiment with MTDf and PV again
-    - Aspiration windows
-    - Bad move pruning experiment
-  */
-
   // Bounds:
   // 0 = Exact
   // 1 = Lower, Never found a move greater than alpha
@@ -149,13 +142,25 @@ public class MyBot : IChessBot
 
     Array.Sort(interest, moves);
 
+    bool principalVariation = true;
+
     foreach (Move move in moves)
     {
       if (!_initialSearch && !hasTime) break;
 
       _board.MakeMove(move);
 
-      int score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
+      int score;
+
+      if (principalVariation)
+      {
+        score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
+      }
+      else
+      {
+        score = -Search(-lowerBound - 1, -lowerBound, ply + 1, depth - 1, move.IsCapture);
+        if (score > lowerBound && score < upperBound) score = -Search(-upperBound, -lowerBound, ply + 1, depth - 1, move.IsCapture);
+      }
 
       _board.UndoMove(move);
 
@@ -179,6 +184,8 @@ public class MyBot : IChessBot
 
         lowerBound = score;
       }
+
+      principalVariation = false;
     }
 
     if (ply == 0) _bestMove = bestMove;
@@ -200,7 +207,7 @@ public class MyBot : IChessBot
     _board = board;
     _timer = timer;
 
-    int depth = 1;
+    int depth = 4;
     _initialSearch = true;
 
     while (_initialSearch || hasTime)
