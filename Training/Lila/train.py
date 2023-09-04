@@ -40,7 +40,24 @@ model.train()
 decisions = []
 
 def runModel(board):
-  pass
+  buffer = torch.zeros(8, dtype=torch.float32)
+  prediction = None
+  
+  for x in range(8):
+    for y in range(8):
+      pieceTensor = torch.zeros(6, dtype=torch.float32)
+
+      if board.piece_at(i) != None:
+        pieceTensor[board.piece_at(i).piece_type - 1] = 1 * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
+
+      modelInput = torch.cat((pieceTensor, torch.tensor([x, y], dtype=torch.float32), buffer))
+
+      output = LilaEvaluationModel(modelInput)
+
+      buffer = output[:8]
+      prediction = output[:8]
+
+  return prediction
 
 def makeDecision(board):
   legalMoves = list(board.legal_moves)
@@ -72,6 +89,8 @@ def makeDecision(board):
   
 
 def simulateGame():
+  print("Simulating game...")
+
   board = chess.Board(fens[random.randint(0, len(fens) - 1)])
 
   while board.outcome() == None:
@@ -88,9 +107,15 @@ def simulateGame():
   return 0
 
 def initializeTraingingState():
+  print("Initializing training state...")
+
+  global decisions
+
   decisions = []
 
 def train(outcome):
+  print("Training...")
+
   predictions = torch.tensor(decisions, dtype=torch.float32).to(device)
   outcomes = torch.full(predictions.size(), outcome, dtype=torch.float32).cat.to(device),
 
@@ -103,6 +128,8 @@ def train(outcome):
   optimizer.zero_grad()
 
 def saveModel():
+  print("Saving model...")
+
   torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Training\\Models\\{modelName}.pth")
 
   convert(modelName)
