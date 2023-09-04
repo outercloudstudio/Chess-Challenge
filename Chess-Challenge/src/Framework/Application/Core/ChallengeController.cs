@@ -27,6 +27,7 @@ namespace ChessChallenge.Application
       MyBotEvil,
       StockFish,
       FrederoxQ,
+      Theseus
     }
 
     // Game state
@@ -226,6 +227,7 @@ namespace ChessChallenge.Application
         PlayerType.Tyrant => new ChessPlayer(new Tyrant(), type, GameDurationMilliseconds),
         PlayerType.StockFish => new ChessPlayer(new StockFish(), type, GameDurationMilliseconds),
         PlayerType.FrederoxQ => new ChessPlayer(new Frederox.Quiescence.Quiescence(), type, GameDurationMilliseconds),
+        PlayerType.Theseus => new ChessPlayer(new Theseus(), type, GameDurationMilliseconds),
         _ => new ChessPlayer(new HumanPlayer(boardUI), type)
       };
     }
