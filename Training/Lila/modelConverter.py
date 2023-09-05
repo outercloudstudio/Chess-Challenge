@@ -1,6 +1,6 @@
 import torch
 
-from model import EvaluationNeuralNetwork
+from model import LilaEvaluationModel
 
 device = (
     "cuda"
@@ -12,7 +12,7 @@ device = (
 
 
 def convert(name):
-  model = EvaluationNeuralNetwork().to(device)
+  model = LilaEvaluationModel().to(device)
 
   model.load_state_dict(
     torch.load(

@@ -11,6 +11,8 @@ fensFile = open('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\Fens
 fens = fensFile.readlines()
 fensFile.close()
 
+print("Fens loaded.")
+
 device = (
     "cuda"
     if torch.cuda.is_available()
@@ -18,6 +20,8 @@ device = (
     if torch.backends.mps.is_available()
     else "cpu"
 )
+
+print(f"Using device: {device}")
 
 model = LilaEvaluationModel().to(device)
 
@@ -47,15 +51,15 @@ def runModel(board):
     for y in range(8):
       pieceTensor = torch.zeros(6, dtype=torch.float32)
 
-      if board.piece_at(i) != None:
-        pieceTensor[board.piece_at(i).piece_type - 1] = 1 * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
+      if board.piece_at(chess.square(x, y)) != None:
+        pieceTensor[board.piece_at(chess.square(x, y)).piece_type - 1] = 1 * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
 
-      modelInput = torch.cat((pieceTensor, torch.tensor([x, y], dtype=torch.float32), buffer))
+      modelInput = torch.cat((pieceTensor.to(device), torch.tensor([x, y], dtype=torch.float32).to(device), buffer.to(device)))
 
-      output = LilaEvaluationModel(modelInput)
+      output = model(modelInput)
 
       buffer = output[:8]
-      prediction = output[:8]
+      prediction = output[8:]
 
   return prediction
 
@@ -86,7 +90,6 @@ def makeDecision(board):
   decisions.append(decision)
 
   return move
-  
 
 def simulateGame():
   print("Simulating game...")
@@ -97,6 +100,9 @@ def simulateGame():
     decision = makeDecision(board)
 
     board.push(decision)
+
+    print('\n')
+    print(board)
 
   if board.outcome().winner == chess.WHITE:
     return 1
@@ -117,7 +123,10 @@ def train(outcome):
   print("Training...")
 
   predictions = torch.tensor(decisions, dtype=torch.float32).to(device)
-  outcomes = torch.full(predictions.size(), outcome, dtype=torch.float32).cat.to(device),
+  outcomes = torch.full(predictions.size(), outcome, dtype=torch.float32).to(device)
+
+  print(predictions)
+  print(outcomes)
 
   loss = loss_fn(predictions, outcomes)
 
