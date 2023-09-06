@@ -11,8 +11,6 @@ fensFile = open('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\Fens
 fens = fensFile.readlines()
 fensFile.close()
 
-print("Fens loaded.")
-
 device = (
     "cuda"
     if torch.cuda.is_available()
@@ -43,25 +41,14 @@ model.train()
 
 decisions = []
 
-def runModel(board):
-  buffer = torch.zeros(8, dtype=torch.float32)
-  prediction = None
-  
+def boardToTensor(board):
+  boardTensor = torch.zeros(8, 8, dtype=torch.float32)
+
   for x in range(8):
     for y in range(8):
-      pieceTensor = torch.zeros(6, dtype=torch.float32)
-
       if board.piece_at(chess.square(x, y)) != None:
-        pieceTensor[board.piece_at(chess.square(x, y)).piece_type - 1] = 1 * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
+        boardTensor[x, y] = board.piece_at(chess.square(x, y)).piece_type * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
 
-      modelInput = torch.cat((pieceTensor.to(device), torch.tensor([x, y], dtype=torch.float32).to(device), buffer.to(device)))
-
-      output = model(modelInput)
-
-      buffer = output[:8]
-      prediction = output[8:]
-
-  return prediction
 
 def makeDecision(board):
   legalMoves = list(board.legal_moves)
@@ -70,7 +57,9 @@ def makeDecision(board):
   for move in legalMoves:
     board.push(move)
 
-    predictions.append(runModel(board))
+    prediction = model(boardToTensor(board).to(device))
+
+    predictions.append(prediction)
 
     board.pop()
 
