@@ -2,10 +2,14 @@ import chess
 import torch
 import os
 import random
+import time
 
 from torch import nn
 from model import LilaEvaluationModel
 from modelConverter import convert
+from stockfish import Stockfish
+
+stockfish = Stockfish(path="D:/Chess-Challenge/Training/Stockfish16.exe", depth=5, parameters={ "Threads": 4, "Hash": 1024 })
 
 fensFile = open('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\FensLarge.txt', 'r')
 fens = fensFile.readlines()
@@ -23,10 +27,10 @@ print(f"Using device: {device}")
 
 model = LilaEvaluationModel().to(device)
 
-loss_fn = nn.CrossEntropyLoss()
+loss_fn = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 
-modelName = "Lila_1"
+modelName = "Lila_2"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -39,16 +43,15 @@ if os.path.exists(
 
 model.train()
 
-decisions = []
-
 def boardToTensor(board):
-  boardTensor = torch.zeros(8, 8, dtype=torch.float32)
+  boardTensor = torch.zeros(1, 8, 8, dtype=torch.float32)
 
   for x in range(8):
     for y in range(8):
       if board.piece_at(chess.square(x, y)) != None:
-        boardTensor[x, y] = board.piece_at(chess.square(x, y)).piece_type * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
+        boardTensor[0, x, y] = board.piece_at(chess.square(x, y)).piece_type * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
 
+  return boardTensor
 
 def makeDecision(board):
   legalMoves = list(board.legal_moves)
@@ -76,54 +79,36 @@ def makeDecision(board):
         decision = predictions[i]
         move = legalMoves[i]
 
-  decisions.append(decision)
-
-  return move
+  return move, decision
 
 def simulateGame():
-  print("Simulating game...")
-
   board = chess.Board(fens[random.randint(0, len(fens) - 1)])
 
   while board.outcome() == None:
-    decision = makeDecision(board)
+    move, prediction = makeDecision(board)
 
-    board.push(decision)
+    board.push(move)
 
-    print('\n')
-    print(board)
+    train(prediction, board)
 
-  if board.outcome().winner == chess.WHITE:
-    return 1
-  
-  if board.outcome().winner == chess.BLACK:
-    return -1
-  
-  return 0
+def train(prediction, board):
+  stockfish.set_fen_position(board.fen())
+  stockfishEvaluationData = stockfish.get_evaluation()
+  stockfishEvaluation = stockfishEvaluationData["value"] / 1000
 
-def initializeTraingingState():
-  print("Initializing training state...")
+  if stockfishEvaluationData["type"] == "mate" and stockfishEvaluationData["value"] != 0:
+    abs(stockfishEvaluationData["value"]) / stockfishEvaluationData["value"]
 
-  global decisions
+  target = torch.tensor([[[stockfishEvaluation]]], dtype=torch.float32).to(device)
 
-  decisions = []
-
-def train(outcome):
-  print("Training...")
-
-  predictions = torch.tensor(decisions, dtype=torch.float32).to(device)
-  outcomes = torch.full(predictions.size(), outcome, dtype=torch.float32).to(device)
-
-  print(predictions)
-  print(outcomes)
-
-  loss = loss_fn(predictions, outcomes)
-
-  print(f"Loss: {loss}")
+  loss = loss_fn(prediction, target)
 
   loss.backward()
   optimizer.step()
   optimizer.zero_grad()
+
+  print(loss.item())
+
 
 def saveModel():
   print("Saving model...")
@@ -133,10 +118,6 @@ def saveModel():
   convert(modelName)
 
 while True:
-  initializeTraingingState()
-
-  outcome = simulateGame()
-
-  train(outcome)
+  simulateGame()
 
   saveModel()

@@ -5,17 +5,16 @@ class LilaEvaluationModel(nn.Module):
     super().__init__()
 
     self.linearStack = nn.Sequential(
-      nn.Linear(64, 16),
+      nn.Conv2d(1, 32, 3, padding=1),
       nn.Tanh(),
 
-      nn.Linear(16, 16),
+      nn.Conv2d(32, 32, 3, padding=1),
       nn.Tanh(),
 
-      nn.Linear(16, 16),
+      nn.Conv2d(32, 1, 3, padding=1),
       nn.Tanh(),
-
-      nn.Linear(16, 1),
-      nn.Tanh()
+      
+      nn.AvgPool2d(8)
     )
 
   def forward(self, x):
