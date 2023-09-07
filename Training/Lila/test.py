@@ -6,6 +6,8 @@ import time
 
 from model import LilaEvaluationModel
 
+from torch import nn
+
 device = (
     "cuda"
     if torch.cuda.is_available()
@@ -28,8 +30,6 @@ if os.path.exists(
       "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
     )
   )
-
-model.eval()
 
 def boardToTensor(board):
   boardTensor = torch.zeros(1, 8, 8, dtype=torch.float32)

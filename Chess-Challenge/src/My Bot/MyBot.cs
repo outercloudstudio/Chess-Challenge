@@ -1,132 +1,116 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  int _positionsSearched = 0;
+  float[] _parameters;
 
-  Board _board;
-
-  int[] pieceValues = new int[] { 1, 3, 3, 5, 9, 10, -1, -3, -3, -5, -9, -10 };
-
-  public int Evaluate()
+  public MyBot()
   {
-    int score = 0;
-
-    var lists = _board.GetAllPieceLists();
-
-    for (int index = 0; index < lists.Length; index++) score += pieceValues[index] * lists[index].Count;
-
-    return score * (_board.IsWhiteToMove ? 1 : -1);
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(float.Parse).ToArray();
   }
 
-  public class Node
+  float[,,] BoardToTensor(Board board)
   {
-    public Move Move;
-    public int Score;
-    public Node[] Children;
-    public ulong Hash;
-    public int Depth;
-  }
+    float[,,] tensor = new float[1, 8, 8];
 
-  Node[] _transpositionTable = new Node[100000];
-
-  public void Search(Node node, int depth, int lowerBound, int upperBound)
-  {
-    _positionsSearched++;
-
-    if (node.Depth >= depth) return;
-
-    if (depth == 0)
+    for (int x = 0; x < 8; x++)
     {
-      node.Score = Evaluate();
-
-      return;
-    }
-
-    var moves = _board.GetLegalMoves();
-
-    if (moves.Length == 0)
-    {
-      node.Score = _board.IsInCheck() ? -999999999 : 0;
-
-      return;
-    }
-
-    var children = new Node[moves.Length];
-
-    int max = -999999999;
-
-    for (int moveIndex = 0; moveIndex < moves.Length; moveIndex++)
-    {
-      Move move = moves[moveIndex];
-
-      _board.MakeMove(move);
-
-      ulong hash = _board.ZobristKey;
-
-      Node child = new Node() { Move = move, Hash = hash };
-
-      Node transposition = _transpositionTable[hash % 100000];
-
-      if (transposition != null && transposition.Hash == hash) child = transposition;
-
-      Search(child, depth - 1, -upperBound, -lowerBound);
-
-      _transpositionTable[child.Hash % 100000] = child;
-
-      _board.UndoMove(move);
-
-      node.Depth = Math.Max(node.Depth, child.Depth + 1);
-
-      int score = -child.Score;
-
-      children[moveIndex] = child;
-
-      if (score > upperBound)
+      for (int y = 0; y < 8; y++)
       {
-        max = score;
+        Piece piece = board.GetPiece(new Square(x, y));
 
-        break;
-      }
-
-      if (score > max)
-      {
-        max = score;
-
-        lowerBound = Math.Max(lowerBound, score);
+        tensor[0, x, y] = (int)piece.PieceType * (piece.IsWhite ? 1 : -1);
       }
     }
 
-    node.Score = max;
+    return tensor;
+  }
 
-    node.Children = children;
+  float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels, ref int weightOffset, Func<float, float> activationFunction)
+  {
+    int imageHeight = input.GetLength(1);
+    int imageWidth = input.GetLength(2);
+    float[,,] output = new float[outputChannels, imageHeight, imageWidth];
+    int channels = input.GetLength(0);
+    for (int outputChannel = 0; outputChannel < outputChannels; outputChannel++)
+    {
+      for (int y = 0; y < imageHeight; y += 1)
+      {
+        for (int x = 0; x < imageWidth; x += 1)
+        {
+          float bias = _parameters[weightOffset + inputChannels * outputChannels * 3 * 3 + outputChannel];
+          float sum = 0;
+          for (int inputChannel = 0; inputChannel < inputChannels; inputChannel++)
+          {
+            float kernalValue = 0;
+            for (int kernalY = -1; kernalY <= 1; kernalY++)
+            {
+              for (int kernalX = -1; kernalX <= 1; kernalX++)
+              {
+                float pixelValue = 0;
+                try
+                {
+                  if (x + kernalX >= 0 && y + kernalY >= 0 && x + kernalX < imageWidth && y + kernalY < imageHeight) pixelValue = input[inputChannel, y + kernalY, x + kernalX];
+                }
+                catch
+                {
+                  Console.WriteLine("Error reading input at " + inputChannel + " " + (y + kernalY) + " " + (x + kernalX) + " from dimensions " + input.GetLength(0) + " " + input.GetLength(1) + " " + input.GetLength(2));
+                }
+                float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kernalY + 1) + (kernalX + 1)];
+                kernalValue += pixelValue * weight;
+              }
+            }
+            sum += kernalValue;
+          }
+          output[outputChannel, y, x] = activationFunction(bias + sum);
+        }
+      }
+    }
+    weightOffset += inputChannels * outputChannels * 3 * 3 + outputChannels;
+    return output;
+  }
+
+  float Inference(Board board)
+  {
+    int weight = 0;
+
+    float[,,] tensor = BoardToTensor(board);
+
+    float[,,] layer1 = Convolution(tensor, 1, 32, ref weight, (x) => MathF.Tanh(x));
+    float[,,] layer2 = Convolution(layer1, 32, 32, ref weight, (x) => MathF.Tanh(x));
+    float[,,] output = Convolution(layer2, 32, 1, ref weight, (x) => MathF.Tanh(x));
+
+    float result = 0;
+    int resultTotal = 0;
+
+    for (int x = 0; x < 8; x++)
+    {
+      for (int y = 0; y < 8; y++)
+      {
+        result += output[0, x, y];
+        resultTotal++;
+      }
+    }
+
+    result /= resultTotal;
+
+    return result;
   }
 
   public Move Think(Board board, Timer timer)
   {
-    _board = board;
-
-    Node root = new Node() { Move = Move.NullMove, Score = Evaluate() };
-
-    int depth = 1;
-
-    while (true)
+    return board.GetLegalMoves().MaxBy(move =>
     {
-      _positionsSearched = 0;
+      board.MakeMove(move);
 
-      Search(root, depth, -999999999, 999999999);
+      float result = Inference(board);
 
-      string positionsPerSecond = timer.MillisecondsElapsedThisTurn == 0 ? "a lot" : (_positionsSearched / timer.MillisecondsElapsedThisTurn).ToString();
+      board.UndoMove(move);
 
-      Console.WriteLine($"Searched to depth {depth} in {timer.MillisecondsElapsedThisTurn}ms positions: {_positionsSearched} pps: {positionsPerSecond}"); // #DEBUG
-
-      if (timer.MillisecondsElapsedThisTurn > timer.MillisecondsRemaining / 120f) break;
-
-      depth++;
-    }
-
-    return root.Children.MaxBy(child => child != null ? -child.Score : -999999999).Move;
+      return result;
+    });
   }
 }
