@@ -30,7 +30,7 @@ def convert(name):
     for value in param.data.flatten().tolist():
       weightOutput += str(value) + "\n"
 
-  print(f"Converted {weightCount} weights. Compressed size: {weightCount / 8}")
+  print(f"Converted {weightCount} weights. Compressed size: {weightCount / 6}")
 
   weightFile = open(
     f"D:\\Chess-Challenge\\Training\\Models\\{name}.txt", "w"

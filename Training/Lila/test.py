@@ -2,6 +2,7 @@ import chess
 import torch
 import os
 import random
+import time
 
 from model import LilaEvaluationModel
 
@@ -71,26 +72,16 @@ def makeDecision(board):
 def simulateGame():
   board = chess.Board()
 
-  botMove = random.randint(0, 1) == 0
-
-  if not botMove:
-    print(board)
 
   while board.outcome() == None:
-    if botMove:
-      move, prediction = makeDecision(board)
+    move, prediction = makeDecision(board)
 
-      board.push(move)
-
-      print(prediction.item())
-    else:
-      move = input("Enter Move > ")
-
-      board.push_uci(move)
+    board.push(move)
 
     print(board)
+    print(prediction.item())
 
-    botMove = not botMove
+    time.sleep(5)
 
 while True:
   simulateGame()
