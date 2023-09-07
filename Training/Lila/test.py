@@ -73,13 +73,18 @@ def simulateGame():
 
   botMove = random.randint(0, 1) == 0
 
+  if not botMove:
+    print(board)
+
   while board.outcome() == None:
     if botMove:
       move, prediction = makeDecision(board)
 
       board.push(move)
+
+      print(prediction.item())
     else:
-      move = input("Enter Move")
+      move = input("Enter Move > ")
 
       board.push_uci(move)
 
