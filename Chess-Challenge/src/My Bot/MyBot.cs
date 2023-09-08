@@ -49,32 +49,24 @@ public class MyBot : IChessBot
       {
         for (int x = 0; x < imageWidth; x += 1)
         {
-          float bias = _parameters[weightOffset + inputChannels * outputChannels * 3 * 3 + outputChannel];
-          float sum = 0;
+          float sum = _parameters[weightOffset + inputChannels * outputChannels * 3 * 3 + outputChannel];
+
           for (int inputChannel = 0; inputChannel < inputChannels; inputChannel++)
           {
-            float kernalValue = 0;
-            for (int kernalY = -1; kernalY <= 1; kernalY++)
+            for (int kernal = 0; kernal < 9; kernal++)
             {
-              for (int kernalX = -1; kernalX <= 1; kernalX++)
-              {
-                float pixelValue = 0;
+              int kX = kernal % 3 - 1;
+              int kY = kernal / 3 - 1;
 
-                try
-                {
-                  if (x + kernalX >= 0 && y + kernalY >= 0 && x + kernalX < imageWidth && y + kernalY < imageHeight) pixelValue = input[inputChannel, y + kernalY, x + kernalX];
-                }
-                catch
-                {
-                }
+              if (x + kX < 0 || y + kY < 0 || x + kX >= imageWidth || y + kY >= imageHeight) continue;
 
-                float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kernalY + 1) + (kernalX + 1)];
-                kernalValue += pixelValue * weight;
-              }
+              float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kY + 1) + (kX + 1)];
+
+              sum += input[inputChannel, y + kY, x + kX] * weight;
             }
-            sum += kernalValue;
           }
-          output[outputChannel, y, x] = activationFunction(bias + sum);
+
+          output[outputChannel, y, x] = activationFunction(sum);
         }
       }
     }
