@@ -9,7 +9,16 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(float.Parse).ToArray();
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(text =>
+    {
+      float raw = float.Parse(text);
+
+      int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f);
+
+      float uncompressed = compressed / 128f * 3f - 1.5f;
+
+      return uncompressed;
+    }).ToArray();
   }
 
   float[,,] BoardToTensor(Board board)
@@ -34,7 +43,6 @@ public class MyBot : IChessBot
     int imageHeight = input.GetLength(1);
     int imageWidth = input.GetLength(2);
     float[,,] output = new float[outputChannels, imageHeight, imageWidth];
-    int channels = input.GetLength(0);
     for (int outputChannel = 0; outputChannel < outputChannels; outputChannel++)
     {
       for (int y = 0; y < imageHeight; y += 1)
@@ -51,14 +59,15 @@ public class MyBot : IChessBot
               for (int kernalX = -1; kernalX <= 1; kernalX++)
               {
                 float pixelValue = 0;
+
                 try
                 {
                   if (x + kernalX >= 0 && y + kernalY >= 0 && x + kernalX < imageWidth && y + kernalY < imageHeight) pixelValue = input[inputChannel, y + kernalY, x + kernalX];
                 }
                 catch
                 {
-                  Console.WriteLine("Error reading input at " + inputChannel + " " + (y + kernalY) + " " + (x + kernalX) + " from dimensions " + input.GetLength(0) + " " + input.GetLength(1) + " " + input.GetLength(2));
                 }
+
                 float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kernalY + 1) + (kernalX + 1)];
                 kernalValue += pixelValue * weight;
               }

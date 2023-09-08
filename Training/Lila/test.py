@@ -81,7 +81,31 @@ def simulateGame():
     print(board)
     print(prediction.item())
 
-    time.sleep(5)
+    input("Press enter to continue...")
 
 while True:
   simulateGame()
+
+import matplotlib.pyplot as plt
+
+x = []
+y = []
+
+file = open("D:/Chess-Challenge/Training/Models/Lila_2.txt", "r")
+
+index = 0
+
+for line in file.readlines():
+  if(line == "\n"): break
+
+  x.append(index)
+  y.append(float(line))
+
+  index += 1
+
+print(index)
+
+file.close()
+
+plt.plot(x, y)
+plt.show()
