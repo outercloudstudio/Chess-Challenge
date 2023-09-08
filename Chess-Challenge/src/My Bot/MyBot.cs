@@ -9,11 +9,11 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(text =>
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(text =>//#DEBUG
     {
-      float raw = float.Parse(text);
+      float raw = float.Parse(text);//#DEBUG
 
-      int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f);
+      int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f); //#DEBUG
 
       float uncompressed = compressed / 128f * 3f - 1.5f;
 
@@ -43,6 +43,7 @@ public class MyBot : IChessBot
     int imageHeight = input.GetLength(1);
     int imageWidth = input.GetLength(2);
     float[,,] output = new float[outputChannels, imageHeight, imageWidth];
+
     for (int outputChannel = 0; outputChannel < outputChannels; outputChannel++)
     {
       for (int y = 0; y < imageHeight; y += 1)
@@ -58,11 +59,11 @@ public class MyBot : IChessBot
               int kX = kernal % 3 - 1;
               int kY = kernal / 3 - 1;
 
-              if (x + kX < 0 || y + kY < 0 || x + kX >= imageWidth || y + kY >= imageHeight) continue;
-
-              float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kY + 1) + (kX + 1)];
-
-              sum += input[inputChannel, y + kY, x + kX] * weight;
+              try
+              {
+                sum += input[inputChannel, y + kY, x + kX] * _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kY + 1) + (kX + 1)];
+              }
+              catch { }
             }
           }
 
