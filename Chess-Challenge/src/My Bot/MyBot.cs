@@ -59,11 +59,11 @@ public class MyBot : IChessBot
               int kX = kernal % 3 - 1;
               int kY = kernal / 3 - 1;
 
-              try
-              {
-                sum += input[inputChannel, y + kY, x + kX] * _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kY + 1) + (kX + 1)];
-              }
-              catch { }
+              if (x + kX < 0 || y + kY < 0 || x + kX >= imageWidth || y + kY >= imageHeight) continue;
+
+              float weight = _parameters[weightOffset + inputChannels * outputChannel * 3 * 3 + inputChannel * 3 * 3 + 3 * (kY + 1) + (kX + 1)];
+
+              sum += input[inputChannel, y + kY, x + kX] * weight;
             }
           }
 
