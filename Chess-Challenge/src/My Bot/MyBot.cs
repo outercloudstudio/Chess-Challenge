@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ChessChallenge.API;
@@ -32,23 +33,6 @@ public class MyBot : IChessBot
     }).ToArray();
 
     Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
-  }
-
-  float[,,] BoardToTensor(Board board)
-  {
-    var tensor = new float[1, 8, 8];
-
-    for (int i = 0; i < 64; i++)
-    {
-      int x = i % 8;
-      int y = i / 8;
-
-      Piece piece = board.GetPiece(new Square(x, y));
-
-      tensor[0, x, y] = (int)piece.PieceType * (piece.IsWhite ? 1 : -1);
-    }
-
-    return tensor;
   }
 
   int weightOffset = 0;
@@ -92,11 +76,23 @@ public class MyBot : IChessBot
     return output;
   }
 
-  float Inference(Board board)
+  float Inference()
   {
+    var tensor = new float[1, 8, 8];
+
+    for (int i = 0; i < 64; i++)
+    {
+      int x = i % 8;
+      int y = i / 8;
+
+      Piece piece = _board.GetPiece(new Square(x, y));
+
+      tensor[0, x, y] = (int)piece.PieceType * (piece.IsWhite ? 1 : -1);
+    }
+
     weightOffset = 0;
 
-    var output = Convolution(Convolution(Convolution(Convolution(Convolution(BoardToTensor(board), 1, 24), 24, 24), 24, 24), 24, 24), 24, 1);
+    var output = Convolution(Convolution(Convolution(Convolution(Convolution(tensor, 1, 24), 24, 24), 24, 24), 24, 24), 24, 1);
 
     float result = 0;
 
@@ -105,21 +101,53 @@ public class MyBot : IChessBot
     return result;
   }
 
+  float UpperConfidenceBound(Node node) => node.Value + 2 * MathF.Sqrt(MathF.Log(node.Parent.Visits) / node.Visits) * (_board.IsWhiteToMove ? 1 : -1);
+
+  record class Node(Move Move, Node Parent)
+  {
+    public float Visits;
+    public float Value;
+    public Node[] Children;
+  };
+
+  Board _board;
+
+  void Search(Node node)
+  {
+    while (node.Children != null && node.Children.Length > 0)
+    {
+      node = node.Children.MaxBy(UpperConfidenceBound);
+
+      Console.WriteLine($"Entering Node {node.Move}"); //#DEBUG
+
+      _board.MakeMove(node.Move);
+    }
+
+    node.Children = _board.GetLegalMoves().Select(move => new Node(move, node)).ToArray();
+
+    float value = Inference();
+
+    Console.WriteLine($"Value: {value}"); //#DEBUG
+
+    while (node.Parent != null)
+    {
+      node.Parent.Value += value;
+      node.Parent.Visits += 1;
+
+      _board.UndoMove(node.Move);
+
+      node = node.Parent;
+    }
+  }
+
   public Move Think(Board board, Timer timer)
   {
-    Console.WriteLine(" ");
+    _board = board;
 
-    return board.GetLegalMoves().MaxBy(move =>
-    {
-      board.MakeMove(move);
+    Node root = new Node(Move.NullMove, null);
 
-      float result = Inference(board);
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60f) Search(root);
 
-      Console.WriteLine($"{move} {result * 3000}"); //#DEBUG
-
-      board.UndoMove(move);
-
-      return result;
-    });
+    return root.Children.MaxBy(node => node.Visits).Move;
   }
 }
