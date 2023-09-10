@@ -20,7 +20,7 @@ print(f"Using device: {device}")
 
 model = LilaEvaluationModel().to(device)
 
-modelName = "Lila_2"
+modelName = "Lila_3"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -79,7 +79,7 @@ def simulateGame():
     board.push(move)
 
     print(board)
-    print(prediction.item())
+    print(prediction.item() * 3000)
 
     input("Press enter to continue...")
 

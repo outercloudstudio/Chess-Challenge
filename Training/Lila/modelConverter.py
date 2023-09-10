@@ -24,13 +24,20 @@ def convert(name):
 
   weightOutput = ""
 
+  pruned = 0
+
   for param in model.parameters():
     weightCount += param.data.flatten().size()[0]
 
     for value in param.data.flatten().tolist():
+      if abs(value) < 0.04:
+        pruned += 1
+
       weightOutput += str(value) + "\n"
 
-  print(f"Converted {weightCount} weights. Compressed size: {weightCount / 6}")
+  
+
+  print(f"Converted {weightCount} weights. Compressed size: {(weightCount - pruned / 2.0) / 17.3}")
 
   weightFile = open(
     f"D:\\Chess-Challenge\\Training\\Models\\{name}.txt", "w"

@@ -3,6 +3,7 @@ import torch
 import os
 import random
 import time
+import math
 
 from torch import nn
 from model import LilaEvaluationModel
@@ -28,9 +29,9 @@ print(f"Using device: {device}")
 model = LilaEvaluationModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
-modelName = "Lila_2"
+modelName = "Lila_3"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -66,18 +67,14 @@ def makeDecision(board):
 
     board.pop()
 
-  decision = None
-  move = None
+  pairings = []
 
   for i in range(len(predictions)):
-    if board.turn == chess.WHITE:
-      if decision == None or predictions[i].item() > decision.item():
-        decision = predictions[i]
-        move = legalMoves[i]
-    else:
-      if decision == None or predictions[i].item() < decision.item():
-        decision = predictions[i]
-        move = legalMoves[i]
+    pairings.append((predictions[i], legalMoves[i]))
+
+  pairings.sort(key=lambda x: x[0].item(), reverse=board.turn == chess.WHITE)
+
+  decision, move = pairings[min(math.floor(pow(random.random(), 3) * 3), len(pairings) - 1)]
 
   return move, decision
 
@@ -94,10 +91,12 @@ def simulateGame():
 def train(prediction, board):
   stockfish.set_fen_position(board.fen())
   stockfishEvaluationData = stockfish.get_evaluation()
-  stockfishEvaluation = stockfishEvaluationData["value"] / 1000
+  stockfishEvaluation = stockfishEvaluationData["value"] / 3000
+  if stockfishEvaluation > 1: stockfishEvaluation = 1
+  if stockfishEvaluation < -1: stockfishEvaluation = -1
 
   if stockfishEvaluationData["type"] == "mate" and stockfishEvaluationData["value"] != 0:
-    abs(stockfishEvaluationData["value"]) / stockfishEvaluationData["value"]
+    stockfishEvaluation = abs(stockfishEvaluationData["value"]) / stockfishEvaluationData["value"]
 
   target = torch.tensor([[[stockfishEvaluation]]], dtype=torch.float32).to(device)
 
@@ -107,7 +106,7 @@ def train(prediction, board):
   optimizer.step()
   optimizer.zero_grad()
 
-  print(loss.item())
+  print(f"Loss: {round(loss.item(), 3)} Prediction {round(prediction.item(), 3)} Target: {round(target.item(), 3)})")
 
 
 def saveModel():
