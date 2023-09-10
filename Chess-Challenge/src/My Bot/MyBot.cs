@@ -11,9 +11,11 @@ public class MyBot : IChessBot
   {
     int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_2.txt")[0..9857].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_3.txt")[0..16081].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
+
+      return raw;
 
       if (MathF.Abs(raw) < 0.04f)//#DEBUG
       {
@@ -49,7 +51,9 @@ public class MyBot : IChessBot
     return tensor;
   }
 
-  float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels, ref int weightOffset)
+  int weightOffset = 0;
+
+  float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels)
   {
     var output = new float[outputChannels, 8, 8];
 
@@ -90,9 +94,9 @@ public class MyBot : IChessBot
 
   float Inference(Board board)
   {
-    int weight = 0;
+    weightOffset = 0;
 
-    var output = Convolution(Convolution(Convolution(BoardToTensor(board), 1, 24, ref weight), 24, 24, ref weight), 24, 1, ref weight);
+    var output = Convolution(Convolution(Convolution(Convolution(Convolution(BoardToTensor(board), 1, 24), 24, 24), 24, 24), 24, 24), 24, 1);
 
     float result = 0;
 
@@ -103,11 +107,15 @@ public class MyBot : IChessBot
 
   public Move Think(Board board, Timer timer)
   {
+    Console.WriteLine(" ");
+
     return board.GetLegalMoves().MaxBy(move =>
     {
       board.MakeMove(move);
 
       float result = Inference(board);
+
+      Console.WriteLine($"{move} {result * 3000}"); //#DEBUG
 
       board.UndoMove(move);
 
