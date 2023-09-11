@@ -118,7 +118,7 @@ public class MyBot : IChessBot
     {
       node = node.Children.MaxBy(UpperConfidenceBound);
 
-      Console.WriteLine($"Entering Node {node.Move}"); //#DEBUG
+      // Console.WriteLine($"Entering Node {node.Move}"); //#DEBUG
 
       _board.MakeMove(node.Move);
     }
@@ -127,7 +127,7 @@ public class MyBot : IChessBot
 
     float value = Inference();
 
-    Console.WriteLine($"Value: {value}"); //#DEBUG
+    // Console.WriteLine($"Value: {value}"); //#DEBUG
 
     while (node.Parent != null)
     {
@@ -146,7 +146,7 @@ public class MyBot : IChessBot
 
     Node root = new Node(Move.NullMove, null);
 
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60f) Search(root);
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 10f) Search(root);
 
     return root.Children.MaxBy(node => node.Visits).Move;
   }
