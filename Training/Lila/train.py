@@ -29,9 +29,9 @@ print(f"Using device: {device}")
 model = LilaEvaluationModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 
-modelName = "Lila_3"
+modelName = "Lila_4"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -45,12 +45,16 @@ if os.path.exists(
 model.train()
 
 def boardToTensor(board):
-  boardTensor = torch.zeros(1, 8, 8, dtype=torch.float32)
+  boardTensor = torch.zeros(6 * 64, dtype=torch.float32)
 
   for x in range(8):
     for y in range(8):
       if board.piece_at(chess.square(x, y)) != None:
-        boardTensor[0, x, y] = board.piece_at(chess.square(x, y)).piece_type * (1 if board.piece_at(chess.square(x, y)).color == chess.WHITE else -1)
+        piece = board.piece_at(chess.square(x, y))
+
+        if piece == None: continue
+
+        boardTensor[x * 8 * 6 + y * 6 + piece.piece_type - 1] =  1 if piece.color == chess.WHITE else -1
 
   return boardTensor
 
@@ -74,7 +78,7 @@ def makeDecision(board):
 
   pairings.sort(key=lambda x: x[0].item(), reverse=board.turn == chess.WHITE)
 
-  decision, move = pairings[min(math.floor(pow(random.random(), 3) * 3), len(pairings) - 1)]
+  decision, move = pairings[min(math.floor(pow(random.random(), 3) * 5), len(pairings) - 1)]
 
   return move, decision
 
