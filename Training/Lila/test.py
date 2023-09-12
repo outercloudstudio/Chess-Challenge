@@ -4,7 +4,7 @@ import os
 import random
 import time
 
-from model import LilaEvaluationModel
+from model import LilaModel
 
 from torch import nn
 
@@ -18,9 +18,9 @@ device = (
 
 print(f"Using device: {device}")
 
-model = LilaEvaluationModel().to(device)
+model = LilaModel().to(device)
 
-modelName = "Lila_4"
+modelName = "Lila_5"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
