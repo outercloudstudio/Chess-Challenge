@@ -6,7 +6,7 @@ import time
 import math
 
 from torch import nn
-from model import LilaEvaluationModel
+from model import LilaModel
 from modelConverter import convert
 from stockfish import Stockfish
 
@@ -26,12 +26,12 @@ device = (
 
 print(f"Using device: {device}")
 
-model = LilaEvaluationModel().to(device)
+model = LilaModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-1)
 
-modelName = "Lila_4"
+modelName = "Lila_5"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -111,6 +111,7 @@ def train(prediction, board):
   optimizer.zero_grad()
 
   print(f"Loss: {round(loss.item(), 3)} Prediction {round(prediction.item(), 3)} Target: {round(target.item(), 3)})")
+  print(board)
 
 
 def saveModel():
