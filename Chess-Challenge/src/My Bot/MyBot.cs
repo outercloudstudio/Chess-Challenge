@@ -12,7 +12,7 @@ public class MyBot : IChessBot
   {
     int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_3.txt")[0..16081].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_4.txt")[0..12865].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
@@ -35,50 +35,30 @@ public class MyBot : IChessBot
     Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
   }
 
-  int weightOffset = 0;
+  int parameterOffset = 0;
 
-  float[,,] Convolution(float[,,] input, int inputChannels, int outputChannels)
+  float[] Layer(float[] input, int previousLayerSize, int layerSize)
   {
-    var output = new float[outputChannels, 8, 8];
+    float[] layer = new float[layerSize];
 
-    for (int outputChannel = 0; outputChannel < outputChannels; outputChannel++)
+    for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
     {
-      for (int i = 0; i < 8 * 8; i += 1)
+      for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
       {
-        int x = i % 8;
-        int y = i / 8;
-
-        float sum = _parameters[weightOffset + inputChannels * outputChannels * 9 + outputChannel];
-
-        for (int inputChannel = 0; inputChannel < inputChannels; inputChannel++)
-        {
-          for (int kernal = 0; kernal < 9; kernal++)
-          {
-            int kX = kernal % 3;
-            int kY = kernal / 3;
-            int aX = x + kX - 1;
-            int aY = y + kY - 1;
-
-            if (aX < 0 || aX > 7 || aY < 0 || aY > 7) continue;
-
-            float weight = _parameters[weightOffset + inputChannels * outputChannel * 9 + inputChannel * 9 + 3 * kY + kX];
-
-            sum += input[inputChannel, aY, aX] * weight;
-          }
-        }
-
-        output[outputChannel, y, x] = MathF.Tanh(sum);
+        layer[nodeIndex] += input[weightIndex] * _parameters[parameterOffset + nodeIndex * previousLayerSize + weightIndex];
       }
+
+      layer[nodeIndex] = MathF.Tanh(layer[nodeIndex] + _parameters[parameterOffset + layerSize * previousLayerSize + nodeIndex]);
     }
 
-    weightOffset += inputChannels * outputChannels * 9 + outputChannels;
+    parameterOffset += layerSize * previousLayerSize + layerSize;
 
-    return output;
+    return layer;
   }
 
   float Inference()
   {
-    var tensor = new float[1, 8, 8];
+    var tensor = new float[6 * 64];
 
     for (int i = 0; i < 64; i++)
     {
@@ -87,18 +67,14 @@ public class MyBot : IChessBot
 
       Piece piece = _board.GetPiece(new Square(x, y));
 
-      tensor[0, x, y] = (int)piece.PieceType * (piece.IsWhite ? 1 : -1);
+      if (piece.PieceType == PieceType.None) continue;
+
+      tensor[x * 8 * 6 + y * 6 + (int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
     }
 
-    weightOffset = 0;
+    parameterOffset = 0;
 
-    var output = Convolution(Convolution(Convolution(Convolution(Convolution(tensor, 1, 24), 24, 24), 24, 24), 24, 24), 24, 1);
-
-    float result = 0;
-
-    for (int i = 0; i < 64; i++) result += output[0, i % 8, i / 8] / 64f;
-
-    return result;
+    return Layer(Layer(Layer(tensor, 6 * 64, 32), 32, 16), 16, 1)[0];
   }
 
   float UpperConfidenceBound(Node node) => node.Value + 2 * MathF.Sqrt(MathF.Log(node.Parent.Visits) / node.Visits) * (_board.IsWhiteToMove ? 1 : -1);
@@ -146,7 +122,7 @@ public class MyBot : IChessBot
 
     Node root = new Node(Move.NullMove, null);
 
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 10f) Search(root);
+    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30f) Search(root);
 
     return root.Children.MaxBy(node => node.Visits).Move;
   }
