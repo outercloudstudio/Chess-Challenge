@@ -29,7 +29,7 @@ print(f"Using device: {device}")
 model = LilaModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 
 modelName = "Lila_5"
 
@@ -58,35 +58,22 @@ def boardToTensor(board):
 
   return boardTensor
 
-def makeDecision(board):
+def saveModel():
+  print("Saving model...")
 
-  stockfish.set_fen_position(board.fen())
-  bestMove = stockfish.get_best_move()
-  move = chess.Move.from_uci(bestMove)
+  torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Training\\Models\\{modelName}.pth")
 
-  if random.random() <= 0.5:
-    move = random.choice(list(board.legal_moves))
+  convert(modelName)
 
-  board.push(move)
+position = 0
+
+while True:
+  fen = fens[random.randint(0, len(fens) - 1)]
+  board = chess.Board(fen)
 
   prediction = model(boardToTensor(board).to(device))
 
-  board.pop()
-
-  return move, prediction
-
-def simulateGame():
-  board = chess.Board(fens[random.randint(0, len(fens) - 1)])
-
-  while board.outcome() == None:
-    move, prediction = makeDecision(board)
-
-    board.push(move)
-
-    train(prediction, board)
-
-def train(prediction, board):
-  stockfish.set_fen_position(board.fen())
+  stockfish.set_fen_position(fen)
   stockfishEvaluationData = stockfish.get_evaluation()
   stockfishEvaluation = stockfishEvaluationData["value"] / 3000
   if stockfishEvaluation > 1: stockfishEvaluation = 1
@@ -95,7 +82,7 @@ def train(prediction, board):
   if stockfishEvaluationData["type"] == "mate" and stockfishEvaluationData["value"] != 0:
     stockfishEvaluation = abs(stockfishEvaluationData["value"]) / stockfishEvaluationData["value"]
 
-  target = torch.tensor([[[stockfishEvaluation]]], dtype=torch.float32).to(device)
+  target = torch.tensor([stockfishEvaluation], dtype=torch.float32).to(device)
 
   loss = loss_fn(prediction, target)
 
@@ -103,17 +90,9 @@ def train(prediction, board):
   optimizer.step()
   optimizer.zero_grad()
 
-  print(f"Loss: {round(loss.item(), 3)} Prediction {round(prediction.item(), 3)} Target: {round(target.item(), 3)})")
+  position += 1
+
+  print(f"Loss: {round(loss.item(), 3)} Prediction {round(prediction.item(), 3)} Target: {round(target.item(), 3)} Position: {position}")
 
 
-def saveModel():
-  print("Saving model...")
-
-  torch.save(model.state_dict(), f"D:\\Chess-Challenge\\Training\\Models\\{modelName}.pth")
-
-  convert(modelName)
-
-while True:
-  simulateGame()
-
-  saveModel()
+  if position % 100 == 0: saveModel()

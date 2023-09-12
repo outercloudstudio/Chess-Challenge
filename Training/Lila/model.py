@@ -26,7 +26,7 @@ class LilaModel(nn.Module):
     )
 
     self.evaluationStack = nn.Sequential(
-      nn.Linear(64, 32),
+      nn.Linear(36, 32),
       nn.Tanh(),
 
       nn.Linear(32, 16),
@@ -37,7 +37,7 @@ class LilaModel(nn.Module):
     )
 
   def forward(self, inp):
-    vision = torch.zeros(64, dtype=torch.float32).to(device)
+    vision = torch.zeros(36, dtype=torch.float32).to(device)
 
     for i in range(36):
       x = i % 6
