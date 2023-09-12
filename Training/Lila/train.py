@@ -12,7 +12,7 @@ from stockfish import Stockfish
 
 stockfish = Stockfish(path="D:/Chess-Challenge/Training/Stockfish16.exe", depth=5, parameters={ "Threads": 4, "Hash": 1024 })
 
-fensFile = open('D:\\Chess-Challenge\\Chess-Challenge\\src\\Training\\Fens\\FensLarge.txt', 'r')
+fensFile = open('D:/Chess-Challenge/Training/Data/Fens.txt', 'r')
 fens = fensFile.readlines()
 fensFile.close()
 
@@ -29,7 +29,7 @@ print(f"Using device: {device}")
 model = LilaModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-1)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
 modelName = "Lila_5"
 
@@ -59,28 +59,21 @@ def boardToTensor(board):
   return boardTensor
 
 def makeDecision(board):
-  legalMoves = list(board.legal_moves)
-  predictions = []
 
-  for move in legalMoves:
-    board.push(move)
+  stockfish.set_fen_position(board.fen())
+  bestMove = stockfish.get_best_move()
+  move = chess.Move.from_uci(bestMove)
 
-    prediction = model(boardToTensor(board).to(device))
+  if random.random() <= 0.5:
+    move = random.choice(list(board.legal_moves))
 
-    predictions.append(prediction)
+  board.push(move)
 
-    board.pop()
+  prediction = model(boardToTensor(board).to(device))
 
-  pairings = []
+  board.pop()
 
-  for i in range(len(predictions)):
-    pairings.append((predictions[i], legalMoves[i]))
-
-  pairings.sort(key=lambda x: x[0].item(), reverse=board.turn == chess.WHITE)
-
-  decision, move = pairings[min(math.floor(pow(random.random(), 3) * 5), len(pairings) - 1)]
-
-  return move, decision
+  return move, prediction
 
 def simulateGame():
   board = chess.Board(fens[random.randint(0, len(fens) - 1)])
@@ -111,7 +104,6 @@ def train(prediction, board):
   optimizer.zero_grad()
 
   print(f"Loss: {round(loss.item(), 3)} Prediction {round(prediction.item(), 3)} Target: {round(target.item(), 3)})")
-  print(board)
 
 
 def saveModel():
