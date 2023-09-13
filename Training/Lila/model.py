@@ -40,14 +40,14 @@ class LilaModel(nn.Module):
     vision = torch.zeros(36, dtype=torch.float32).to(device)
 
     for i in range(36):
-      x = i % 6
-      y = i // 6
+      x = i // 6
+      y = i % 6
 
       squareTensors = []
 
       for offsetX in range(3):
         for offsetY in range(3):
-          squareTensors.append(inp[(x + offsetX) * 8 + y + offsetY: (x + offsetX) * 8 + y + offsetY + 6])
+          squareTensors.append(inp[(x + offsetX) * 8 * 6 + (y + offsetY) * 6: (x + offsetX) * 8 * 6 + (y + offsetY) * 6 + 6])
 
       squareTensor = torch.cat(squareTensors).to(device)
 

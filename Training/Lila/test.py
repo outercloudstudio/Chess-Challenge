@@ -51,7 +51,7 @@ def makeDecision(board):
 
   for move in legalMoves:
     board.push(move)
-
+    
     prediction = model(boardToTensor(board).to(device))
 
     predictions.append(prediction)
@@ -76,7 +76,6 @@ def makeDecision(board):
 def simulateGame():
   board = chess.Board()
 
-
   while board.outcome() == None:
     move, prediction = makeDecision(board)
 
@@ -87,26 +86,28 @@ def simulateGame():
 
     input("Press enter to continue...")
 
-# while True:
-#   simulateGame()
+model.eval()
 
-import numpy as np
-import seaborn as sns
-import pandas as pd
-import matplotlib.pyplot as plt
+while True:
+  simulateGame()
 
-data = []
+# import numpy as np
+# import seaborn as sns
+# import pandas as pd
+# import matplotlib.pyplot as plt
 
-file = open("D:/Chess-Challenge/Training/Models/Lila_5.txt", "r")
+# data = []
 
-index = 0
+# file = open("D:/Chess-Challenge/Training/Models/Lila_5.txt", "r")
 
-for line in file.readlines():
-  if(line == "\n"): break
+# index = 0
 
-  data.append(float(line))
+# for line in file.readlines():
+#   if(line == "\n"): break
 
-  index += 1
+#   data.append(float(line))
 
-sns.kdeplot(data, bw_method=0.25)
-plt.show()
+#   index += 1
+
+# sns.kdeplot(data, bw_method=0.25)
+# plt.show()

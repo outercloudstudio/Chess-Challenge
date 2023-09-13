@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ChessChallenge.API;
@@ -86,6 +87,9 @@ public class MyBot : IChessBot
       }
     }
 
+    // foreach (float num in evaluationTensor) Console.Write(num + " ");//#DEBUG
+    // Console.WriteLine(""); //#DEBUG
+
     return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
   }
 
@@ -137,6 +141,8 @@ public class MyBot : IChessBot
     // while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30f) Search(root);
 
     // return root.Children.MaxBy(node => node.Visits).Move;
+
+    parameterOffset = 0;
 
     return _board.GetLegalMoves().MaxBy(move =>
     {
