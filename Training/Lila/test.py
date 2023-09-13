@@ -87,29 +87,26 @@ def simulateGame():
 
     input("Press enter to continue...")
 
-while True:
-  simulateGame()
+# while True:
+#   simulateGame()
 
+import numpy as np
+import seaborn as sns
+import pandas as pd
 import matplotlib.pyplot as plt
 
-x = []
-y = []
+data = []
 
-file = open("D:/Chess-Challenge/Training/Models/Lila_2.txt", "r")
+file = open("D:/Chess-Challenge/Training/Models/Lila_5.txt", "r")
 
 index = 0
 
 for line in file.readlines():
   if(line == "\n"): break
 
-  x.append(index)
-  y.append(float(line))
+  data.append(float(line))
 
   index += 1
 
-print(index)
-
-file.close()
-
-plt.plot(x, y)
+sns.kdeplot(data, bw_method=0.25)
 plt.show()

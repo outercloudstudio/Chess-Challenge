@@ -10,36 +10,36 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    int pruned = 0;
+    // int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_4.txt")[0..12865].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_5.txt")[0..2898].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
       return raw;
 
-      if (MathF.Abs(raw) < 0.04f)//#DEBUG
-      {
-        raw = 0f;//#DEBUG
+      // if (MathF.Abs(raw) < 0.04f)//#DEBUG
+      // {
+      //   raw = 0f;//#DEBUG
 
-        pruned++;//#DEBUG
-      }
+      //   pruned++;//#DEBUG
+      // }
 
-      int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f); //#DEBUG
+      // int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f); //#DEBUG
 
-      float uncompressed = compressed / 128f * 3f - 1.5f;
+      // float uncompressed = compressed / 128f * 3f - 1.5f;
 
-      return uncompressed;
+      // return uncompressed;
     }).ToArray();
 
-    Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
+    // Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
   }
 
   int parameterOffset = 0;
 
   float[] Layer(float[] input, int previousLayerSize, int layerSize)
   {
-    float[] layer = new float[layerSize];
+    var layer = new float[layerSize];
 
     for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
     {
@@ -58,72 +58,95 @@ public class MyBot : IChessBot
 
   float Inference()
   {
-    var tensor = new float[6 * 64];
+    var evaluationTensor = new float[36];
 
-    for (int i = 0; i < 64; i++)
+    for (int x = 0; x < 6; x++)
     {
-      int x = i % 8;
-      int y = i / 8;
+      for (int y = 0; y < 6; y++)
+      {
+        var sightTensor = new List<float>();
 
-      Piece piece = _board.GetPiece(new Square(x, y));
+        for (int kernelX = 0; kernelX < 3; kernelX++)
+        {
+          for (int kernelY = 0; kernelY < 3; kernelY++)
+          {
+            var pieceTensor = new float[6];
 
-      if (piece.PieceType == PieceType.None) continue;
+            Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
 
-      tensor[x * 8 * 6 + y * 6 + (int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
+            if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
+
+            sightTensor.AddRange(pieceTensor);
+          }
+        }
+
+        parameterOffset = 0;
+
+        evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
+      }
     }
 
-    parameterOffset = 0;
-
-    return Layer(Layer(Layer(tensor, 6 * 64, 32), 32, 16), 16, 1)[0];
+    return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
   }
 
-  float UpperConfidenceBound(Node node) => node.Value + 2 * MathF.Sqrt(MathF.Log(node.Parent.Visits) / node.Visits) * (_board.IsWhiteToMove ? 1 : -1);
+  // float UpperConfidenceBound(Node node) => node.Value + 2 * MathF.Sqrt(MathF.Log(node.Parent.Visits) / node.Visits) * (_board.IsWhiteToMove ? 1 : -1);
 
-  record class Node(Move Move, Node Parent)
-  {
-    public float Visits;
-    public float Value;
-    public Node[] Children;
-  };
+  // record class Node(Move Move, Node Parent)
+  // {
+  //   public float Visits;
+  //   public float Value;
+  //   public Node[] Children;
+  // };
 
   Board _board;
 
-  void Search(Node node)
-  {
-    while (node.Children != null && node.Children.Length > 0)
-    {
-      node = node.Children.MaxBy(UpperConfidenceBound);
+  // void Search(Node node)
+  // {
+  //   while (node.Children != null && node.Children.Length > 0)
+  //   {
+  //     node = node.Children.MaxBy(UpperConfidenceBound);
 
-      // Console.WriteLine($"Entering Node {node.Move}"); //#DEBUG
+  //     // Console.WriteLine($"Entering Node {node.Move}"); //#DEBUG
 
-      _board.MakeMove(node.Move);
-    }
+  //     _board.MakeMove(node.Move);
+  //   }
 
-    node.Children = _board.GetLegalMoves().Select(move => new Node(move, node)).ToArray();
+  //   node.Children = _board.GetLegalMoves().Select(move => new Node(move, node)).ToArray();
 
-    float value = Inference();
+  //   float value = Inference();
 
-    // Console.WriteLine($"Value: {value}"); //#DEBUG
+  //   // Console.WriteLine($"Value: {value}"); //#DEBUG
 
-    while (node.Parent != null)
-    {
-      node.Parent.Value += value;
-      node.Parent.Visits += 1;
+  //   while (node.Parent != null)
+  //   {
+  //     node.Parent.Value += value;
+  //     node.Parent.Visits += 1;
 
-      _board.UndoMove(node.Move);
+  //     _board.UndoMove(node.Move);
 
-      node = node.Parent;
-    }
-  }
+  //     node = node.Parent;
+  //   }
+  // }
 
   public Move Think(Board board, Timer timer)
   {
     _board = board;
 
-    Node root = new Node(Move.NullMove, null);
+    // Node root = new Node(Move.NullMove, null);
 
-    while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30f) Search(root);
+    // while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30f) Search(root);
 
-    return root.Children.MaxBy(node => node.Visits).Move;
+    // return root.Children.MaxBy(node => node.Visits).Move;
+
+    return _board.GetLegalMoves().MaxBy(move =>
+    {
+      _board.MakeMove(move);
+
+      float value = Inference();
+
+      _board.UndoMove(move);
+
+      return value * (_board.IsWhiteToMove ? 1 : -1);
+    });
   }
 }
