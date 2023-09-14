@@ -91,15 +91,44 @@ public class MyBot : IChessBot
 
   Board _board;
   Move _bestMove;
+  Move[] _transpositionTable = new Move[1048576];
   int _nodes; //#DEBUG
 
+  // Bounds:
+  // 0 = Exact
+  // 1 = Lower, Never found a move greater than alpha
+  // 2 = Upper, found a move better than oponent reposonses
   float Search(int ply, int depth, float alpha, float beta)
   {
     _nodes++; //#DEBUG
 
-    if (depth == 0) return Inference() * (_board.IsWhiteToMove ? 1 : -1);
+    if (depth <= 0) return Inference() * (_board.IsWhiteToMove ? 1 : -1);
 
     var moves = _board.GetLegalMoves();
+
+    ref var hashMove = ref _transpositionTable[_board.ZobristKey % 1048576];
+
+    if (hashMove.IsNull)
+      depth--;
+
+    var scores = new int[moves.Length];
+
+    for (int index = 0; index < scores.Length; index++)
+    {
+      Move move = moves[index];
+
+      scores[index] = move == hashMove
+          ? -1000000
+          : move.IsCapture
+              ? (int)move.MovePieceType - 100 * (int)move.CapturePieceType
+              : 1000000;
+    }
+
+    Array.Sort(scores, moves);
+
+    hashMove = default;
+
+    float max = -100000f;
 
     foreach (Move move in moves)
     {
@@ -113,17 +142,24 @@ public class MyBot : IChessBot
 
       _board.UndoMove(move);
 
-      if (score > alpha)
+      if (score > max)
       {
+        hashMove = move;
+
         if (ply == 0) _bestMove = move;
 
-        alpha = score;
-      }
+        max = score;
 
-      if (score >= beta) return beta;
+        if (score >= beta)
+        {
+          max = beta;
+
+          break;
+        }
+      }
     }
 
-    return alpha;
+    return max;
   }
 
   public Move Think(Board board, Timer timer)
@@ -132,7 +168,7 @@ public class MyBot : IChessBot
 
     _nodes = 0; //#DEBUG
 
-    Search(0, 5, -100000f, 100000f);
+    Search(0, 6, -100000f, 100000f);
 
     Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)}"); //#DEBUG
 
