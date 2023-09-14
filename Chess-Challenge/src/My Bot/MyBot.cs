@@ -102,6 +102,8 @@ public class MyBot : IChessBot
   {
     _nodes++; //#DEBUG
 
+    if (_board.IsInCheckmate()) return _board.IsWhiteToMove ? -100000f : 100000f;
+
     if (depth <= 0) return Inference() * (_board.IsWhiteToMove ? 1 : -1);
 
     var moves = _board.GetLegalMoves();
@@ -132,6 +134,8 @@ public class MyBot : IChessBot
 
     foreach (Move move in moves)
     {
+      if (outOfTime) return 0f;
+
       _board.MakeMove(move);
 
       // Console.WriteLine(new string('\t', ply) + $"Searching {move}"); //#DEBUG
@@ -162,13 +166,36 @@ public class MyBot : IChessBot
     return max;
   }
 
+  Timer _timer;
+
+  bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 60f;
+
   public Move Think(Board board, Timer timer)
   {
     _board = board;
+    _timer = timer;
 
     _nodes = 0; //#DEBUG
 
-    Search(0, 6, -100000f, 100000f);
+    int depth = 2;
+
+    Move lastBestMove = Move.NullMove;
+
+    while (!outOfTime)
+    {
+      Search(0, depth, -100000f, 100000f);
+
+      if (outOfTime)
+      {
+        _bestMove = lastBestMove;
+
+        break;
+      }
+
+      lastBestMove = _bestMove;
+
+      depth++;
+    }
 
     Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)}"); //#DEBUG
 
