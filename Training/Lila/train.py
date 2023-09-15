@@ -29,7 +29,7 @@ print(f"Using device: {device}")
 model = LilaModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+optimizer = torch.optim.adamw(model.parameters(), lr=1e-3)
 
 modelName = "Lila_5"
 

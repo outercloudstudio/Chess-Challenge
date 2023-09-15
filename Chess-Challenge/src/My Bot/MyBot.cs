@@ -58,115 +58,122 @@ public class MyBot : IChessBot
 
   float Inference()
   {
-    var evaluationTensor = new float[36];
+    if (_board.IsInCheckmate()) return -100000;
 
-    for (int x = 0; x < 6; x++)
+    int evaluation = 0;
+
+    for (int type = 1; type < 7; type++)
     {
-      for (int y = 0; y < 6; y++)
-      {
-        var sightTensor = new List<float>();
-
-        for (int kernelX = 0; kernelX < 3; kernelX++)
-        {
-          for (int kernelY = 0; kernelY < 3; kernelY++)
-          {
-            var pieceTensor = new float[6];
-
-            Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
-
-            if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
-
-            sightTensor.AddRange(pieceTensor);
-          }
-        }
-
-        parameterOffset = 0;
-
-        evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
-      }
+      evaluation += _board.GetPieceList((PieceType)type, true).Count;
+      evaluation -= _board.GetPieceList((PieceType)type, false).Count;
     }
 
-    return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
+    return evaluation;
+
+    // var evaluationTensor = new float[36];
+
+    // for (int x = 0; x < 6; x++)
+    // {
+    //   for (int y = 0; y < 6; y++)
+    //   {
+    //     var sightTensor = new List<float>();
+
+    //     for (int kernelX = 0; kernelX < 3; kernelX++)
+    //     {
+    //       for (int kernelY = 0; kernelY < 3; kernelY++)
+    //       {
+    //         var pieceTensor = new float[6];
+
+    //         Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
+
+    //         if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
+
+    //         sightTensor.AddRange(pieceTensor);
+    //       }
+    //     }
+
+    //     parameterOffset = 0;
+
+    //     evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
+    //   }
+    // }
+
+    // return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
   }
 
   Board _board;
+  Timer _timer;
   Move _bestMove;
-  Move[] _transpositionTable = new Move[1048576];
+
   int _nodes; //#DEBUG
 
-  // Bounds:
-  // 0 = Exact
-  // 1 = Lower, Never found a move greater than alpha
-  // 2 = Upper, found a move better than oponent reposonses
+  int[] MoveScores = new int[218];
+
+  int WhiteToMoveFactor => _board.IsWhiteToMove ? 1 : -1;
+
   float Search(int ply, int depth, float alpha, float beta)
   {
     _nodes++; //#DEBUG
 
-    if (_board.IsInCheckmate()) return _board.IsWhiteToMove ? -100000f : 100000f;
+    bool qSearch = depth <= 0;
 
-    if (depth <= 0) return Inference() * (_board.IsWhiteToMove ? 1 : -1);
+    if (qSearch)
+    {
+      alpha = MathF.Max(Inference(), alpha);
 
-    var moves = _board.GetLegalMoves();
+      if (alpha >= beta) return alpha;
+    }
 
-    ref var hashMove = ref _transpositionTable[_board.ZobristKey % 1048576];
+    if (depth <= 0) return Inference() * WhiteToMoveFactor;
 
-    if (hashMove.IsNull)
-      depth--;
+    bool isCheck = _board.IsInCheck();
+
+    Span<Move> moves = stackalloc Move[218];
+    _board.GetLegalMovesNonAlloc(ref moves, qSearch && !isCheck);
+
+    if (qSearch && !isCheck && moves.Length == 0) return Inference() * WhiteToMoveFactor;
 
     var scores = new int[moves.Length];
 
-    for (int index = 0; index < scores.Length; index++)
-    {
-      Move move = moves[index];
+    int index = 0;
 
-      scores[index] = move == hashMove
-          ? -1000000
-          : move.IsCapture
-              ? (int)move.MovePieceType - 100 * (int)move.CapturePieceType
-              : 1000000;
+    // Scores are sorted low to high
+    foreach (Move move in moves)
+    {
+      scores[index++] = move.IsCapture
+        ? (int)move.MovePieceType - 100 * (int)move.CapturePieceType
+        : 1000000;
     }
 
-    Array.Sort(scores, moves);
-
-    hashMove = default;
-
-    float max = -100000f;
+    MoveScores.AsSpan(0, moves.Length).Sort(moves);
 
     foreach (Move move in moves)
     {
-      if (outOfTime) return 0f;
+      if (outOfTime) return 100000f;
 
       _board.MakeMove(move);
 
-      // Console.WriteLine(new string('\t', ply) + $"Searching {move}"); //#DEBUG
-
       float score = -Search(ply + 1, depth - 1, -beta, -alpha);
-
-      // Console.WriteLine(new string('\t', ply) + score); //#DEBUG
 
       _board.UndoMove(move);
 
-      if (score > max)
+      if (score > alpha)
       {
-        hashMove = move;
-
         if (ply == 0) _bestMove = move;
 
-        max = score;
+        alpha = score;
 
         if (score >= beta)
         {
-          max = beta;
+          alpha = beta;
 
           break;
         }
       }
     }
 
-    return max;
+    return alpha;
   }
-
-  Timer _timer;
 
   bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 60f;
 
@@ -177,28 +184,21 @@ public class MyBot : IChessBot
 
     _nodes = 0; //#DEBUG
 
-    int depth = 2;
+    int depth = 1;
 
     Move lastBestMove = Move.NullMove;
 
-    while (!outOfTime)
+    while (true)
     {
-      Search(0, depth, -100000f, 100000f);
+      Search(0, depth++, -100000f, 100000f);
 
-      if (outOfTime)
-      {
-        _bestMove = lastBestMove;
-
-        break;
-      }
+      if (outOfTime) break;
 
       lastBestMove = _bestMove;
-
-      depth++;
     }
 
-    Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)}"); //#DEBUG
+    Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)} Depth: {depth} Seconds {timer.MillisecondsElapsedThisTurn / 1000f}"); //#DEBUG
 
-    return _bestMove;
+    return lastBestMove;
   }
 }

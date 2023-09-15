@@ -55,6 +55,10 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotEvil);
       }
+      if (NextButtonInRow("My Bot vs Tier2", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tier2);
+      }
       if (NextButtonInRow("My Bot vs My Bot Evil Threaded", ref buttonPos, spacing, buttonSize))
       {
         FastGame.Match(() => new MyBot(), () => new MyBotEvil(), 30 * 1000);
