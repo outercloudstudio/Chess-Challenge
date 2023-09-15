@@ -29,9 +29,9 @@ print(f"Using device: {device}")
 model = LilaModel().to(device)
 
 loss_fn = nn.MSELoss()
-optimizer = torch.optim.adamw(model.parameters(), lr=1e-3)
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
 
-modelName = "Lila_5"
+modelName = "Lila_6"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
@@ -45,7 +45,7 @@ if os.path.exists(
 model.train()
 
 def boardToTensor(board):
-  boardTensor = torch.zeros(6 * 64, dtype=torch.float32)
+  boardTensor = torch.zeros(6 * 64 + 1, dtype=torch.float32)
 
   for x in range(8):
     for y in range(8):
@@ -55,6 +55,8 @@ def boardToTensor(board):
         if piece == None: continue
 
         boardTensor[x * 8 * 6 + y * 6 + piece.piece_type - 1] =  1 if piece.color == chess.WHITE else -1
+
+  boardTensor[384] = 1 if board.turn == chess.WHITE else -1
 
   return boardTensor
 

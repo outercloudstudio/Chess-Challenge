@@ -12,7 +12,7 @@ public class MyBot : IChessBot
   {
     // int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_5.txt")[0..2898].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_6.txt")[0..2930].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
@@ -70,7 +70,7 @@ public class MyBot : IChessBot
       evaluation -= _board.GetPieceList((PieceType)type, false).Count * pieceValues[type];
     }
 
-    var evaluationTensor = new float[36];
+    var evaluationTensor = new float[37];
 
     for (int x = 0; x < 6; x++)
     {
@@ -98,7 +98,9 @@ public class MyBot : IChessBot
       }
     }
 
-    return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
+    evaluationTensor[36] = WhiteToMoveFactor;
+
+    return Layer(Layer(Layer(evaluationTensor, 37, 32), 32, 16), 16, 1)[0] * 3000 + evaluation;
   }
 
   Board _board;
