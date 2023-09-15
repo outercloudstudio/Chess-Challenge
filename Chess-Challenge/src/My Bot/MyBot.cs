@@ -124,7 +124,7 @@ public class MyBot : IChessBot
       if (alpha >= beta) return alpha;
     }
 
-    if (depth <= 0) return Inference() * WhiteToMoveFactor;
+    if (depth <= 0 && !qSearch) return Inference() * WhiteToMoveFactor;
 
     bool isCheck = _board.IsInCheck();
 
@@ -149,7 +149,7 @@ public class MyBot : IChessBot
 
     foreach (Move move in moves)
     {
-      if (outOfTime) return 100000f;
+      if (outOfTime && ply > 1) return -100000f;
 
       _board.MakeMove(move);
 
@@ -191,6 +191,8 @@ public class MyBot : IChessBot
     while (true)
     {
       Search(0, depth++, -100000f, 100000f);
+
+      if (lastBestMove == Move.NullMove) lastBestMove = _bestMove;
 
       if (outOfTime) break;
 
