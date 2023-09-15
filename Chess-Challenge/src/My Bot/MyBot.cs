@@ -70,37 +70,35 @@ public class MyBot : IChessBot
       evaluation -= _board.GetPieceList((PieceType)type, false).Count * pieceValues[type];
     }
 
-    return evaluation;
+    var evaluationTensor = new float[36];
 
-    // var evaluationTensor = new float[36];
+    for (int x = 0; x < 6; x++)
+    {
+      for (int y = 0; y < 6; y++)
+      {
+        var sightTensor = new List<float>();
 
-    // for (int x = 0; x < 6; x++)
-    // {
-    //   for (int y = 0; y < 6; y++)
-    //   {
-    //     var sightTensor = new List<float>();
+        for (int kernelX = 0; kernelX < 3; kernelX++)
+        {
+          for (int kernelY = 0; kernelY < 3; kernelY++)
+          {
+            var pieceTensor = new float[6];
 
-    //     for (int kernelX = 0; kernelX < 3; kernelX++)
-    //     {
-    //       for (int kernelY = 0; kernelY < 3; kernelY++)
-    //       {
-    //         var pieceTensor = new float[6];
+            Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
 
-    //         Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
+            if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
 
-    //         if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
+            sightTensor.AddRange(pieceTensor);
+          }
+        }
 
-    //         sightTensor.AddRange(pieceTensor);
-    //       }
-    //     }
+        parameterOffset = 0;
 
-    //     parameterOffset = 0;
+        evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
+      }
+    }
 
-    //     evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
-    //   }
-    // }
-
-    // return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
+    return Layer(Layer(Layer(evaluationTensor, 36, 32), 32, 16), 16, 1)[0];
   }
 
   Board _board;
