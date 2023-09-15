@@ -56,16 +56,18 @@ public class MyBot : IChessBot
     return layer;
   }
 
+  int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 1000 };
+
   float Inference()
   {
-    if (_board.IsInCheckmate()) return -100000;
+    if (_board.IsInCheckmate()) return -100000 * WhiteToMoveFactor;
 
     int evaluation = 0;
 
     for (int type = 1; type < 7; type++)
     {
-      evaluation += _board.GetPieceList((PieceType)type, true).Count;
-      evaluation -= _board.GetPieceList((PieceType)type, false).Count;
+      evaluation += _board.GetPieceList((PieceType)type, true).Count * pieceValues[type];
+      evaluation -= _board.GetPieceList((PieceType)type, false).Count * pieceValues[type];
     }
 
     return evaluation;
@@ -119,33 +121,31 @@ public class MyBot : IChessBot
 
     if (qSearch)
     {
-      alpha = MathF.Max(Inference(), alpha);
+      alpha = MathF.Max(alpha, Inference() * WhiteToMoveFactor);
 
       if (alpha >= beta) return alpha;
     }
-
-    if (depth <= 0 && !qSearch) return Inference() * WhiteToMoveFactor;
 
     bool isCheck = _board.IsInCheck();
 
     Span<Move> moves = stackalloc Move[218];
     _board.GetLegalMovesNonAlloc(ref moves, qSearch && !isCheck);
 
-    if (qSearch && !isCheck && moves.Length == 0) return Inference() * WhiteToMoveFactor;
-
-    var scores = new int[moves.Length];
+    if (qSearch && moves.Length == 0) return Inference() * WhiteToMoveFactor;
 
     int index = 0;
 
     // Scores are sorted low to high
     foreach (Move move in moves)
     {
-      scores[index++] = move.IsCapture
+      MoveScores[index++] = move.IsCapture
         ? (int)move.MovePieceType - 100 * (int)move.CapturePieceType
-        : 1000000;
+        : (int)(new Random().NextDouble() * 100);
     }
 
     MoveScores.AsSpan(0, moves.Length).Sort(moves);
+
+    index = 0;
 
     foreach (Move move in moves)
     {
@@ -163,12 +163,7 @@ public class MyBot : IChessBot
 
         alpha = score;
 
-        if (score >= beta)
-        {
-          alpha = beta;
-
-          break;
-        }
+        if (score >= beta) break;
       }
     }
 
