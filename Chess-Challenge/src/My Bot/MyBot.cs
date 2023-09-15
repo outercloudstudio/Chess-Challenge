@@ -100,7 +100,7 @@ public class MyBot : IChessBot
 
     evaluationTensor[36] = WhiteToMoveFactor;
 
-    return Layer(Layer(Layer(evaluationTensor, 37, 32), 32, 16), 16, 1)[0] * 3000 + evaluation;
+    return Layer(Layer(Layer(evaluationTensor, 37, 32), 32, 16), 16, 1)[0] + evaluation;
   }
 
   Board _board;
