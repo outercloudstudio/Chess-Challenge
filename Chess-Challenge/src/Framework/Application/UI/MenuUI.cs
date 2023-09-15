@@ -9,8 +9,6 @@ namespace ChessChallenge.Application
 {
   public static class MenuUI
   {
-    public static Trainer Trainer;
-
     public static void DrawButtons(ChallengeController controller)
     {
       Vector2 buttonPos = UIHelper.Scale(new Vector2(130, 100));
@@ -31,18 +29,6 @@ namespace ChessChallenge.Application
         var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.Theseus : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
-      // if (NextButtonInRow("Human vs My Bot No T", ref buttonPos, spacing, buttonSize))
-      // {
-      //   var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
-      //   var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotEvil : ChallengeController.PlayerType.Human;
-      //   controller.StartNewGame(whiteType, blackType);
-      // }
-      // if (NextButtonInRow("Human vs ARCNET 2 Move Ordering", ref buttonPos, spacing, buttonSize))
-      // {
-      //   var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
-      //   var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.ARCNET2_MoveOrdering : ChallengeController.PlayerType.Human;
-      //   controller.StartNewGame(whiteType, blackType);
-      // }
       if (NextButtonInRow("My Bot vs My Bot", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
@@ -63,18 +49,6 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.FrederoxQ);
       }
-      // if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EvilBot);
-      // }
-      // if (NextButtonInRow("v T1", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.ARCNET2_MoveOrdering);
-      // }
-      // if (NextButtonInRow("My Bot vs T1 Threaded", ref buttonPos, spacing, buttonSize))
-      // {
-      //   FastGame.Match(() => new MyBot(), () => new ARCNET2_MoveOrdering(), 30 * 1000);
-      // }
       if (NextButtonInRow("v T2", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
@@ -83,26 +57,6 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tyrant);
       }
-      // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2);
-      // }
-      // if (NextButtonInRow("ARCNET 2 vs ARCNET 1", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET1);
-      // }
-      // if (NextButtonInRow("ARCNET 2 vs ARCNET 2 Optimized", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.ARCNET2_Optimized);
-      // }
-      // if (NextButtonInRow("ARCNET 2 vs Test Evil Bot", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EvilBot);
-      // }
-      // if (NextButtonInRow("ARCNET 2 vs Elo Bot 2", ref buttonPos, spacing, buttonSize))
-      // {
-      //   controller.StartNewBotMatch(ChallengeController.PlayerType.ARCNET2, ChallengeController.PlayerType.EloBot2);
-      // }
 
       buttonPos = UIHelper.Scale(new Vector2(390, 100));
 
@@ -138,15 +92,6 @@ namespace ChessChallenge.Application
 
           break;
         }
-      }
-      if (NextButtonInRow("Start Training Server", ref buttonPos, spacing, buttonSize))
-      {
-        if (Trainer != null)
-          Trainer.StopServer();
-
-        Trainer = new Trainer(controller);
-
-        Trainer.StartServer();
       }
       if (NextButtonInRow("Save Games", ref buttonPos, spacing, buttonSize))
       {
