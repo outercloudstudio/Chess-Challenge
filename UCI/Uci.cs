@@ -26,6 +26,7 @@ namespace Chess_Challenge.Cli
     private void Reset()
     {
       if (args[0] == "MyBot") _bot = new MyBot();
+      if (args[0] == "MyBotOld") _bot = new MyBotOld();
       if (args[0] == "Frederox") _bot = new Frederox.Quiescence.Quiescence();
       if (args[0] == "Tier2") _bot = new Tier2();
       if (args[0] == "MyBotEvil") _bot = new MyBotEvil();
