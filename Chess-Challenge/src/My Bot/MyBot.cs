@@ -113,9 +113,21 @@ public class MyBot : IChessBot
 
   int WhiteToMoveFactor => _board.IsWhiteToMove ? 1 : -1;
 
+  // Hash, Move, Score, Depth, Bound
+  (ulong, Move, float, int, int)[] _transpositionTable = new (ulong, Move, float, int, int)[40000];
+
   float Search(int ply, int depth, float alpha, float beta)
   {
     _nodes++; //#DEBUG
+
+    ulong zobristKey = _board.ZobristKey;
+    var (transpositionHash, transpositionMove, transpositionScore, transpositionDepth, transpositionFlag) = _transpositionTable[zobristKey % 40000];
+
+    if (transpositionHash == zobristKey && transpositionDepth >= depth && (
+      transpositionFlag == 1 ||
+      transpositionFlag == 2 && transpositionScore <= alpha ||
+      transpositionFlag == 3 && transpositionScore >= beta)
+    ) return transpositionScore;
 
     bool qSearch = depth <= 0;
 
@@ -131,23 +143,26 @@ public class MyBot : IChessBot
     Span<Move> moves = stackalloc Move[218];
     _board.GetLegalMovesNonAlloc(ref moves, qSearch && !isCheck);
 
-    if (qSearch && moves.Length == 0) return Inference() * WhiteToMoveFactor;
+    if (moves.Length == 0) return Inference() * WhiteToMoveFactor;
 
     int index = 0;
 
     // Scores are sorted low to high
     foreach (Move move in moves)
     {
-      MoveScores[index++] = move.IsCapture
+      MoveScores[index++] = move == transpositionMove ? -1000000 : move.IsCapture
         ? (int)move.MovePieceType - 100 * (int)move.CapturePieceType
-        : (int)(new Random().NextDouble() * 100);
+        : 1000000;
     }
 
     MoveScores.AsSpan(0, moves.Length).Sort(moves);
 
+    Move bestMove = moves[0];
+    int newTranspositionFlag = 1;
+
     foreach (Move move in moves)
     {
-      if (outOfTime && ply > 1) return -100000f;
+      if (outOfTime && ply > 0) return -100000f;
 
       _board.MakeMove(move);
 
@@ -157,13 +172,24 @@ public class MyBot : IChessBot
 
       if (score > alpha)
       {
+        newTranspositionFlag = 0;
+
+        bestMove = move;
+
         if (ply == 0) _bestMove = move;
 
         alpha = score;
 
-        if (score >= beta) break;
+        if (score >= beta)
+        {
+          newTranspositionFlag = 2;
+
+          break;
+        }
       }
     }
+
+    _transpositionTable[zobristKey % 40000] = (zobristKey, bestMove, alpha, depth, newTranspositionFlag);
 
     return alpha;
   }
@@ -184,7 +210,7 @@ public class MyBot : IChessBot
 
     while (true)
     {
-      Search(0, depth++, -100000f, 100000f);
+      Search(0, depth++, -1000000f, 1000000f);
 
       if (lastBestMove == Move.NullMove) lastBestMove = _bestMove;
 

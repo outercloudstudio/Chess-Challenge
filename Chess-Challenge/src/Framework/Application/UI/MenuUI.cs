@@ -59,17 +59,9 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tier2);
       }
-      if (NextButtonInRow("My Bot vs My Bot Evil Threaded", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new MyBotEvil(), 30 * 1000);
-      }
       if (NextButtonInRow("My Bot vs FrederoxQ", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.FrederoxQ);
-      }
-      if (NextButtonInRow("My Bot vs FrederoxQ Threaded", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new Frederox.Quiescence.Quiescence(), 30 * 1000);
       }
       // if (NextButtonInRow("v T0", ref buttonPos, spacing, buttonSize))
       // {
@@ -87,25 +79,9 @@ namespace ChessChallenge.Application
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.EloBot2);
       }
-      if (NextButtonInRow("My Bot vs T2", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new EloBot2(), 30 * 1000);
-      }
       if (NextButtonInRow("v Tyrant", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.Tyrant);
-      }
-      if (NextButtonInRow("My Bot vs Tyrant Threaded", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new Tyrant(), 30 * 1000);
-      }
-      if (NextButtonInRow("My Bot vs StockFish", ref buttonPos, spacing, buttonSize))
-      {
-        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.StockFish);
-      }
-      if (NextButtonInRow("My Bot vs StockFish Threaded", ref buttonPos, spacing, buttonSize))
-      {
-        FastGame.Match(() => new MyBot(), () => new StockFish(), 60 * 1000);
       }
       // if (NextButtonInRow("ARCNET 2 vs ARCNET 2", ref buttonPos, spacing, buttonSize))
       // {
