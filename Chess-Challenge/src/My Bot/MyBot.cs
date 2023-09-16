@@ -12,7 +12,7 @@ public class MyBot : IChessBot
   {
     // int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_6.txt")[0..2930].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
@@ -111,7 +111,8 @@ public class MyBot : IChessBot
     Layer(32, 16);
     Layer(16, 1);
 
-    return _layerOutput[0] + evaluation;
+    return _layerOutput[0] * 10 + evaluation;
+    // return _layerOutput[0];
   }
 
   Board _board;
