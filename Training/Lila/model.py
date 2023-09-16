@@ -37,6 +37,8 @@ class LilaModel(nn.Module):
     )
 
   def forward(self, inp):
+    inp = inp.view(64 * 6 + 1)
+
     vision = torch.zeros(37, dtype=torch.float32).to(device)
 
     for i in range(36):

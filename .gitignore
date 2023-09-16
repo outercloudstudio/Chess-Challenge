@@ -400,3 +400,5 @@ Chess-Challenge/src/Training/positions.pgn
 *.yml
 Training/Data/lichess_db_standard_rated_2014-09.pgn
 Training/Data/lichess_db_standard_rated_2014-09.pgn.zst
+openings.bin
+Training/Data/sebv2.epd
