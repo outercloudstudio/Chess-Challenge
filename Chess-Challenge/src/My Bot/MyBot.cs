@@ -205,7 +205,7 @@ public class MyBot : IChessBot
     return alpha;
   }
 
-  bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 60f;
+  bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 30f;
 
   public Move Think(Board board, Timer timer)
   {
