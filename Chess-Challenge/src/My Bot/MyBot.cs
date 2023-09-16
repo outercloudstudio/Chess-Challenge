@@ -41,10 +41,12 @@ public class MyBot : IChessBot
   float[] _layerOutput = new float[32];
   float[] _evaluationTensor = new float[37];
   float[] _sightTensor = new float[54];
-  float[] _emptySightTensor = new float[54];
+  float[] _emptyTensor = new float[54];
 
   void Layer(int previousLayerSize, int layerSize)
   {
+    Array.Copy(_emptyTensor, _layerOutput, 32);
+
     for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
     {
       for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
@@ -78,7 +80,7 @@ public class MyBot : IChessBot
     {
       for (int y = 0; y < 6; y++)
       {
-        Array.Copy(_emptySightTensor, _sightTensor, 54);
+        Array.Copy(_emptyTensor, _sightTensor, 54);
 
         for (int kernelX = 0; kernelX < 3; kernelX++)
         {
@@ -93,6 +95,7 @@ public class MyBot : IChessBot
         parameterOffset = 0;
 
         Array.Copy(_sightTensor, _layerInput, 54);
+
         Layer(54, 16);
         Layer(16, 16);
         Layer(16, 1);

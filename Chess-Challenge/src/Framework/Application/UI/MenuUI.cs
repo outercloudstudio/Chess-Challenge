@@ -29,9 +29,19 @@ namespace ChessChallenge.Application
         var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.Theseus : ChallengeController.PlayerType.Human;
         controller.StartNewGame(whiteType, blackType);
       }
+      if (NextButtonInRow("Human vs My Bot Old", ref buttonPos, spacing, buttonSize))
+      {
+        var whiteType = controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotOld : ChallengeController.PlayerType.Human;
+        var blackType = !controller.HumanWasWhiteLastGame ? ChallengeController.PlayerType.MyBotOld : ChallengeController.PlayerType.Human;
+        controller.StartNewGame(whiteType, blackType);
+      }
       if (NextButtonInRow("My Bot vs My Bot", ref buttonPos, spacing, buttonSize))
       {
         controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBot);
+      }
+      if (NextButtonInRow("My Bot vs My Bot Old", ref buttonPos, spacing, buttonSize))
+      {
+        controller.StartNewBotMatch(ChallengeController.PlayerType.MyBot, ChallengeController.PlayerType.MyBotOld);
       }
       if (NextButtonInRow("My Bot vs Evil Bot", ref buttonPos, spacing, buttonSize))
       {
