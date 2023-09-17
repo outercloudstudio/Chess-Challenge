@@ -10,27 +10,50 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    int pruned = 0;
+    int uncompressedParameterCount = 2930;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(text =>//#DEBUG
+    List<int> rawParameters = new List<int>() { 0 };
+
+    bool countingPrunedNodes = false;
+
+    int lastCountIndex = 0;
+
+    foreach (string parameter in File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930])
     {
-      float raw = float.Parse(text);//#DEBUG
+      float value = float.Parse(parameter);
 
-      if (MathF.Abs(raw) < 0.02f)//#DEBUG
+      bool shouldPrune = MathF.Abs(value) < 0.02f;
+
+      if (shouldPrune && !countingPrunedNodes)
       {
-        raw = 0f;//#DEBUG
+        countingPrunedNodes = true;
 
-        pruned++;//#DEBUG
+        lastCountIndex = rawParameters.Count;
+        rawParameters.Add(0);
+      }
+      else if (!shouldPrune && countingPrunedNodes)
+      {
+        countingPrunedNodes = false;
+
+        lastCountIndex = rawParameters.Count;
+        rawParameters.Add(0);
+      }
+      else if (rawParameters[lastCountIndex] == 127)
+      {
+        countingPrunedNodes = !countingPrunedNodes;
+
+        lastCountIndex = rawParameters.Count;
+        rawParameters.Add(0);
       }
 
-      float scaled = MathF.Pow(raw / 4.8f, 1 / 3f) + 0.5f; //#DEBUG
-      int compressed = (int)(MathF.Min(MathF.Max(scaled, -0.5f), 0.5f) * 128f); //#DEBUG
-      float uncompressed = MathF.Pow(compressed / 128f - 0.5f, 3) * 4.8f;
+      if (!shouldPrune) rawParameters.Add((int)(MathF.Min(MathF.Max(MathF.Pow(value / 4.8f, 1 / 3f) + 0.5f, -0.5f), 0.5f) * 128f));
 
-      return uncompressed;
-    }).ToArray();
+      rawParameters[lastCountIndex]++;
+    }
 
-    Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
+    int compressedTokenCount = (int)MathF.Ceiling(rawParameters.Count / 13.714286f);
+
+    Console.WriteLine($"Param Count: {uncompressedParameterCount} Compressed Tokens: {compressedTokenCount}"); //#DEBUG
   }
 
   int parameterOffset = 0;
