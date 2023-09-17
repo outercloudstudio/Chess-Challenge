@@ -22,7 +22,7 @@ public class MyBot : IChessBot
     {
       float value = float.Parse(parameter);
 
-      bool shouldPrune = MathF.Abs(value) < 0.02f;
+      bool shouldPrune = MathF.Abs(value) < 0.04f;
 
       if (shouldPrune && !countingPrunedNodes)
       {
@@ -38,7 +38,7 @@ public class MyBot : IChessBot
         lastCountIndex = rawParameters.Count;
         rawParameters.Add(0);
       }
-      else if (rawParameters[lastCountIndex] == 127)
+      else if (rawParameters[lastCountIndex] == 63)
       {
         countingPrunedNodes = !countingPrunedNodes;
 
@@ -46,12 +46,12 @@ public class MyBot : IChessBot
         rawParameters.Add(0);
       }
 
-      if (!shouldPrune) rawParameters.Add((int)(MathF.Min(MathF.Max(MathF.Pow(value / 4.8f, 1 / 3f) + 0.5f, -0.5f), 0.5f) * 128f));
+      if (!shouldPrune) rawParameters.Add((int)(MathF.Min(MathF.Max(MathF.Pow(value / 4.8f, 1 / 3f) + 0.5f, -0.5f), 0.5f) * 64f));
 
       rawParameters[lastCountIndex]++;
     }
 
-    int compressedTokenCount = (int)MathF.Ceiling(rawParameters.Count / 13.714286f);
+    int compressedTokenCount = (int)MathF.Ceiling(rawParameters.Count / 16f);
 
     Console.WriteLine($"Param Count: {uncompressedParameterCount} Compressed Tokens: {compressedTokenCount}"); //#DEBUG
   }
