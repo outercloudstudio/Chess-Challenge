@@ -54,6 +54,41 @@ public class MyBot : IChessBot
     int compressedTokenCount = (int)MathF.Ceiling(rawParameters.Count / 16f);
 
     Console.WriteLine($"Param Count: {uncompressedParameterCount} Compressed Tokens: {compressedTokenCount}"); //#DEBUG
+
+    List<Decimal> decimals = new List<Decimal>();
+
+    for (int readIndex = 0; readIndex < rawParameters.Count; readIndex += 16)
+    {
+      byte[] bytes = new byte[16];
+
+      for (int offset = 0; offset < Math.Min(16, rawParameters.Count - readIndex); offset++)
+      {
+        int byteIndex = (6 * offset) / 8;
+
+        bytes[byteIndex] = bytes[byteIndex] |= (byte)((rawParameters[readIndex + offset] & 63) << (6 * offset) % 8);
+      }
+
+      decimals.Add(ByteArrayToDecimal(bytes, 0));
+    }
+
+    string output = "";
+
+    foreach (Decimal value in decimals)
+    {
+      output += value.ToString() + "M, ";
+    }
+
+    File.WriteAllText("D:/Chess-Challenge/Training/Models/Lila_7_Compressed.txt", output);
+  }
+
+  public static decimal ByteArrayToDecimal(byte[] src, int offset)
+  {
+    using (MemoryStream stream = new MemoryStream(src))
+    {
+      stream.Position = offset;
+      using (BinaryReader reader = new BinaryReader(stream))
+        return reader.ReadDecimal();
+    }
   }
 
   int parameterOffset = 0;
