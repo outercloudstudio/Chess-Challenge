@@ -12,7 +12,7 @@ public class MyBotOld : IChessBot
   {
     // int pruned = 0;
 
-    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_6.txt")[0..2930].Select(text =>//#DEBUG
+    _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
@@ -37,23 +37,29 @@ public class MyBotOld : IChessBot
 
   int parameterOffset = 0;
 
-  float[] Layer(float[] input, int previousLayerSize, int layerSize)
+  float[] _layerInput = new float[54];
+  float[] _layerOutput = new float[32];
+  float[] _evaluationTensor = new float[37];
+  float[] _sightTensor = new float[54];
+  float[] _emptyTensor = new float[54];
+
+  void Layer(int previousLayerSize, int layerSize)
   {
-    var layer = new float[layerSize];
+    Array.Copy(_emptyTensor, _layerOutput, 32);
 
     for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++)
     {
       for (int weightIndex = 0; weightIndex < previousLayerSize; weightIndex++)
       {
-        layer[nodeIndex] += input[weightIndex] * _parameters[parameterOffset + nodeIndex * previousLayerSize + weightIndex];
+        _layerOutput[nodeIndex] += _layerInput[weightIndex] * _parameters[parameterOffset + nodeIndex * previousLayerSize + weightIndex];
       }
 
-      layer[nodeIndex] = MathF.Tanh(layer[nodeIndex] + _parameters[parameterOffset + layerSize * previousLayerSize + nodeIndex]);
+      _layerOutput[nodeIndex] = MathF.Tanh(_layerOutput[nodeIndex] + _parameters[parameterOffset + layerSize * previousLayerSize + nodeIndex]);
     }
 
     parameterOffset += layerSize * previousLayerSize + layerSize;
 
-    return layer;
+    Array.Copy(_layerOutput, _layerInput, layerSize);
   }
 
   int[] pieceValues = new int[] { 0, 1, 3, 3, 5, 9, 1000 };
@@ -70,37 +76,43 @@ public class MyBotOld : IChessBot
       evaluation -= _board.GetPieceList((PieceType)type, false).Count * pieceValues[type];
     }
 
-    var evaluationTensor = new float[37];
-
     for (int x = 0; x < 6; x++)
     {
       for (int y = 0; y < 6; y++)
       {
-        var sightTensor = new List<float>();
+        Array.Copy(_emptyTensor, _sightTensor, 54);
 
         for (int kernelX = 0; kernelX < 3; kernelX++)
         {
           for (int kernelY = 0; kernelY < 3; kernelY++)
           {
-            var pieceTensor = new float[6];
-
             Piece piece = _board.GetPiece(new Square(x + kernelX, y + kernelY));
 
-            if (piece.PieceType != PieceType.None) pieceTensor[(int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
-
-            sightTensor.AddRange(pieceTensor);
+            if (piece.PieceType != PieceType.None) _sightTensor[kernelX * 18 + kernelY * 6 + (int)piece.PieceType - 1] = piece.IsWhite ? 1 : -1;
           }
         }
 
         parameterOffset = 0;
 
-        evaluationTensor[x * 6 + y] = Layer(Layer(Layer(sightTensor.ToArray(), 6 * 9, 16), 16, 16), 16, 1)[0];
+        Array.Copy(_sightTensor, _layerInput, 54);
+
+        Layer(54, 16);
+        Layer(16, 16);
+        Layer(16, 1);
+
+        _evaluationTensor[x * 6 + y] = _layerOutput[0];
       }
     }
 
-    evaluationTensor[36] = WhiteToMoveFactor;
+    _evaluationTensor[36] = WhiteToMoveFactor;
 
-    return Layer(Layer(Layer(evaluationTensor, 37, 32), 32, 16), 16, 1)[0] + evaluation;
+    Array.Copy(_evaluationTensor, _layerInput, 37);
+    Layer(37, 32);
+    Layer(32, 16);
+    Layer(16, 1);
+
+    return _layerOutput[0] + evaluation;
+    // return _layerOutput[0];
   }
 
   Board _board;
@@ -194,7 +206,7 @@ public class MyBotOld : IChessBot
     return alpha;
   }
 
-  bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 60f;
+  bool outOfTime => _timer.MillisecondsElapsedThisTurn >= _timer.MillisecondsRemaining / 30f;
 
   public Move Think(Board board, Timer timer)
   {

@@ -8,8 +8,8 @@
 			"args": [
 				"build",
 				"${workspaceFolder}/Chess-Challenge/Chess-Challenge.csproj",
-				// "-c",
-				// "Release",
+				"-c",
+				"Release",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],
@@ -54,8 +54,8 @@
 			"args": [
 				"build",
 				"${workspaceFolder}/UCI/Chess-Challenge.CLI.csproj",
-				// "-c",
-				// "Release",
+				"-c",
+				"Release",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],

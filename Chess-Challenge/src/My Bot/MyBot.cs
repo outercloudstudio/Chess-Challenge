@@ -10,29 +10,27 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    // int pruned = 0;
+    int pruned = 0;
 
     _parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(text =>//#DEBUG
     {
       float raw = float.Parse(text);//#DEBUG
 
-      return raw;
+      if (MathF.Abs(raw) < 0.02f)//#DEBUG
+      {
+        raw = 0f;//#DEBUG
 
-      // if (MathF.Abs(raw) < 0.04f)//#DEBUG
-      // {
-      //   raw = 0f;//#DEBUG
+        pruned++;//#DEBUG
+      }
 
-      //   pruned++;//#DEBUG
-      // }
+      float scaled = MathF.Pow(raw / 4.8f, 1 / 3f) + 0.5f; //#DEBUG
+      int compressed = (int)(MathF.Min(MathF.Max(scaled, -0.5f), 0.5f) * 128f); //#DEBUG
+      float uncompressed = MathF.Pow(compressed / 128f - 0.5f, 3) * 4.8f;
 
-      // int compressed = (int)MathF.Floor(MathF.Max(MathF.Min((raw + 1.5f) / 3f, 1f), 0f) * 128f); //#DEBUG
-
-      // float uncompressed = compressed / 128f * 3f - 1.5f;
-
-      // return uncompressed;
+      return uncompressed;
     }).ToArray();
 
-    // Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
+    Console.WriteLine($"Pruned {pruned} weights"); //#DEBUG
   }
 
   int parameterOffset = 0;
@@ -111,7 +109,7 @@ public class MyBot : IChessBot
     Layer(32, 16);
     Layer(16, 1);
 
-    return _layerOutput[0] * 10 + evaluation;
+    return _layerOutput[0] + evaluation;
     // return _layerOutput[0];
   }
 
