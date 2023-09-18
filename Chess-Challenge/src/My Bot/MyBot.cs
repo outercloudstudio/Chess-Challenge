@@ -10,84 +10,19 @@ public class MyBot : IChessBot
 
   public MyBot()
   {
-    // float[] parameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(line =>
-    // {
-    //   return float.Parse(line);
-    // }).ToArray();
-
-    // int[] compressedParameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_7.txt")[0..2930].Select(line =>
-    // {
-    //   float value = float.Parse(line);
-    //   int quantized = (int)(MathF.Min(MathF.Max(MathF.Pow(MathF.Abs(value) / 4.8f, 1 / 3f) * (value < 0 ? -1 : 1) + 0.5f, 0f), 1f) * 64f);
-
-    //   return quantized;
-    // }).ToArray();
-
     for (int parameter = 0; parameter < 2930; parameter++)
     {
       var ints = decimal.GetBits(_compressedParameters[parameter / 16]);
-      int bitsOffset = parameter % 16 * 6 % 32;
-      int intIndex = parameter % 16 * 6 / 32;
+      int bits = parameter % 16 * 6;
+      int bitsOffset = bits % 32;
+      int intIndex = bits / 32;
 
       int quantized = ints[intIndex] >> bitsOffset & 0b111111;
       if (bitsOffset > 27) quantized |= ints[intIndex + 1] << 32 - bitsOffset & 0b111111;
 
       _parameters[parameter] = MathF.Pow(quantized / 64f - 0.5f, 3) * 4.8f;
     }
-
-    // int compressedTokenCount = (int)MathF.Ceiling(compressedParameters.Length / 16f);
-
-    // Console.WriteLine($"Param Count: 2930 Compressed Tokens: {compressedTokenCount}"); //#DEBUG
-
-    // List<decimal> decimals = new List<decimal>();
-
-    // for (int readIndex = 0; readIndex < _parameters.Length; readIndex += 16)
-    // {
-    //   byte[] bytes = new byte[16];
-
-    //   // Console.WriteLine("Values:");
-
-    //   for (int offset = 0; offset < Math.Min(16, compressedParameters.Length - readIndex); offset++)
-    //   {
-    //     // Console.WriteLine(offset + ": " + compressedParameters[readIndex + offset] + " " + Convert.ToString(compressedParameters[readIndex + offset], toBase: 2).PadLeft(6, '0'));
-
-    //     int bits = offset * 6;
-    //     int byteIndex = bits / 8;
-    //     int bitsOffset = bits - byteIndex * 8;
-
-    //     bytes[byteIndex] |= (byte)(compressedParameters[readIndex + offset] << bitsOffset);
-    //     if (bitsOffset > 2) bytes[byteIndex + 1] |= (byte)(compressedParameters[readIndex + offset] >> 8 - bitsOffset);
-    //   }
-
-    //   // Console.WriteLine("Bytes:"); //#DEBUG
-
-    //   // int i = 0;
-    //   // foreach (byte b in bytes) Console.WriteLine((i++) + " " + Convert.ToString(b, toBase: 2).PadLeft(8, '0'));
-
-    //   decimals.Add(ByteArrayToDecimal(bytes, 0));
-
-    //   // break;
-    // }
-
-    // string output = "";
-
-    // foreach (decimal value in decimals)
-    // {
-    //   output += value.ToString() + "M, ";
-    // }
-
-    // File.WriteAllText("D:/Chess-Challenge/Training/Models/Lila_7_Compressed.txt", output);
   }
-
-  // public static decimal ByteArrayToDecimal(byte[] src, int offset)
-  // {
-  //   using (MemoryStream stream = new MemoryStream(src))
-  //   {
-  //     stream.Position = offset;
-  //     using (BinaryReader reader = new BinaryReader(stream))
-  //       return reader.ReadDecimal();
-  //   }
-  // }
 
   int parameterOffset = 0;
 
