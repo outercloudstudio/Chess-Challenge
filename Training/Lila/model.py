@@ -16,24 +16,24 @@ class LilaModel(nn.Module):
 
     self.sightStack = nn.Sequential(
       nn.Linear(6 * 9, 8),
-      nn.Tanh(),
+      nn.ReLU(),
 
       nn.Linear(8, 8),
-      nn.Tanh(),
+      nn.ReLU(),
 
       nn.Linear(8, 1),
-      nn.Tanh(),
+      nn.ReLU(),
     )
 
     self.evaluationStack = nn.Sequential(
       nn.Linear(37, 16),
-      nn.Tanh(),
+      nn.ReLU(),
 
       nn.Linear(16, 16),
-      nn.Tanh(),
+      nn.ReLU(),
 
       nn.Linear(16, 1),
-      nn.Tanh(),
+      nn.ReLU(),
     )
 
   def forward(self, inp):
