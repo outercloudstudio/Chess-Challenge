@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static ChessChallenge.Application.Settings;
 using static ChessChallenge.Application.ConsoleHelper;
+using System.Collections.Generic;
 
 namespace ChessChallenge.Application
 {
@@ -83,6 +84,54 @@ namespace ChessChallenge.Application
       botTaskWaitHandle = new AutoResetEvent(false);
 
       StartNewGame(PlayerType.Human, PlayerType.MyBot);
+
+      int[] compressedParameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_8.txt")[0..1418].Select(line =>
+      {
+        float value = float.Parse(line);
+        int quantized = (int)(MathF.Min(MathF.Max(MathF.Pow(MathF.Abs(value) / 6f, 1 / 3f) * (value < 0 ? -1 : 1) + 0.5f, 0f), 1f) * 64f);
+        return quantized;
+      }).ToArray();
+
+      int compressedTokenCount = (int)MathF.Ceiling(compressedParameters.Length / 16f);
+      Console.WriteLine($"Param Count: 1418 Compressed Tokens: {compressedTokenCount}"); //#DEBUG
+
+      List<decimal> decimals = new List<decimal>();
+
+      for (int readIndex = 0; readIndex < 1418; readIndex += 16)
+      {
+        byte[] bytes = new byte[16];
+
+        for (int offset = 0; offset < Math.Min(16, compressedParameters.Length - readIndex); offset++)
+        {
+          int bits = offset * 6;
+          int byteIndex = bits / 8;
+          int bitsOffset = bits - byteIndex * 8;
+
+          bytes[byteIndex] |= (byte)(compressedParameters[readIndex + offset] << bitsOffset);
+
+          if (bitsOffset > 2) bytes[byteIndex + 1] |= (byte)(compressedParameters[readIndex + offset] >> 8 - bitsOffset);
+        }
+
+        decimals.Add(ByteArrayToDecimal(bytes, 0));
+      }
+
+      string output = "";
+      foreach (decimal value in decimals)
+      {
+        output += value.ToString() + "M, ";
+      }
+
+      File.WriteAllText("D:/Chess-Challenge/Training/Models/Lila_8_Compressed.txt", output);
+    }
+
+    public static decimal ByteArrayToDecimal(byte[] src, int offset)
+    {
+      using (MemoryStream stream = new MemoryStream(src))
+      {
+        stream.Position = offset;
+        using (BinaryReader reader = new BinaryReader(stream))
+          return reader.ReadDecimal();
+      }
     }
 
     public void StartNewGame(PlayerType whiteType, PlayerType blackType)
