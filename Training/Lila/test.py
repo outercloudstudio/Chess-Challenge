@@ -100,7 +100,7 @@ import matplotlib.pyplot as plt
 
 data = []
 
-file = open("D:/Chess-Challenge/Training/Models/Lila_5.txt", "r")
+file = open("D:/Chess-Challenge/Training/Models/Lila_8.txt", "r")
 
 index = 0
 

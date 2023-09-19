@@ -73,10 +73,10 @@ averageLoss = 0
 
 averageLosses = []
 
-for positionTensor, winPercentTensor in dataLoader:
+for positionTensor, evaluationTensor in dataLoader:
   prediction = model(positionTensor.to(device))
 
-  loss = loss_fn(prediction, winPercentTensor.to(device))
+  loss = loss_fn(prediction, evaluationTensor.to(device))
 
   loss.backward()
   optimizer.step()

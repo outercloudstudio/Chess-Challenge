@@ -16,24 +16,24 @@ class LilaModel(nn.Module):
 
     self.sightStack = nn.Sequential(
       nn.Linear(6 * 9, 8),
-      nn.ReLU(),
+      CRelu(),
 
       nn.Linear(8, 8),
-      nn.ReLU(),
+      CRelu(),
 
       nn.Linear(8, 1),
-      nn.ReLU(),
+      CRelu(),
     )
 
     self.evaluationStack = nn.Sequential(
       nn.Linear(37, 16),
-      nn.ReLU(),
+      CRelu(),
 
       nn.Linear(16, 16),
-      nn.ReLU(),
+      CRelu(),
 
       nn.Linear(16, 1),
-      nn.ReLU(),
+      CRelu(),
     )
 
   def forward(self, inp):
@@ -58,3 +58,10 @@ class LilaModel(nn.Module):
     vision[36] = inp[384]
 
     return self.evaluationStack(vision)
+  
+class CRelu(nn.Module):
+  def __init__(self):
+    super().__init__()
+  
+  def forward(self, x):
+    return torch.clamp(x, min=-1, max=1)

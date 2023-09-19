@@ -27,6 +27,9 @@ def convert(name):
   for param in model.parameters():
     paramCount += param.data.flatten().size()[0]
 
+    for value in param.data.flatten().tolist():
+      paramOutput += str(value) + "\n"
+
   print(f"Converted {paramCount} weights. Compressed size: {paramCount / 16}")
 
   weightFile = open(
