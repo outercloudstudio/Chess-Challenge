@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO; //#DEBUG
-using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
@@ -101,7 +98,6 @@ public class MyBot : IChessBot
     Layer(16, 1);
 
     return _layerOutput[0] + evaluation;
-    // return _layerOutput[0];
   }
 
   Board _board;
