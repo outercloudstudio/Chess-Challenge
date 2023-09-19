@@ -20,7 +20,7 @@ print(f"Using device: {device}")
 
 model = LilaModel().to(device)
 
-modelName = "Lila_7"
+modelName = "Lila_8"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"

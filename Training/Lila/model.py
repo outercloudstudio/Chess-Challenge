@@ -15,21 +15,21 @@ class LilaModel(nn.Module):
     super().__init__()
 
     self.sightStack = nn.Sequential(
-      nn.Linear(6 * 9, 16),
+      nn.Linear(6 * 9, 8),
       nn.Tanh(),
 
-      nn.Linear(16, 16),
+      nn.Linear(8, 8),
       nn.Tanh(),
 
-      nn.Linear(16, 1),
+      nn.Linear(8, 1),
       nn.Tanh(),
     )
 
     self.evaluationStack = nn.Sequential(
-      nn.Linear(37, 32),
+      nn.Linear(37, 16),
       nn.Tanh(),
 
-      nn.Linear(32, 16),
+      nn.Linear(16, 16),
       nn.Tanh(),
 
       nn.Linear(16, 1),
