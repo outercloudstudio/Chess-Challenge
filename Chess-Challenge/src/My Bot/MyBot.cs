@@ -40,7 +40,7 @@ public class MyBot : IChessBot
         _layerOutput[nodeIndex] += _layerInput[weightIndex] * _parameters[parameterOffset + nodeIndex * previousLayerSize + weightIndex];
       }
 
-      _layerOutput[nodeIndex] = MathF.Tanh(_layerOutput[nodeIndex] + _parameters[parameterOffset + layerSize * previousLayerSize + nodeIndex]);
+      _layerOutput[nodeIndex] = MathF.Max(MathF.Min(_layerOutput[nodeIndex] + _parameters[parameterOffset + layerSize * previousLayerSize + nodeIndex], 1), -1);
     }
 
     parameterOffset += layerSize * previousLayerSize + layerSize;
@@ -159,7 +159,7 @@ public class MyBot : IChessBot
 
     foreach (Move move in moves)
     {
-      if (outOfTime && ply > 0) return -100000f;
+      if (outOfTime && ply > 0) return 100000f;
 
       _board.MakeMove(move);
 
