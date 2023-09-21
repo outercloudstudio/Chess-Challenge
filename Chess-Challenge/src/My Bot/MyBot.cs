@@ -159,7 +159,7 @@ public class MyBot : IChessBot
 
     foreach (Move move in moves)
     {
-      if (outOfTime && ply > 0) return 100000f;
+      if (outOfTime && ply > 0) return 100000000f;
 
       _board.MakeMove(move);
 
@@ -186,7 +186,7 @@ public class MyBot : IChessBot
       }
     }
 
-    _transpositionTable[zobristKey % 40000] = (zobristKey, bestMove, alpha, depth, newTranspositionFlag);
+    if (!outOfTime) _transpositionTable[zobristKey % 40000] = (zobristKey, bestMove, alpha, depth, newTranspositionFlag);
 
     return alpha;
   }
