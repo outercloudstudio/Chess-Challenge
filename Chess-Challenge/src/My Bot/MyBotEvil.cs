@@ -218,7 +218,7 @@ public class MyBotEvil : IChessBot
       if (depth > 50) break;
     }
 
-    Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)} Depth: {depth} Seconds {timer.MillisecondsElapsedThisTurn / 1000f}"); //#DEBUG
+    Console.WriteLine($"My Bot Evil: Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)} Depth: {depth} Seconds {timer.MillisecondsElapsedThisTurn / 1000f}"); //#DEBUG
 
     return lastBestMove;
   }

@@ -97,7 +97,7 @@ public class MyBot : IChessBot
     Layer(16, 16);
     Layer(16, 1);
 
-    return _layerOutput[0] + evaluation;
+    return (_layerOutput[0] + evaluation) * WhiteToMoveFactor;
   }
 
   Board _board;
@@ -130,17 +130,19 @@ public class MyBot : IChessBot
 
     if (qSearch)
     {
-      alpha = MathF.Max(alpha, Inference() * WhiteToMoveFactor);
+      alpha = MathF.Max(alpha, Inference());
 
       if (alpha >= beta) return alpha;
     }
 
     bool isCheck = _board.IsInCheck();
 
+    // if (!qSearch && !isCheck && Inference() - 1f * depth >= beta) return beta;
+
     Span<Move> moves = stackalloc Move[218];
     _board.GetLegalMovesNonAlloc(ref moves, qSearch && !isCheck);
 
-    if (moves.Length == 0) return Inference() * WhiteToMoveFactor;
+    if (moves.Length == 0) return Inference();
 
     int index = 0;
 
@@ -156,8 +158,6 @@ public class MyBot : IChessBot
 
     Move bestMove = moves[0];
     int newTranspositionFlag = 1;
-
-    index = 0;
 
     foreach (Move move in moves)
     {
@@ -215,7 +215,7 @@ public class MyBot : IChessBot
       lastBestMove = _bestMove;
     }
 
-    Console.WriteLine($"Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)} Depth: {depth} Seconds {timer.MillisecondsElapsedThisTurn / 1000f}"); //#DEBUG
+    Console.WriteLine($"My Bot: Nodes per second {_nodes / (timer.MillisecondsElapsedThisTurn / 1000f + 0.00001f)} Depth: {depth} Seconds {timer.MillisecondsElapsedThisTurn / 1000f}"); //#DEBUG
 
     return lastBestMove;
   }
