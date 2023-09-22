@@ -10,11 +10,8 @@ public class MyBot : IChessBot
     for (int parameter = 0; parameter < 1418; parameter++)
     {
       var ints = decimal.GetBits(_compressedParameters[parameter / 16]);
-      int bits = parameter % 16 * 6;
-      int bitsOffset = bits % 32;
-      int intIndex = bits / 32;
 
-      int quantized = ints[intIndex] >> bitsOffset & 0b111111;
+      int bits = parameter % 16 * 6, bitsOffset = bits % 32, intIndex = bits / 32, quantized = ints[intIndex] >> bitsOffset & 0b111111;
       if (bitsOffset > 27) quantized |= ints[intIndex + 1] << 32 - bitsOffset & 0b111111;
 
       _parameters[parameter] = MathF.Pow(quantized / 64f - 0.5f, 3) * 6f;
