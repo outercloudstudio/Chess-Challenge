@@ -110,15 +110,6 @@ public class MyBot : IChessBot
   {
     _nodes++; //#DEBUG
 
-    ulong zobristKey = _board.ZobristKey;
-    var (transpositionHash, transpositionMove, transpositionScore, transpositionDepth, transpositionFlag) = _transpositionTable[zobristKey % 40000];
-
-    if (transpositionHash == zobristKey && transpositionDepth >= depth && (
-      transpositionFlag == 1 ||
-      transpositionFlag == 2 && transpositionScore <= alpha ||
-      transpositionFlag == 3 && transpositionScore >= beta)
-    ) return transpositionScore;
-
     bool qSearch = depth <= 0;
 
     if (qSearch)
@@ -129,6 +120,17 @@ public class MyBot : IChessBot
     }
 
     bool isCheck = _board.IsInCheck();
+
+    if (!qSearch && !isCheck && depth <= 5 && Inference() - 1f * depth >= beta) return beta;
+
+    ulong zobristKey = _board.ZobristKey;
+    var (transpositionHash, transpositionMove, transpositionScore, transpositionDepth, transpositionFlag) = _transpositionTable[zobristKey % 40000];
+
+    if (transpositionHash == zobristKey && transpositionDepth >= depth && (
+      transpositionFlag == 1 ||
+      transpositionFlag == 2 && transpositionScore <= alpha ||
+      transpositionFlag == 3 && transpositionScore >= beta)
+    ) return transpositionScore;
 
     Span<Move> moves = stackalloc Move[218];
     _board.GetLegalMovesNonAlloc(ref moves, qSearch && !isCheck);
