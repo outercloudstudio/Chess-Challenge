@@ -121,8 +121,6 @@ public class MyBot : IChessBot
 
     bool isCheck = _board.IsInCheck();
 
-    if (!qSearch && !isCheck && depth <= 5 && Inference() - 1f * depth >= beta) return beta;
-
     ulong zobristKey = _board.ZobristKey;
     var (transpositionHash, transpositionMove, transpositionScore, transpositionDepth, transpositionFlag) = _transpositionTable[zobristKey % 40000];
 
