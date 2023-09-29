@@ -1,136 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using ChessChallenge.API;
 
 public class MyBot : IChessBot
 {
-  readonly (ulong, Move, int, float, byte)[] tt = new (ulong, Move, int, float, byte)[1048576];
-
-  int[] pieceValues = { 0, 1, 3, 3, 5, 9, 1000 };
+  class State { public Move Move; public State[] Children; public State Parent; public int Visits = 1; public float TotalScore; }
+  float Score(State state) => -state.TotalScore / MathF.Pow(state.Visits, 1f);
 
   public Move Think(Board board, Timer timer)
   {
-    Move bestMoveRoot = default;
-    var killers = new Move[128];
-    var history = new int[4096];
-    int iterDepth = 1;
+    State root = new State() { Move = default };
 
-    while (iterDepth < 64 && timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 30)
-      Search(-30000, 30000, iterDepth++, 0);
-
-    return bestMoveRoot;
-
-    float Search(float alpha, float beta, int depth, int ply)
+    do
     {
-      bool inCheck = board.IsInCheck();
+      State currentState = root;
 
-      // Check extensions
-      if (inCheck)
-        depth++;
-
-      bool qs = depth <= 0;
-      ulong key = board.ZobristKey;
-      var (ttKey, ttMove, ttDepth, score, ttFlag) = tt[key % 1048576];
-      float bestScore = -30000;
-      int moveIdx = 0;
-
-      // Check for draw by repetition
-      if (ply > 0
-          && board.IsRepeatedPosition())
-        return 0;
-
-      // Stand Pat
-      if (qs
-          && (bestScore = alpha = MathF.Max(alpha, Evaluate())) >= beta)
-        return alpha;
-
-      // TT Cutoffs
-      if (beta - alpha == 1
-          && ttKey == key
-          && ttDepth >= depth
-          && (score >= beta ? ttFlag > 0 : ttFlag < 2))
-        return score;
-
-      // Reverse Futility Pruning
-      if (!qs
-          && !inCheck
-          && depth <= 8
-          && Evaluate() >= beta + 120 * depth)
-        return beta;
-
-      // Generate moves
-      var moves = board.GetLegalMoves(qs);
-
-      // Checkmate/Stalemate
-      if (moves.Length == 0)
-        return qs ? alpha : inCheck ? ply - 30_000 : 0;
-
-      // Score moves
-      var scores = new int[moves.Length];
-      foreach (Move move in moves)
-        scores[moveIdx++] = -(
-            move == ttMove
-                ? 900_000_000
-                : move.IsCapture
-                    ? 100_000_000 * (int)move.CapturePieceType - (int)move.MovePieceType
-                    : move == killers[ply]
-                        ? 80_000_000
-                        : history[move.RawValue & 4095]
-        );
-
-      Array.Sort(scores, moves);
-
-      ttMove = default;
-      moveIdx = ttFlag = 0;
-
-      foreach (Move move in moves)
+      while (currentState.Children != null)
       {
-        if (timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / 15)
-          return 30000;
+        if (currentState.Children.Length == 0) break;
 
-        board.MakeMove(move);
+        currentState = currentState.Children.MinBy(Score);
 
-        // Principal Variation Search + Late Move Reductions
-        if (moveIdx++ == 0
-            || qs
-            || depth < 2
-            || move.IsCapture
-            || (score = -Search(-alpha - 1, -alpha, depth - 2 - moveIdx / 16, ply + 1)) > alpha)
-          score = -Search(-beta, -alpha, depth - 1, ply + 1);
-
-        board.UndoMove(move);
-
-        if (score > bestScore)
-        {
-          bestScore = score;
-          ttMove = move;
-          if (score > alpha)
-          {
-            alpha = score;
-            ttFlag = 1;
-
-            if (ply == 0)
-              bestMoveRoot = move;
-
-            if (alpha >= beta)
-            {
-              // Quiet cutoffs update tables
-              if (!move.IsCapture)
-              {
-                killers[ply] = move;
-                history[move.RawValue & 4095] += depth;
-              }
-
-              ttFlag++;
-
-              break;
-            }
-          }
-        }
+        board.MakeMove(currentState.Move);
       }
 
-      tt[key % 1048576] = (key, ttMove, depth, bestScore, ttFlag);
+      if (currentState.Children == null) currentState.Children = board.GetLegalMoves().Select(move => new State() { Move = move, TotalScore = EvaluateMove(move), Parent = currentState }).ToArray();
 
-      return bestScore;
+      float score = currentState.Children.Length == 0 ? (board.IsDraw() ? 0 : -100) : currentState.Children.MinBy(Score).TotalScore;
+
+      while (currentState.Parent != null)
+      {
+        currentState.Visits++;
+
+        currentState.TotalScore += score *= -1;
+
+        board.UndoMove(currentState.Move);
+
+        currentState = currentState.Parent;
+      }
+
+      // DebugState(root);
+      // Console.WriteLine("\n");
+    } while (timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / 60f);
+
+    return root.Children.MinBy(Score).Move;
+
+    float EvaluateMove(Move move)
+    {
+      board.MakeMove(move);
+
+      float evaluation = -Evaluate();
+
+      board.UndoMove(move);
+
+      return evaluation;
     }
 
     float Evaluate()
@@ -181,6 +106,19 @@ public class MyBot : IChessBot
       return (_layerOutput[0] + evaluation) * (board.IsWhiteToMove ? 1 : -1);
     }
   }
+
+  // void DebugState(State state, int depth = 0)
+  // {
+  //   // if (depth == 2) return;
+
+  //   Console.WriteLine(new string('\t', depth) + $"{state.Move} {Score(state)} {state.TotalScore} {state.Visits}");
+
+  //   if (state.Children == null) return;
+
+  //   foreach (State child in state.Children) DebugState(child, depth + 1);
+  // }
+
+  int[] pieceValues = { 0, 1, 3, 3, 5, 9, 1000 };
 
   float[] _parameters = new float[1418];
 
