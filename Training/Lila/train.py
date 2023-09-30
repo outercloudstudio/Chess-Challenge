@@ -24,7 +24,7 @@ model = LilaModel().to(device)
 loss_fn = nn.MSELoss()
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
 
-modelName = "Lila_9"
+modelName = "Lila_10"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
