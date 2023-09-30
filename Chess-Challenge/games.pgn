@@ -1991,3 +1991,111 @@ Kxf8 8. O-O-O Ke8 9. Bxa7 Ra8 10. Bb6 Ng8 11. Bb5+ Kf8 12. a4 Nf6 13. Be3 Bg8
 8. h3 Nc7 9. Rg1 Bxh3 10. Rh1 Bg2 11. b3 Bxh1 12. f4 gxf4 13. Kf1 fxg3+ 14. Ke1
 Qb4 15. Qxb4 g2 {No result} *
 
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "1"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.849 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Ng1 Bg4 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "1"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.856 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Nfd2 g5 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "2"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "r1bqk1nr/pp2bpp1/3p3p/4p3/2P5/2NQ2P1/PP2PP1P/R1B1KB1R w KQkq - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.862 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Qe3 Bg5 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "2"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "r1bqk1nr/pp2bpp1/3p3p/4p3/2P5/2NQ2P1/PP2PP1P/R1B1KB1R w KQkq - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.868 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Qe3 f6 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "3"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "rnbq1k1r/pp1nb1pp/4pp2/2ppP1BQ/3P3P/2NB4/PPP2PP1/R3K1NR w KQ - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.871 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Ke2 fxg5 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.30"]
+[Round "3"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "rnbq1k1r/pp1nb1pp/4pp2/2ppP1BQ/3P3P/2NB4/PPP2PP1/R3K1NR w KQ - 0 1"]
+[GameDuration "00:00:00"]
+[GameEndTime "2023-09-30T01:12:53.385 Central Daylight Time"]
+[GameStartTime "2023-09-30T01:12:52.880 Central Daylight Time"]
+[PlyCount "2"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. exf6 gxf6 {No result} *
+
