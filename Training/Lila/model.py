@@ -21,12 +21,12 @@ class LilaModel(nn.Module):
       nn.Linear(8, 8),
       CRelu(),
 
-      nn.Linear(8, 1),
+      nn.Linear(8, 2),
       CRelu(),
     )
 
     self.evaluationStack = nn.Sequential(
-      nn.Linear(37, 16),
+      nn.Linear(36 * 2 + 1, 16),
       CRelu(),
 
       nn.Linear(16, 16),
@@ -39,7 +39,7 @@ class LilaModel(nn.Module):
   def forward(self, inp):
     inp = inp.view(64 * 6 + 1)
 
-    vision = torch.zeros(37, dtype=torch.float32).to(device)
+    vision = torch.zeros(36 * 2 + 1, dtype=torch.float32).to(device)
 
     for i in range(36):
       x = i // 6
@@ -53,9 +53,10 @@ class LilaModel(nn.Module):
 
       squareTensor = torch.cat(squareTensors).to(device)
 
-      vision[i] = self.sightStack(squareTensor)
+      vision[i] = self.sightStack(squareTensor)[0]
+      vision[i] = self.sightStack(squareTensor)[1]
 
-    vision[36] = inp[384]
+    vision[36 * 2] = inp[384]
 
     return self.evaluationStack(vision)
   

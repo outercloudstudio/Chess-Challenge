@@ -1,7 +1,6 @@
 import chess
 import torch
 import os
-import random
 
 from torch import nn
 from torch.utils.data import DataLoader
@@ -25,7 +24,7 @@ model = LilaModel().to(device)
 loss_fn = nn.MSELoss()
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
 
-modelName = "Lila_8"
+modelName = "Lila_9"
 
 if os.path.exists(
   "D:\\Chess-Challenge\\Training\\Models\\" + modelName + ".pth"
