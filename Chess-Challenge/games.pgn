@@ -1595,3 +1595,399 @@ Bb2 {No result} *
 
 1. Bd2 {No result} *
 
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "1"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "00:00:07"]
+[GameEndTime "2023-09-29T23:57:07.763 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.322 Central Daylight Time"]
+[PlyCount "44"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Ng1 Bg4 2. Qd2 Rb8 3. Kf1 b6 4. Qf4 Qd6 5. Be3 Qxf4 6. Bxf4 Rb7 7. Ke1 b5
+8. d6 bxc4 9. dxc7 Rxb2 10. c8=N Bxc8 11. Bxh6 Rxh6 12. Nd2 c3 13. Nc4 Rxc2
+14. h4 Be6 15. Ne3 Rxa2 16. Rc1 g5 17. Rxc3 Bb4 18. Ne2 gxh4 19. Ng1 Bxc3+
+20. Kf1 Ra1+ 21. Nd1 Bc4+ 22. Ne2 Rxd1# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "1"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "00:00:07"]
+[GameEndTime "2023-09-29T23:57:07.944 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.323 Central Daylight Time"]
+[PlyCount "45"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Nfd2 Bb4 2. c3 Bd6 3. Qc2 g6 4. Nxe4 Bf5 5. Nxf6+ Qxf6 6. Qa4+ Ke7 7. Be3 Qg5
+8. Bxg5+ hxg5 9. g3 Bxg3 10. fxg3 Rhd8 11. Qb4+ Kd7 12. Qxb7 Re8+ 13. Kd2 Rad8
+14. Qxa7 Re7 15. Qa4+ Kd6 16. Qa6+ Kd7 17. Qb7 Rf8 18. d6 Re5 19. Qxc7+ Ke8
+20. Qb8+ Kd7 21. Qxf8 Be6 22. Qe7+ Kc8 23. Qc7# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "2"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "r1bqk1nr/pp2bpp1/3p3p/4p3/2P5/2NQ2P1/PP2PP1P/R1B1KB1R w KQkq - 0 1"]
+[GameDuration "00:00:08"]
+[GameEndTime "2023-09-29T23:57:09.172 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.322 Central Daylight Time"]
+[PlyCount "54"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Qe3 Be6 2. a3 Bxc4 3. Bg2 Bg5 4. f4 Be7 5. Bxb7 exf4 6. gxf4 Rb8 7. Bc6+ Kf8
+8. Qxa7 Bh4+ 9. Kd1 Ne7 10. Bb5 Bxb5 11. e3 Nc6 12. Qxb8 Qxb8 13. Rg1 Ne7
+14. Bd2 d5 15. Rg2 Bf1 16. Rg4 Qb3+ 17. Kc1 g5 18. fxg5 hxg5 19. Nb1 Rh6 20. Rd4
+Rc6+ 21. Bc3 Bg2 22. Rd3 Qb8 23. Ra2 Be4 24. Ra1 Bxd3 25. Kd2 Bf5 26. Bd4 Qxh2+
+27. Kd1 Bg4# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "2"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "r1bqk1nr/pp2bpp1/3p3p/4p3/2P5/2NQ2P1/PP2PP1P/R1B1KB1R w KQkq - 0 1"]
+[GameDuration "00:00:14"]
+[GameEndTime "2023-09-29T23:57:15.098 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.314 Central Daylight Time"]
+[PlyCount "103"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Qe3 Bf6 2. Rb1 Qa5 3. b4 Qa6 4. b5 Qa5 5. Bd2 Ke7 6. Nd5+ Kd8 7. Bxa5+ Kd7
+8. Bh3+ Ke8 9. Nc7+ Kf8 10. Nxa8 Bxh3 11. Qxa7 Ke7 12. Qxb7+ Kf8 13. Bb4 g5
+14. Bxd6+ Kg7 15. Rb2 Rh7 16. Qe4 Rh8 17. Bxe5 Bc8 18. Bxf6+ Nxf6 19. Qe3 Rf8
+20. Nb6 Bh3 21. Nd5 Nxd5 22. cxd5 Bc8 23. h4 g4 24. O-O h5 25. Qg5+ Kh7
+26. Qxh5+ Kg8 27. Rfb1 Kg7 28. Qe5+ Kh6 29. Qf6+ Kh7 30. Qg7+ Kxg7 31. Kf1 Rd8
+32. Rc1 Bd7 33. Rcc2 Kg6 34. e3 Ra8 35. Kg2 Kh5 36. Kh2 Be8 37. Kg2 Ra7 38. Rc8
+Bd7 39. Rh8+ Kg6 40. Rf8 f5 41. Kf1 Kg7 42. Rd8 Bxb5+ 43. Rxb5 Rxa2 44. Re8 Kg6
+45. Rb4 Ra7 46. Re6+ Kh5 47. Rf6 Ra5 48. Rxf5+ Kg6 49. Rg5+ Kh7 50. Rbxg4 Kh6
+51. Rg8 Rxd5 52. Rh8# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "3"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "rnbq1k1r/pp1nb1pp/4pp2/2ppP1BQ/3P3P/2NB4/PPP2PP1/R3K1NR w KQ - 0 1"]
+[GameDuration "00:00:05"]
+[GameEndTime "2023-09-29T23:57:05.649 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.315 Central Daylight Time"]
+[PlyCount "30"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. f3 fxg5 2. Ke2 cxd4 3. Bxh7 Nxe5 4. Na4 b5 5. hxg5 bxa4 6. Rf1 Ba6+ 7. Kf2
+Bxf1 8. Kxf1 Bxg5 9. c3 Nd3 10. cxd4 Nxb2 11. g4 Bf6 12. Rh2 Bxd4 13. f4 Qb6
+14. g5 Bxg1 15. Rh4 Qf2# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "3"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "rnbq1k1r/pp1nb1pp/4pp2/2ppP1BQ/3P3P/2NB4/PPP2PP1/R3K1NR w KQ - 0 1"]
+[GameDuration "00:00:02"]
+[GameEndTime "2023-09-29T23:57:02.481 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:00.324 Central Daylight Time"]
+[PlyCount "11"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. exf6 gxf6 2. Bh6+ Kg8 3. Qg4+ Kf7 4. Qg7+ Ke8 5. Qg6+ hxg6
+6. Bxg6# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "4"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "r3kb1r/pppq2pp/2n2n2/8/2Pp2b1/5NP1/PP1NPPBP/R1BQK2R w KQkq - 0 1"]
+[GameDuration "00:00:17"]
+[GameEndTime "2023-09-29T23:57:19.892 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:02.485 Central Daylight Time"]
+[PlyCount "128"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Ng1 d3 2. Qb3 Bxe2 3. Qxb7 Rb8 4. Qa6 Rb6 5. Qa4 Bb4 6. Bxc6 Qxc6 7. Qxc6+
+Rxc6 8. c5 Bh5 9. a3 Re6+ 10. Kf1 Bxc5 11. Nb3 Be2+ 12. Kg2 Be7 13. a4 Bd1
+14. Nd4 Re4 15. Nf5 Bf8 16. a5 Re5 17. Nh4 Ng4 18. h3 Nf6 19. Bd2 Bc2 20. g4 g5
+21. Nhf3 Rd5 22. Ra2 Bb3 23. Ra1 Ne4 24. Be3 Bb4 25. Bxa7 Bxa5 26. Ra3 Bc2
+27. Nh2 Re5 28. f3 Nf6 29. Kf2 d2 30. Ne2 d1=Q 31. Rxd1 Bxd1 32. Nd4 Be1+
+33. Kg2 c5 34. Nb5 Re2+ 35. Kf1 Rxh2 36. Kxe1 Rh1+ 37. Kd2 Nd7 38. Kd3 Rxh3
+39. Kd2 Bxf3 40. Bb6 Nxb6 41. Kc1 Rh1+ 42. Kc2 Rh2+ 43. Kb3 c4+ 44. Kc3 Bxg4
+45. Ra6 Rh3+ 46. Kd4 Rh6 47. Ke5 Nd7+ 48. Kd5 Bf3+ 49. Kxc4 Be2+ 50. Kb3 Nc5+
+51. Ka3 Nxa6 52. Nd4 Bf1 53. Kb3 Rh4 54. Nf3 Rh3 55. Kc2 Rxf3 56. Kd1 Rb3
+57. Kc1 Nb4 58. Kb1 Nd3 59. Ka1 Nxb2 60. Ka2 Bc4 61. Ka1 g4 62. Kb1 Bd3+ 63. Kc1
+Nc4 64. Kd1 Rb1# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "4"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "r3kb1r/pppq2pp/2n2n2/8/2Pp2b1/5NP1/PP1NPPBP/R1BQK2R w KQkq - 0 1"]
+[GameDuration "00:00:05"]
+[GameEndTime "2023-09-29T23:57:11.481 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:05.653 Central Daylight Time"]
+[PlyCount "33"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Ng1 Nd8 2. Rb1 Qe7 3. Qb3 Qd6 4. Bxb7 Qe7 5. Bxa8 Kf7 6. Bg2 Kg6 7. Qd3+ Bf5
+8. Qxd4 Bxb1 9. Nxb1 Nd7 10. Qxa7 Qb4+ 11. Nd2 Kf5 12. Bh3+ Kg6 13. Bxd7 Qe7
+14. Qxc7 Nf7 15. Qc6+ Kg5 16. h4+ Kh5 17. g4# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "5"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "r1bq1rk1/pppp1ppp/5nn1/3Pp3/1bP5/2NBP3/PPQ1NPPP/R1B1K2R w KQ - 0 1"]
+[GameDuration "00:00:11"]
+[GameEndTime "2023-09-29T23:57:18.943 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:07.767 Central Daylight Time"]
+[PlyCount "72"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. d6 cxd6 2. Qb1 Ng4 3. Rf1 Nxh2 4. Rh1 Ng4 5. Rh5 Rb8 6. c5 Bxc3+ 7. Nxc3 dxc5
+8. Kf1 d5 9. b3 Be6 10. Ke1 c4 11. bxc4 dxc4 12. Be2 Nf6 13. Rg5 h6 14. Rg3 Nh8
+15. f3 Nh5 16. Bxc4 Nxg3 17. Qh7+ Kxh7 18. Bxe6 fxe6 19. e4 b5 20. Rb1 b4
+21. Na4 Qa5 22. Nc3 bxc3 23. Ra1 Rb5 24. Kd1 Qa4+ 25. Ke1 Qc4 26. Kf2 Nxe4+
+27. Ke1 Ng3 28. Kf2 Ne4+ 29. Ke1 Qxa2 30. Rxa2 Rb1 31. fxe4 Rxc1+ 32. Ke2 Rg1
+33. Rb2 cxb2 34. Ke3 Rxg2 35. Kd3 b1=Q+ 36. Kc4 Rc8# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "5"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "r1bq1rk1/pppp1ppp/5nn1/3Pp3/1bP5/2NBP3/PPQ1NPPP/R1B1K2R w KQ - 0 1"]
+[GameDuration "00:00:06"]
+[GameEndTime "2023-09-29T23:57:14.383 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:07.946 Central Daylight Time"]
+[PlyCount "37"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Bd2 Bxc3 2. bxc3 e4 3. Bxe4 Ne5 4. Bd3 h5 5. Rb1 Ne8 6. Bh7+ Kh8 7. Rb4 c5
+8. dxc6 bxc6 9. g3 c5 10. Ra4 Rb8 11. Rxa7 Nxc4 12. Qe4 Rb3 13. axb3 Qe7
+14. Qxe7 Kxh7 15. Qxf8 g6 16. bxc4 Nf6 17. Qxf7+ Kh8 18. Nf4 Nd5
+19. Nxg6# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "6"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "rnbqnrk1/ppp3bp/3p2p1/3Ppp2/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 1"]
+[GameDuration "00:00:07"]
+[GameEndTime "2023-09-29T23:57:16.326 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:09.174 Central Daylight Time"]
+[PlyCount "42"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Nge2 f4 2. Bf2 Qg5 3. c5 dxc5 4. Bxc5 Qh4+ 5. Kd1 Rf7 6. Ba3 Qg5 7. b4 c6
+8. Kc1 cxd5 9. exd5 a5 10. Qe3 fxe3 11. Kb1 Qe7 12. Bc1 Qxb4+ 13. Bb2 Bf5+
+14. Ne4 Bxe4+ 15. fxe4 Qxe4+ 16. Kc1 Qxd5 17. h3 Qd2+ 18. Kb1 Qd1+ 19. Nc1 e2
+20. Bc3 Rxf1 21. Bb4 Qxc1# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "6"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "1-0"]
+[FEN "rnbqnrk1/ppp3bp/3p2p1/3Ppp2/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 1"]
+[GameDuration "00:00:07"]
+[GameEndTime "2023-09-29T23:57:18.803 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:11.484 Central Daylight Time"]
+[PlyCount "43"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. Bg5 Qd7 2. O-O-O Rf7 3. Nb5 fxe4 4. fxe4 Rf8 5. Qe3 Qc6 6. dxc6 Nxc6 7. b3
+Kf7 8. g3 Ke6 9. Bh3+ Kf7 10. Bxc8 Rxc8 11. Nxa7 Nxa7 12. Qxa7 h6 13. Qxb7 Nf6
+14. Bxf6 Kxf6 15. Rf1+ Kg5 16. Rxf8 Rxf8 17. Qxc7 Rf6 18. Qxg7 Re6 19. Qf7 Rf6
+20. h4+ Kg4 21. Qxf6 Kxg3 22. Qf3# {White mates} 1-0
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "7"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "0-1"]
+[FEN "r1bq1rk1/1pp2ppp/2n1pn2/p2p2B1/2PP4/P1Q2N2/1P2PPPP/R3KB1R w KQ - 0 1"]
+[GameDuration "00:00:05"]
+[GameEndTime "2023-09-29T23:57:19.394 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:14.387 Central Daylight Time"]
+[PlyCount "28"]
+[SetUp "1"]
+[TimeControl "8+0.08"]
+
+1. cxd5 exd5 2. Qc2 Ra7 3. Qb3 a4 4. Qc2 Bg4 5. Nd2 Nxd4 6. Qc5 Nc6 7. Nf3 h6
+8. Nd4 hxg5 9. Nxc6 bxc6 10. Qxa7 Qb8 11. Qxa4 Qxb2 12. Rd1 Re8 13. Qxc6 Rxe2+
+14. Bxe2 Qxe2# {Black mates} 0-1
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "7"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "r1bq1rk1/1pp2ppp/2n1pn2/p2p2B1/2PP4/P1Q2N2/1P2PPPP/R3KB1R w KQ - 0 1"]
+[GameDuration "00:00:10"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:15.100 Central Daylight Time"]
+[PlyCount "64"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Ra2 Nxd4 2. Nxd4 Kh8 3. Qc2 Kg8 4. Nb5 h5 5. cxd5 exd5 6. Qxc7 Qe8 7. Qb6 Ne4
+8. Nc7 Nxg5 9. Nxe8 Rxe8 10. Qd4 Rd8 11. Qh4 f6 12. Qxh5 Ne4 13. Qf3 Ng5 14. Qe3
+Nh7 15. b3 Bf5 16. g3 Kf8 17. Qc5+ Kf7 18. Qe7+ Kxe7 19. a4 Kd7 20. Bg2 Ke7
+21. Rd2 g6 22. Rxd5 Rxd5 23. Bxd5 Ra7 24. Bg8 Nf8 25. Kd1 Bh3 26. Kc2 Ra6
+27. Bc4 Rb6 28. Re1 Bc8 29. e3 g5 30. Bb5 Rd6 31. h4 Bf5+ 32. e4 Bg4 {No result}
+*
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "8"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "rn1q1rk1/pbp1bppp/1p3n2/3p4/3PP3/2NB1N2/PP3PPP/R1BQK2R w KQ - 0 1"]
+[GameDuration "00:00:08"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:16.331 Central Daylight Time"]
+[PlyCount "54"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. exd5 Nxd5 2. Ne4 Nd7 3. Qa4 f5 4. Ned2 Nb4 5. Qb3+ Bd5 6. Qa3 Nc2+ 7. Bxc2
+Bxa3 8. bxa3 Rb8 9. Bd3 g5 10. Ke2 Rf7 11. Ne1 Qe7+ 12. Kd1 Qe6 13. Bxf5 Qxf5
+14. Rf1 Qe6 15. Nb3 Bxb3+ 16. axb3 Qxb3+ 17. Kd2 Qc4 18. Nd3 Qd5 19. Ke2 Qxg2
+20. Re1 Rg7 21. Ra2 Qxh2 22. Rb2 a5 23. Ra2 Rb7 24. Rb2 Kf7 25. Rc2 Kf8 26. Rb2
+Ke7 27. Kf3+ Kd6 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "8"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "rn1q1rk1/pbp1bppp/1p3n2/3p4/3PP3/2NB1N2/PP3PPP/R1BQK2R w KQ - 0 1"]
+[GameDuration "00:00:06"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:18.805 Central Daylight Time"]
+[PlyCount "37"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. e5 Ne8 2. Qc2 h6 3. Ng1 Bc6 4. Be3 h5 5. O-O-O Bh4 6. g3 Be7 7. Nce2 Bb7
+8. Bh7+ Kh8 9. Re1 Na6 10. Bd3 Nb4 11. Qb3 Nxd3+ 12. Qxd3 Bc6 13. Qb3 Kh7
+14. Qc2+ Kg8 15. Qxc6 Rb8 16. Qa4 Bd6 17. exd6 Nf6 18. dxc7 Qe7
+19. cxb8=Q {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "9"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "r2qkbnr/pp1npppb/2p5/7p/3P1N1P/6N1/PPP2PP1/R1BQKB1R w KQkq - 0 1"]
+[GameDuration "00:00:06"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:18.946 Central Daylight Time"]
+[PlyCount "36"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Qxh5 Nb8 2. Ne6 Qc8 3. Nf4 a5 4. c3 e6 5. Qe5 b5 6. Nge2 Na6 7. Rh3 a4 8. Rf3
+Bf5 9. Nxe6 Bxe6 10. Qh2 Qd8 11. Kd1 Qxh4 12. Qe5 Ne7 13. Ng1 Qh1 14. Qf5 Nxf5
+15. b4 Qxg1 16. Ke1 Ne7 17. Rf4 Bc4 18. Rg4 Qxf1+ {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "9"]
+[White "MyBotEvil"]
+[Black "MyBot"]
+[Result "*"]
+[FEN "r2qkbnr/pp1npppb/2p5/7p/3P1N1P/6N1/PPP2PP1/R1BQKB1R w KQkq - 0 1"]
+[GameDuration "00:00:05"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:19.396 Central Daylight Time"]
+[PlyCount "33"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Qxh5 c5 2. dxc5 Rb8 3. Ne6 Qc8 4. Be3 Nxc5 5. Nxf8 Nf6 6. Qxc5 Qxc5 7. Bxc5
+Kxf8 8. O-O-O Ke8 9. Bxa7 Ra8 10. Bb6 Ng8 11. Bb5+ Kf8 12. a4 Nf6 13. Be3 Bg8
+14. c4 g6 15. b4 Kg7 16. Kc2 Kh7 17. Rde1 {No result} *
+
+[Event "?"]
+[Site "?"]
+[Date "2023.09.29"]
+[Round "10"]
+[White "MyBot"]
+[Black "MyBotEvil"]
+[Result "*"]
+[FEN "rnbqnrk1/pp2bp1p/3p2p1/2pPp3/2P1P3/2N3P1/PP2NPBP/R1BQK2R w KQ - 0 1"]
+[GameDuration "00:00:05"]
+[GameEndTime "2023-09-29T23:57:25.272 Central Daylight Time"]
+[GameStartTime "2023-09-29T23:57:19.895 Central Daylight Time"]
+[PlyCount "30"]
+[SetUp "1"]
+[Termination "unterminated"]
+[TimeControl "8+0.08"]
+
+1. Qa4 g5 2. Bf3 f5 3. exf5 Bxf5 4. Kd1 Bd7 5. Qa3 Rxf3 6. Bd2 Rf7 7. Ke1 Qb6
+8. h3 Nc7 9. Rg1 Bxh3 10. Rh1 Bg2 11. b3 Bxh1 12. f4 gxf4 13. Kf1 fxg3+ 14. Ke1
+Qb4 15. Qxb4 g2 {No result} *
+

@@ -15,24 +15,24 @@ class LilaModel(nn.Module):
     super().__init__()
 
     self.sightStack = nn.Sequential(
-      nn.Linear(6 * 9, 8),
+      nn.Linear(6 * 9, 12),
       CRelu(),
 
-      nn.Linear(8, 8),
+      nn.Linear(12, 12),
       CRelu(),
 
-      nn.Linear(8, 2),
+      nn.Linear(12, 2),
       CRelu(),
     )
 
     self.evaluationStack = nn.Sequential(
-      nn.Linear(36 * 2 + 1, 16),
+      nn.Linear(36 * 2 + 1, 32),
       CRelu(),
 
-      nn.Linear(16, 16),
+      nn.Linear(32, 32),
       CRelu(),
 
-      nn.Linear(16, 1),
+      nn.Linear(32, 1),
       CRelu(),
     )
 
@@ -53,8 +53,8 @@ class LilaModel(nn.Module):
 
       squareTensor = torch.cat(squareTensors).to(device)
 
-      vision[i] = self.sightStack(squareTensor)[0]
-      vision[i] = self.sightStack(squareTensor)[1]
+      vision[i * 2] = self.sightStack(squareTensor)[0]
+      vision[i * 2 + 1] = self.sightStack(squareTensor)[1]
 
     vision[36 * 2] = inp[384]
 

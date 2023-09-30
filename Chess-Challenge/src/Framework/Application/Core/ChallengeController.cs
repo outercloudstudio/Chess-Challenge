@@ -85,7 +85,7 @@ namespace ChessChallenge.Application
 
       StartNewGame(PlayerType.Human, PlayerType.MyBot);
 
-      int[] compressedParameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_9.txt")[0..1418].Select(line =>
+      int[] compressedParameters = File.ReadAllLines("D:/Chess-Challenge/Training/Models/Lila_9.txt")[0..4299].Select(line =>
       {
         float value = float.Parse(line);
         int quantized = (int)(MathF.Min(MathF.Max(MathF.Pow(MathF.Abs(value) / 6f, 1 / 3f) * (value < 0 ? -1 : 1) + 0.5f, 0f), 1f) * 64f);
@@ -93,11 +93,11 @@ namespace ChessChallenge.Application
       }).ToArray();
 
       int compressedTokenCount = (int)MathF.Ceiling(compressedParameters.Length / 16f);
-      Console.WriteLine($"Param Count: 2003 Compressed Tokens: {compressedTokenCount}"); //#DEBUG
+      Console.WriteLine($"Param Count: 4299 Compressed Tokens: {compressedTokenCount}"); //#DEBUG
 
       List<decimal> decimals = new List<decimal>();
 
-      for (int readIndex = 0; readIndex < 1418; readIndex += 16)
+      for (int readIndex = 0; readIndex < 4299; readIndex += 16)
       {
         byte[] bytes = new byte[16];
 
@@ -120,6 +120,8 @@ namespace ChessChallenge.Application
       {
         output += value.ToString() + "M, ";
       }
+
+      Console.WriteLine("Output " + decimals.Count + " decimals");
 
       File.WriteAllText("D:/Chess-Challenge/Training/Models/Lila_9_Compressed.txt", output);
     }
